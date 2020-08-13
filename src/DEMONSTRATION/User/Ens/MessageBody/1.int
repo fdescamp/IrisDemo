@@ -1,0 +1,283 @@
+ROUTINE User.Ens.MessageBody.1 [Type=INT,Generated]
+ ;User.Ens.MessageBody.1
+ ;Generated for class User.Ens.MessageBody.  Do NOT edit. 08/13/2020 09:38:58AM
+ ;;4F643159;User.Ens.MessageBody
+ ;
+quote(string) public { Quit $zutil(144,1,string) }
+quoteall(string) public { Quit """"_$replace(string,"""","""""")_"""" }
+%BuildFactTable(pVerbose=0,pFactList="") public {
+ Set tSC = ..%OnBuildCube(pFactList)
+ If ('tSC) Quit tSC
+ Set tSC = ##class(User.Ens.MessageBody.Fact).%BuildAllFacts(pVerbose,pFactList)
+ If ('tSC) Quit tSC
+ Set tSC = ..%KillCache()
+ Quit tSC }
+%CheckSourceId(pSourceId,pVerbose=0,pStatus) public {
+ Quit ##class(User.Ens.MessageBody.Fact).%CheckSourceId(pSourceId,pVerbose,.pStatus)
+}
+%DeleteFact(pSourceId) public {
+ Set tSC = ##class(User.Ens.MessageBody.Fact).%DeleteFact(pSourceId,.tFactId)
+ If ('tSC) Quit tSC
+ Set:(tFactId'="") tChunks(tFactId\64000+1)=""
+ Set tSC = ##class(%DeepSee.Query.Engine).%InvalidateBuckets("ENS.MESSAGEBODY","User.Ens.MessageBody.Fact",.tChunks)
+ If ('tSC) Quit tSC
+ Set tTimeStamp = $I(^DeepSee.Cache.Results("ENS.MESSAGEBODY"))
+ Quit tSC }
+%GetCubeCaption() public {
+ Quit "Ens.MessageBody" }
+%GetCubeName() public {
+ Quit "Ens.MessageBody" }
+%GetLevelMemberCaption(pDimNo,pHierNo,pLevelNo,pName) public {
+ Set pName = $zu(28,pName,5)
+ Quit "" }
+%GetListingCaption(pListing) public {
+ Set pListing = $zu(28,pListing,5)
+ If ("NEW_LISTING1"=pListing) {
+  Quit "New_listing1"
+ }
+ Quit "" }
+%GetListingDescription(pListing) public {
+ Set pListing = $zu(28,pListing,5)
+ If ("NEW_LISTING1"=pListing) {
+  Quit ""
+ }
+ Quit "" }
+%GetListingFieldCaption(pField) public {
+ Set pField = $zu(28,pField,5)
+ Quit "" }
+%GetListingFieldDescription(pField) public {
+ Set pField = $zu(28,pField,5)
+ Quit "" }
+%GetMemberCaption(pDimName,pHierName="",pLevelName="",pPropName="") public {
+ Set tCaption = ""
+ Set pDimName = $zu(28,pDimName,5)
+ Set pHierName = $zu(28,pHierName,5)
+ Set pLevelName = $zu(28,pLevelName,5)
+ Set pPropName = $zu(28,pPropName,5)
+ If ($G(%dsCaptionContext)'="") {
+  If (pDimName'="") {
+   If (pHierName="") {
+    Set tCaption = $G(^DeepSee.Captions(%dsCaptionContext,"ENS.MESSAGEBODY",pDimName))
+   }
+   Else {
+    If (pLevelName="") {
+     Set tCaption = $G(^DeepSee.Captions(%dsCaptionContext,"ENS.MESSAGEBODY",pDimName,pHierName))
+    }
+    Else {
+     If (pPropName="") {
+      Set tCaption = $G(^DeepSee.Captions(%dsCaptionContext,"ENS.MESSAGEBODY",pDimName,pHierName,pLevelName))
+     }
+     Else {
+      Set tCaption = $G(^DeepSee.Captions(%dsCaptionContext,"ENS.MESSAGEBODY",pDimName,pHierName,pLevelName,pPropName))
+     }
+    }
+   }
+  }
+ If (tCaption'="") Quit tCaption
+ }
+ If (pDimName = "MEASURES") {
+  Set tCountName = ..%GetCountName()
+  If (pHierName = $zu(28,tCountName,5)) {
+   Set tCountCaption = ..%GetCountCaption()
+   Quit $S(tCountCaption="":$S(tCountName="%COUNT":"Count",1:tCountName),1:tCountCaption)
+  }
+ }
+ If (pDimName="%ID") {
+  If ((pHierName="")&&(pLevelName="")) { Quit "%ID" }
+  ElseIf (pHierName="H1") {
+   If (pLevelName="") { Quit "H1" }
+   ElseIf (pLevelName="%ID") {
+     Quit "%ID"
+    }
+  }
+ }
+ ElseIf (pDimName="%SEARCH") {
+  If ((pHierName="")&&(pLevelName="")) { Quit "%Search" }
+  ElseIf (pHierName="%SEARCH") {
+   If (pLevelName="") { Quit "%Search" }
+   ElseIf (pLevelName="%SEARCH") {
+     Quit "%Search"
+    }
+  }
+ }
+ ElseIf (pDimName="DOCTYPE") {
+  If ((pHierName="")&&(pLevelName="")) { Quit "DocType" }
+  ElseIf (pHierName="H1") {
+   If (pLevelName="") { Quit "H1" }
+   ElseIf (pLevelName="DOCTYPE") {
+     Quit "DocType"
+    }
+  }
+ }
+ ElseIf (pDimName="MESSAGEHEADER") {
+  If ((pHierName="")&&(pLevelName="")) { Quit "MessageHeader" }
+ }
+ Quit tCaption }
+%GetMemberDescription(pDimName,pHierName="",pLevelName="",pPropName="") public {
+ Set tDescription = ""
+ Set pDimName = $zu(28,pDimName,5)
+ Set pHierName = $zu(28,pHierName,5)
+ Set pLevelName = $zu(28,pLevelName,5)
+ Set pPropName = $zu(28,pPropName,5)
+ If (pDimName="%ID") {
+  If ((pHierName="")&&(pLevelName="")) { Quit "" }
+  ElseIf (pHierName="H1") {
+   If (pLevelName="") { Quit "" }
+   ElseIf (pLevelName="%ID") {
+     Quit ""
+    }
+  }
+ }
+ ElseIf (pDimName="%SEARCH") {
+  If ((pHierName="")&&(pLevelName="")) { Quit "%Search" }
+  ElseIf (pHierName="%SEARCH") {
+   If (pLevelName="") { Quit "%Search" }
+   ElseIf (pLevelName="%SEARCH") {
+     Quit "%Search"
+    }
+  }
+ }
+ ElseIf (pDimName="DOCTYPE") {
+  If ((pHierName="")&&(pLevelName="")) { Quit "" }
+  ElseIf (pHierName="H1") {
+   If (pLevelName="") { Quit "" }
+   ElseIf (pLevelName="DOCTYPE") {
+     Quit ""
+    }
+  }
+ }
+ ElseIf (pDimName="MESSAGEHEADER") {
+  If ((pHierName="")&&(pLevelName="")) { Quit "" }
+ }
+ Quit tDescription }
+%GetModel() public {
+ Set tCube1 = ""
+ Set tCube1 = ##class(%DeepSee.Model.cube).%New()
+ Set dmnsn2 = ##class(%DeepSee.Model.dimension).%New()
+ Set dmnsn2.allCaption="All %ID"
+ Set dmnsn2.allDisplayName="%ID"
+ Set dmnsn2.hasAll=0
+ Set hrrchy3 = ##class(%DeepSee.Model.hierarchy).%New()
+ Set lvl4 = ##class(%DeepSee.Model.level).%New()
+ Set lvl4.name="%ID"
+ Set lvl4.sourceProperty="%ID"
+ Set lvl4.useDisplayValue=1
+ Do hrrchy3.levels.Insert(lvl4)
+ Set hrrchy3.name="H1"
+ Do dmnsn2.hierarchies.Insert(hrrchy3)
+ Set dmnsn2.name="%ID"
+ Do tCube1.dimensions.Insert(dmnsn2)
+ Set dmnsn2 = ##class(%DeepSee.Model.dimension).%New()
+ Set dmnsn2.allCaption="All DocType"
+ Set dmnsn2.allDisplayName="DocType"
+ Set dmnsn2.hasAll=0
+ Set hrrchy3 = ##class(%DeepSee.Model.hierarchy).%New()
+ Set lvl4 = ##class(%DeepSee.Model.level).%New()
+ Set lvl4.name="DocType"
+ Set lvl4.sourceProperty="DocType"
+ Set lvl4.useDisplayValue=1
+ Do hrrchy3.levels.Insert(lvl4)
+ Set hrrchy3.name="H1"
+ Do dmnsn2.hierarchies.Insert(hrrchy3)
+ Set dmnsn2.name="DocType"
+ Do tCube1.dimensions.Insert(dmnsn2)
+ Set tCube1.displayName="Ens.MessageBody"
+ Set lstng2 = ##class(%DeepSee.Model.listing).%New()
+ Set lstng2.fieldList="Name"
+ Set lstng2.name="New_listing1"
+ Do tCube1.listings.Insert(lstng2)
+ Set tCube1.name="Ens.MessageBody"
+ Set rltnshp2 = ##class(%DeepSee.Model.relationship).%New()
+ Set rltnshp2.cardinality="one"
+ Set rltnshp2.factName="MessageBodyId"
+ Set rltnshp2.inverse="MessageBody"
+ Set rltnshp2.name="MessageHeader"
+ Set rltnshp2.relatedCube="MessageVolume"
+ Set rltnshp2.sourceProperty="%ID"
+ Do tCube1.relationships.Insert(rltnshp2)
+ Set tCube1.sourceClass="EnsLib.HL7.Message"
+ Quit tCube1 }
+%GetRelationshipId(pRelationName,pKey,pID) public {
+ Set (pStartId,pEndId)=""
+ Set tSC = 1
+ Set pID = ""
+ Quit tSC }
+%GetSourceIds(pStartId,pEndId) [ SQLCODE,pEndId,pStartId ] public { New SQLCODE 
+ Set (pStartId,pEndId)=""
+ Set tSC = 1
+  ;---&sql(SELECT MIN(%ID),MAX(%ID) INTO :pStartId,:pEndId FROM EnsLib_HL7.Message)
+   ;--- ** SQL PUBLIC Variables: SQLCODE, pEndId, pStartId
+ try { d $classmethod("%sqlcq."_$tr($namespace,"%_-$@:/\[]^ ","pudsssssssss")_".xEEH0yZfiUy6QfyAFAvzSkIkpy51","%New") } catch { if $ze["<CLASS DOES NOT EXIST>"&&($ze["%sqlcq."_$tr($namespace,"%_-$@:/\[]^ ","pudsssssssss")_".xEEH0yZfiUy6QfyAFAvzSkIkpy51")||($ze["<ZSQLU>") { d %0dsqlA } else { throw } }
+ If (pStartId="")&&(pEndId="") {
+   ;---&sql(SELECT TOP 1 %ID FROM EnsLib_HL7.Message WHERE %NOINDEX %ID IS NOT NULL)
+    ;--- ** SQL PUBLIC Variables: SQLCODE
+  try { d $classmethod("%sqlcq."_$tr($namespace,"%_-$@:/\[]^ ","pudsssssssss")_".xEipe0V0qcYpUpLlQQT5y2THd0gg","%New") } catch { if $ze["<CLASS DOES NOT EXIST>"&&($ze["%sqlcq."_$tr($namespace,"%_-$@:/\[]^ ","pudsssssssss")_".xEipe0V0qcYpUpLlQQT5y2THd0gg")||($ze["<ZSQLU>") { d %0dsqlC } else { throw } }
+  If (+$G(%ROWCOUNT)>0) {		// DTB495 - Double check that there are in fact zero source records.
+   Quit $$Error^%apiOBJ(5001,"Failure to determine first and last IDs in source table 'EnsLib_HL7.Message'. Check indices on the source.")
+  }
+ }
+ Quit tSC }
+%0dsqlA	n %xxsql
+	s %xxsql("S",1)="SELECT MIN ( %ID ) , MAX ( %ID ) INTO :pStartId , :pEndId FROM EnsLib_HL7 . Message"
+	s %xxsql("I","%DeepSee")="",%xxsql("I","%systemInclude")="",%xxsql("NS")="DEMONSTRATION"
+	d BuildQuery^%SYS.SQLSRV(.%xxsql,$lb("Logical","","","User.Ens",0,"",),,"User.Ens.MessageBody.CLS")
+	q
+%0dsqlC	n %xxsql
+	s %xxsql("S",1)="SELECT TOP 1 %ID FROM EnsLib_HL7 . Message WHERE %NOINDEX %ID IS NOT NULL"
+	s %xxsql("I","%DeepSee")="",%xxsql("I","%systemInclude")="",%xxsql("NS")="DEMONSTRATION"
+	d BuildQuery^%SYS.SQLSRV(.%xxsql,$lb("Logical","","","User.Ens",0,"",),,"User.Ens.MessageBody.CLS")
+	q
+%GetSourceInfo(pInfo) public {
+ Kill pInfo
+ Set pInfo("sourceType") = "persistent"
+ Set pInfo("sourceClass") = "EnsLib.HL7.Message"
+ Set pInfo("maxFacts") = ""
+ Set pInfo("dstime") = ""
+ Set pInfo("dsinterval") = ""
+ Set pInfo("idkey") = "IDKEY"
+ Set pInfo("posint") = 1
+ Quit 1 }
+%InjectFact(pFactId,pValues,pDimensionsOnly=0,pFactList="") public {
+ Set tSC = 1
+ Set tFactList = $S($ListValid(pFactList):pFactList,1:$ListFromString(pFactList,","))
+ Set tSC = ##class(User.Ens.MessageBody.Fact).%InjectFact(.pFactId,.pValues,.tChunks,pDimensionsOnly,tFactList)
+ If ('tSC) Quit tSC
+ If ('pDimensionsOnly) {
+  Set tSC = ##class(%DeepSee.Query.Engine).%InvalidateBuckets("ENS.MESSAGEBODY","User.Ens.MessageBody.Fact",.tChunks)
+  If ('tSC) Quit tSC
+  Set tTimeStamp = $I(^DeepSee.Cache.Results("ENS.MESSAGEBODY"))
+ }
+ Quit tSC }
+%KillFacts() public {
+ Set tSC = 1
+ Try {
+ Do ##class(User.Ens.MessageBody.StarDocType).%KillExtent()
+ Do ##class(User.Ens.MessageBody.StarID).%KillExtent()
+ do ##class(%DeepSee.ComputedDimension.SQL).%OnKillFacts("Ens.MessageBody", 1, 1, 1, 1)
+ Set tSC = ..%KillCache()
+ If ('tSC) Quit
+ Set tSC = ##class(User.Ens.MessageBody.Fact).%KillExtent()
+ If ('tSC) Quit
+ Kill ^DeepSee.Index("ENS.MESSAGEBODY","%sourceId")
+ Kill ^DeepSee.Index("ENS.MESSAGEBODY","%sourceIdReverse")
+ Kill ^DeepSee.FactS("USER.ENS.MESSAGEBODY.FACT")
+ Kill ^DeepSee.FactRelation("ENS.MESSAGEBODY")
+ Set tSC = ##class(User.Ens.MessageBody.Fact).%OnKillFacts()
+ If ('tSC) Quit
+ Set tSC = ..%OnKillFacts()
+ If ('tSC) Quit
+ }
+  Catch(ex) {
+  Set tSC = ex.AsStatus()
+ }
+ Quit tSC }
+%UpdateFacts(pStartId,pEndId="",pBatchMode=0,pVerbose=0,pTaskGroup="",pUpdates,pRefProp="",pRefID="",pDimTables) public {
+ Set tSC = 1
+ Set tSC = ##class(User.Ens.MessageBody.Fact).%UpdateFacts(pStartId,pEndId,pBatchMode,.tChunks, pVerbose,pTaskGroup,.pUpdates,pRefProp,pRefID,.pDimTables)
+ If ('tSC) Quit tSC
+ Set tSC = ##class(%DeepSee.Query.Engine).%InvalidateBuckets("ENS.MESSAGEBODY","User.Ens.MessageBody.Fact",.tChunks)
+ If ('tSC) Quit tSC
+ Set tTimeStamp = $I(^DeepSee.Cache.Results("ENS.MESSAGEBODY"))
+ Quit tSC }
+%UpdateFactsList(pFactList="",pStartId,pEndId="",pBatchMode=0,pVerbose=0,pTaskGroup="",pUpdates,pRefProp="",pRefID="",pDimTables) public {
+ Quit $$Error^%apiOBJ(5001,"%UpdateFactsList cannot be called without enabling namedFactNums for this cube.") }

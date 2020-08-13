@@ -1,0 +1,675 @@
+ROUTINE User.MessageVolume.Listing.1 [Type=INT,Generated]
+ ;User.MessageVolume.Listing.1
+ ;Generated for class User.MessageVolume.Listing.  Do NOT edit. 08/13/2020 09:37:11AM
+ ;;37644339;User.MessageVolume.Listing
+ ;
+SQLUPPER(v,l) { quit $zu(28,v,7,$g(l,32767)) }
+ALPHAUP(v,r) { quit $zu(28,v,6) }
+STRING(v,l) { quit $zu(28,v,9,$g(l,32767)) }
+SQLSTRING(v,l) { quit $zu(28,v,8,$g(l,32767)) }
+UPPER(v) { quit $zu(28,v,5) }
+MVR(v) { quit $zu(28,v,2) }
+TRUNCATE(v,l) { quit $e(v,1,$g(l,3641144)) }
+%BuildIndices(pIndexList="",pAutoPurge=1,pLockFlag=0,pJournalFlag=1,pStartID="",pEndID="",pIgnoreIndexList="") public {
+	If (pIndexList="")||(($listlength(pIndexList)=1)&&($listget(pIndexList,1)="")) { Quit 1 }
+	Quit $$Error^%apiOBJ(5066,$classname()_"::"_$ListToString(pIndexList)) }
+%BuildIndicesSegment(pStartID,pEndID,pIndexHandle=0,pLockFlag=1,pFirstRange=0,pJob="") public {
+	QUIT 1 }
+%CheckConstraints(pID,pConstraintList="",pCheckDisabled=0,pErrorInfo) public {
+	if (''..%OnDetermineClass($select(pID="":"",1:$listbuild(pID_"")),.tMSTC)) && (tMSTC '= $classname()) { quit $classmethod(tMSTC,"%CheckConstraints",pID,pConstraintList) } else { quit 1 } }
+%CheckConstraintsForExtent(pConstraintList="",pCheckDisabled=0,pErrorLog) [ SQLCODE,tID ] public { New %ROWCOUNT,%ROWID,%msg,SQLCODE,tID 
+	kill pErrorLog set tStatusAll = 1, pErrorLog = 0 if '$listvalid(pConstraintList) { set pConstraintList = $listfromstring(pConstraintList) }
+	 ;---&sql(declare ext cursor for select %ID into :tID FROM User_MessageVolume.Listing)
+ 	 ;--- ** SQL PUBLIC Variables: SQLCODE, tID
+	 
+	 ;---&sql(open ext)
+	try { if $g(%ext0273)'="" { s SQLCODE=-101 } else { s %ext0273=$classmethod("%sqlcq."_$tr($namespace,"%_-$@:/\[]^ ","pudsssssssss")_".xEEnesBYPMnwguARo5Xn7yfG3JfJ","%New") if '$isobject(%ext0273) s %ext0273=$$%0dsqlA() } } catch { if $ze["<CLASS DOES NOT EXIST>"&&($ze["%sqlcq."_$tr($namespace,"%_-$@:/\[]^ ","pudsssssssss")_".xEEnesBYPMnwguARo5Xn7yfG3JfJ")||($ze["<ZSQLU>") { s %ext0273=$$%0dsqlA() } else { throw } }
+	if SQLCODE '< 0 {
+		for {
+			 ;---&sql(fetch ext)
+ 			 ;--- ** SQL PUBLIC Variables: %ROWCOUNT, %ROWID, %msg, SQLCODE
+			if $isobject($g(%ext0273))'=1 { s SQLCODE=-102 } else { do %ext0273.FET() if SQLCODE=0 { } }
+			if SQLCODE { if SQLCODE=100 { quit } elseif SQLCODE<0 { set tStatusAll = $select(+tStatusAll:$$Error^%apiOBJ(5521,SQLCODE,$Get(%msg)),1:$$AppendStatus^%occSystem(tStatusAll,$$Error^%apiOBJ(5521,SQLCODE,$Get(%msg)))) quit } }
+			set tStatus = ..%CheckConstraints(tID,pConstraintList,pCheckDisabled,.tErrorInfo)
+			if ('tStatus) { set tStatusAll = $select(+tStatusAll:tStatus,1:$$AppendStatus^%occSystem(tStatusAll,tStatus)) set:pErrorLog<1000 pErrorLog = pErrorLog + 1, pErrorLog(pErrorLog) = tErrorInfo _ $Listbuild(tStatus) }
+		}
+		 ;---&sql(close ext)
+		if '$isobject($get(%ext0273)) { set SQLCODE=-102 } else { set SQLCODE=0 kill %ext0273 }
+	}
+	quit tStatusAll }
+ q
+%0dsqlA()	n %xxsql
+	s %xxsql("S",1)="DECLARE ext CURSOR FOR SELECT %ID INTO :tID FROM User_MessageVolume . Listing"
+	s %xxsql("M","%occSqlfuncinc")=$c(1),%xxsql("I","%DeepSee")="",%xxsql("I","%occSqlfunc")="",%xxsql("I","%systemInclude")=""
+	s %xxsql("NS")="DEMONSTRATION"
+	return $$BuildQuery^%SYS.SQLSRV(.%xxsql,$lb("Logical","","","User.MessageVolume",0,"",),",0,ext,","User.MessageVolume.Listing.CLS",1)
+%ComposeOid(id) public {
+	set tCLASSNAME = $listget($g(^DeepSee.Listing("MESSAGEVOLUME",$p(id,"||",1),$p(id,"||",2))),1)
+	if tCLASSNAME="" { quit $select(id="":"",1:$listbuild(id_"","User.MessageVolume.Listing")) }
+	set tClass=$piece(tCLASSNAME,$extract(tCLASSNAME),*-1)
+	set:tClass'["." tClass="User."_tClass
+	quit $select(id="":"",1:$listbuild(id_"",tClass)) }
+%DeleteData(id,concurrency) public {
+	Set bsv0N1=$p(id,"||",2)
+	Set bsv0N2=$p(id,"||",1)
+	Quit:id="" $$Error^%apiOBJ(5812)
+	set $Ztrap="DeleteDataERR" set lockok=0,sc=""
+	If concurrency {
+		If $tlevel,$increment(%0CacheLock($classname()))>$zu(156,50,1) {
+			Lock +(^DeepSee.Listing("MESSAGEVOLUME")):$zu(115,4)
+			Set lockok=$Select($test:2,1:0)
+			Lock:lockok -(^DeepSee.Listing("MESSAGEVOLUME"))
+		} Else {
+			Lock +(^DeepSee.Listing("MESSAGEVOLUME",bsv0N2,bsv0N1)):$zu(115,4)
+			Set lockok=$Select($test:1,1:0)
+		}
+		If 'lockok {
+			Quit $$Error^%apiOBJ(5803,$classname())
+		}
+	}
+	If ($Data(^DeepSee.Listing("MESSAGEVOLUME",bsv0N2,bsv0N1))) {
+		If $data(^oddEXTR($classname())) {
+			Set fc=""
+			For {
+				Set fc=$order(^rINDEXEXT("F",$classname(),"%1","f",fc))
+				Quit:fc=""
+				Set fk=""
+				For {
+					Set fk=$order(^rINDEXEXT("F",$classname(),"%1","f",fc,fk))
+					Quit:fk=""
+					Set sc=$classmethod(fc,fk_"Delete",id)
+					If ('sc) { Goto DeleteDataEXIT }
+				}
+			}
+			Set fc=""
+			For {
+				Set fc=$order(^rINDEXEXT("F",$classname(),"ID","f",fc))
+				Quit:fc=""
+				Set fk=""
+				For {
+					Set fk=$order(^rINDEXEXT("F",$classname(),"ID","f",fc,fk))
+					Quit:fk=""
+					Set sc=$classmethod(fc,fk_"Delete",$p(id,"||",1),$p(id,"||",2))
+					If ('sc) { Goto DeleteDataEXIT }
+				}
+			}
+		}
+		Kill ^DeepSee.Listing("MESSAGEVOLUME",bsv0N2,bsv0N1)
+		Set sc=1
+	}
+	Else { Set sc=$$Error^%apiOBJ(5810,$classname(),id) }
+DeleteDataEXIT
+	If concurrency,lockok=1 {
+		Lock -(^DeepSee.Listing("MESSAGEVOLUME",bsv0N2,bsv0N1))
+	}
+DeleteDataRET	Set $Ztrap = ""
+	QUIT sc
+DeleteDataERR	Set $Ztrap = "DeleteDataRET"
+	Set sc = $$Error^%apiOBJ(5002,$ZE)
+	Goto DeleteDataEXIT }
+%Exists(oid="") public {
+	Quit ..%ExistsId($listget(oid)) }
+%ExistsId(id) public {
+	Try { set tExists=$s($l(id,"||")'=2:0,$p(id,"||",1)="":0,$p(id,"||",2)="":0,$d(^DeepSee.Listing("MESSAGEVOLUME",$p(id,"||",1),$p(id,"||",2))):1,1:0) } catch tException { set tExists = 0 if '(tException.%IsA("%Exception.SystemException")) { throw tException } elseif tException.Name'="<SUBSCRIPT>" { ZT $ZE } } quit tExists }
+%FileIndices(id,pIndexHandle=0) public {
+	Quit 1 }
+%InsertBatch(objects,concurrency=0,useTransactions=0) public {
+	try {
+		set numerrs=0,errs="",cnt=0,ptr=0
+		while $listnext(objects,ptr,idList) {
+			set ret=$listnext(objects,ptr,data)
+			set cnt=cnt+1
+			set zzc9v1=$lg(idList,2)
+			set zzc9v2=$lg(idList,1)
+			set lock=0
+			if (useTransactions) tstart
+			set id=zzc9v2_"||"_zzc9v1
+			try {
+				set tInnerException = ""
+				;
+				if concurrency { if $tlevel,$i(%0CacheLock($classname()))>$zu(156,50,1) { lock +(^DeepSee.Listing("MESSAGEVOLUME")):$zu(115,4) set lock=$Select($test:2,1:0) lock:lock -(^DeepSee.Listing("MESSAGEVOLUME")) } else { lock +(^DeepSee.Listing("MESSAGEVOLUME",zzc9v2,zzc9v1)):$zu(115,4) set lock=$Select($test:1,1:0) } if 'lock { Throw ##class(%Exception.StatusException).ThrowIfInterrupt($$Error^%apiOBJ(5803,$classname())) } }
+				if $data(^DeepSee.Listing("MESSAGEVOLUME",zzc9v2,zzc9v1)) Throw ##class(%Exception.StatusException).ThrowIfInterrupt($$Error^%apiOBJ(5805,$classname(),$Name(^DeepSee.Listing("MESSAGEVOLUME",zzc9v2,zzc9v1)),"""^DeepSee.Listing(""""MESSAGEVOLUME"""")"""))
+				set ^DeepSee.Listing("MESSAGEVOLUME",zzc9v2,zzc9v1)=data
+				if (useTransactions) { tcommit }
+			}
+			catch tInnerException {
+				set newerr=$lb(cnt,tInnerException.AsStatus())
+				if '($length(errs)+$length(newerr)>32767) { set numerrs=numerrs+1, errs=errs_newerr }
+				if (useTransactions) && ($Tlevel) trollback
+			}
+			if lock=1 lock -(^DeepSee.Listing("MESSAGEVOLUME",zzc9v2,zzc9v1))
+		}
+	}
+	catch tException {
+		set newerr=$lb($g(cnt),tException.AsStatus())
+		if '($length(errs)+$length(newerr)>32767) { set numerrs=numerrs+1, errs=errs_newerr }
+	}
+	QUIT ($lb(numerrs))_errs }
+%KillExtentData(killstreams=0)
+	If killstreams Kill ^User.MessageVolume.ListingS
+	Kill ^DeepSee.Listing("MESSAGEVOLUME")
+	Quit 1
+%LoadData(id) public {
+	New %s1
+	set $ZTrap="CatchError",locked=0,userze=$ze,$ze=""
+	Set i%queryKey=$piece(id,"||",1),i%sourceId=$piece(id,"||",2)
+	If i%%Concurrency=4 {
+		Lock +(^DeepSee.Listing("MESSAGEVOLUME",i%queryKey,i%sourceId)):$zu(115,4)
+		if '$t do init s i%%Concurrency=0 s:$ze="" $ze=userze return $$Error^%apiOBJ(5803,$classname())
+	} ElseIf i%%Concurrency>1 {
+		Lock +(^DeepSee.Listing("MESSAGEVOLUME",i%queryKey,i%sourceId)#"S"):$zu(115,4)
+		if '$t do init s i%%Concurrency=0 s:$ze="" $ze=userze return $$Error^%apiOBJ(5804,$classname())
+		set locked = 1
+	}
+	If $d(^DeepSee.Listing("MESSAGEVOLUME",i%queryKey,i%sourceId),%s1)#2 {
+		If i%%Concurrency=2 { Lock -(^DeepSee.Listing("MESSAGEVOLUME",i%queryKey,i%sourceId)#"SI") }
+		s:$ze="" $ze=userze
+		Quit 1
+	} Else {
+		If i%%Concurrency=2 { Lock -(^DeepSee.Listing("MESSAGEVOLUME",i%queryKey,i%sourceId)#"SI") }
+		do init
+		set sc = $$Error^%apiOBJ(5809,$classname(),id) goto CatchError
+	}
+CatchError	set $ZTrap = "" if $ZE'="" { s sc = $$Error^%apiOBJ(5002,$ZE) }
+	If ($get(locked))&&(i%%Concurrency<3) { Lock -(^DeepSee.Listing("MESSAGEVOLUME",i%queryKey,i%sourceId)#"SI") }
+	if '('sc) { set sc=$$Error^%apiOBJ(5809,$classname(),id) }
+	s:$ze="" $ze=userze
+	return sc
+init	quit }
+%LoadDataFromMemory(id,objstate,obj) public {
+	New %s1
+	Set i%queryKey=$piece(id,"||",1),i%sourceId=$piece(id,"||",2)
+	If (i%queryKey="")||(i%sourceId="") { Quit $$Error^%apiOBJ(5832,$classname(),id) }
+	If $d(objstate("MESSAGEVOLUME",i%queryKey,i%sourceId)) {
+		Set %s1=$g(objstate("MESSAGEVOLUME",i%queryKey,i%sourceId))
+		Quit 1
+	} Else {
+		Quit $$Error^%apiOBJ(5809,$classname(),id)
+	} }
+%LockExtent(shared=0) public {
+	If shared {
+		Lock +(^DeepSee.Listing("MESSAGEVOLUME")#"S"):$zu(115,4) Quit:$t 1
+		Quit $$Error^%apiOBJ(5799,$classname())
+	}
+	Lock +(^DeepSee.Listing("MESSAGEVOLUME")):$zu(115,4) Quit:$t 1
+	Quit $$Error^%apiOBJ(5798,$classname()) }
+%LockId(id,shared=0,timeout) public { s:'($d(timeout)#2) timeout=$zu(115,4)
+	If id="" { Quit $$Error^%apiOBJ(5812) }
+	Set sc=1
+	Set o1=$piece(id,"||",1),o2=$piece(id,"||",2)
+	If (o1="")||(o2="") { Quit $$Error^%apiOBJ(5832,$classname(),id) }
+	If 'shared {
+		Lock +(^DeepSee.Listing("MESSAGEVOLUME",o1,o2)):timeout Quit:$t 1
+		Quit $$Error^%apiOBJ(5803,id_":"_$classname())
+	}
+	Lock +(^DeepSee.Listing("MESSAGEVOLUME",o1,o2)#"S"):timeout Quit:$t 1
+	Quit $$Error^%apiOBJ(5804,id_":"_$classname()) }
+%OnDetermineClass(oid,class) public {
+	Set id=$listget($get(oid))
+	Quit:id="" $$Error^%apiOBJ(5812)
+	Set o1=$piece(id,"||",1),o2=$piece(id,"||",2)
+	If (o1="")||(o2="") { Quit $$Error^%apiOBJ(5832,$classname(),id) }
+	Set idclass=$lg($get(^DeepSee.Listing("MESSAGEVOLUME",o1,o2)),1)
+	If idclass="" { Set class="User.MessageVolume.Listing" Quit 1 }
+	Set class=$piece(idclass,$extract(idclass),*-1)
+	Set:class'["." class="User."_class
+	QUIT 1 }
+%PhysicalAddress(id,paddr)
+	if $Get(id)="" Quit $$Error^%apiOBJ(5813,$classname())
+	new bsv0N1,bsv0N2
+	Set bsv0N1=$p(id,"||",2)
+	Set bsv0N2=$p(id,"||",1)
+	if (bsv0N2="")||(bsv0N1="") { quit $$Error^%apiOBJ(5832,$classname(),id) }
+	s paddr(1)=$lb($Name(^DeepSee.Listing("MESSAGEVOLUME",bsv0N2,bsv0N1)),$classname(),"ID","listnode",id)
+	s paddr=1
+	Quit 1
+%PurgeIndices(idxlist="",lockExtent=0,pIgnoreIndexList="") public {
+	If idxlist="" { Quit 1 }
+	Quit $$Error^%apiOBJ(5066,$classname()_"::"_$ListToString(idxlist)) }
+%SQLAcquireLock(%rowid,s=0,unlockref=0)
+	new %d,gotlock
+	set %d(1)=%rowid,%d(2)=$p(%d(1),"||",1),%d(3)=$p(%d(1),"||",2) set s=$e("S",s)
+	lock +^DeepSee.Listing("MESSAGEVOLUME",%d(2),%d(3))#s:$zu(115,4) set gotlock=$t
+	set:gotlock&&unlockref unlockref=unlockref+1,unlockref(unlockref)=$lb($name(^DeepSee.Listing("MESSAGEVOLUME",%d(2),%d(3))),"User.MessageVolume.Listing",s_"D")
+	QUIT gotlock
+%SQLAcquireTableLock(s=0,SQLCODE,to="")
+	set s=$e("S",s) set:to="" to=$zu(115,4) lock +^DeepSee.Listing("MESSAGEVOLUME")#s:to QUIT:$t 1 set SQLCODE=-110 if s="S" { set %msg=$$FormatMessage^%occMessages(,"%SQL.Filer","SQLFiler35",,"User_MessageVolume"_"."_"Listing") } else { set %msg=$$FormatMessage^%occMessages(,"%SQL.Filer","SQLFiler36",,"User_MessageVolume"_"."_"Listing") } QUIT 0
+	Return
+%SQLBuildIndices(pIndices="",pLockFlag=0,pStartID="",pEndID="",pIgnoreIndexList="")
+	QUIT ..%BuildIndices(pIndices,,pLockFlag,,pStartID,pEndID,pIgnoreIndexList)
+%SQLBuildPurgeIndexForRow(pIndices="",pActions="BP",pLockRow=1,%d,%e,pIgnoreIndexList="")
+	// Purge and build index nodes for a single row using given values, return Status Code
+	new sn,tSC,tLock set tSC=1,pActions=$zcvt(pActions,"U")
+	try {
+		if $g(%d(1))="" { set tSC=$select(+tSC:$$Error^%apiOBJ(5521,-108,"RowID value must be specified in %d(1) when calling %SQLBuildPurgeIndexForRow for table 'User_MessageVolume.Listing'"),1:$$AppendStatus^%occSystem(tSC,$$Error^%apiOBJ(5521,-108,"RowID value must be specified in %d(1) when calling %SQLBuildPurgeIndexForRow for table 'User_MessageVolume.Listing'"))) RETURN tSC }
+		if pLockRow { if '..%SQLAcquireLock(%d(1)) { set tSC=$select(+tSC:$$Error^%apiOBJ(5521,-114,"Unable to lock row in table 'User_MessageVolume.Listing' with %ID = '"_%d(1)_"'"),1:$$AppendStatus^%occSystem(tSC,$$Error^%apiOBJ(5521,-114,"Unable to lock row in table 'User_MessageVolume.Listing' with %ID = '"_%d(1)_"'"))) RETURN tSC  } else { set tLock=1 }}
+		set %d(2)=$p(%d(1),"||",1),%d(3)=$p(%d(1),"||",2)
+		if pLockRow { do ..%SQLReleaseLock(%d(1),0,0) set tLock=0 }
+	}
+	catch {
+		if $g(tLock) { do ..%SQLReleaseLock(%d(1),0,0) }
+		set tSC=$select(+tSC:$$Error^%apiOBJ(5594,$ze),1:$$AppendStatus^%occSystem(tSC,$$Error^%apiOBJ(5594,$ze)))
+	}
+	QUIT tSC
+%SQLCheckUnique(pFromOrig=0,%pID,%pVals...)
+	 ;---&sql(SELECT _DSListingId FROM User_MessageVolume.Listing WHERE  _DSListingId=:%pVals(1) AND (%ID <> :%pID OR :%pID IS NULL)) QUIT SQLCODE=100
+ 	 ;--- ** SQL PUBLIC Variables: %pID, %pVals, SQLCODE
+	try { d $classmethod("%sqlcq."_$tr($namespace,"%_-$@:/\[]^ ","pudsssssssss")_".xE9ACG3AKwz4kHXZ0ndNqO6ip7Bw","%New") } catch { if $ze["<CLASS DOES NOT EXIST>"&&($ze["%sqlcq."_$tr($namespace,"%_-$@:/\[]^ ","pudsssssssss")_".xE9ACG3AKwz4kHXZ0ndNqO6ip7Bw")||($ze["<ZSQLU>") { d %0dsqlD } else { throw } } QUIT SQLCODE=100
+ q
+%0dsqlD	n %xxsql
+	s %xxsql("S",1)="SELECT _DSListingId FROM User_MessageVolume . Listing WHERE _DSListingId = :%pVals(1) AND ( %ID <> :%pID OR :%pID IS NULL )"
+	s %xxsql("M","%occSqlfuncinc")=$c(1),%xxsql("I","%DeepSee")="",%xxsql("I","%occSqlfunc")="",%xxsql("I","%systemInclude")=""
+	s %xxsql("NS")="DEMONSTRATION"
+	d BuildQuery^%SYS.SQLSRV(.%xxsql,$lb("Logical","","","User.MessageVolume",0,"",),,"User.MessageVolume.Listing.CLS")
+	q
+%SQLCopyIcolIntoName()
+	if %oper="DELETE" {
+		set:$d(%d(1)) %f("_DSListingId")=%d(1) set:$d(%d(2)) %f("_DSqueryKey")=%d(2) set:$d(%d(3)) %f("_DSsourceId")=%d(3)
+		QUIT
+	}
+	set:$d(%d(1)) %f("_DSListingId")=%d(1) set:$d(%d(2)) %f("_DSqueryKey")=%d(2) set:$d(%d(3)) %f("_DSsourceId")=%d(3) set:$a(%e,4)&&$d(%d(4)) %f("x__classname")=%d(4)
+	QUIT
+%SQLDefineiDjVars(%d,subs,master)
+	QUIT
+%SQLDelete(%rowid,%check,%tstart=1,%mv=0,%polymorphic=0)
+	// SQL DELETE method for table User_MessageVolume.Listing
+	new bva,ce,%d,dc,%e,%ele,%itm,%key,%l,%nc,omcall,%oper,%pos,%s,sn,sqlcode,subs set %oper="DELETE",sqlcode=0,%ROWID=%rowid,%d(1)=%rowid,%e(1)=%rowid,%d(2)=$p(%d(1),"||",1),%d(3)=$p(%d(1),"||",2),%l=$c(0)
+	if '$d(%0CacheSQLRA) { new %0CacheSQLRA set omcall=1 }
+	if '$a(%check,2) { new %ls if $tlevel,$i(%0CacheLock("User.MessageVolume.Listing"))>$zu(156,50,1) { lock +^DeepSee.Listing("MESSAGEVOLUME"):$zu(115,4) lock:$t -^DeepSee.Listing("MESSAGEVOLUME") set %ls=$s($t:2,1:0) } else { lock +^DeepSee.Listing("MESSAGEVOLUME",%d(2),%d(3)):$zu(115,4) set %ls=$t } set:%ls=2 $e(%check,2)=$c(1) set:%ls=1 $e(%l)=$c(1) if '%ls { set SQLCODE=-110,%msg=$$FormatMessage^%occMessages(,"%SQL.Filer","SQLFiler40",,%oper,"User_MessageVolume"_"."_"Listing",$g(%d(1))) RETURN  }} if %tstart { TSTART:($zu(115,1)=1)||('$TLEVEL&&($zu(115,1)=2))  }
+	set $zt="ERRORDelete"
+	do ..%SQLGetOld(%rowid,.%d,.%e,.sqlcode) if sqlcode { set SQLCODE=-106,%msg=$$FormatMessage^%occMessages(,"%SQL.Filer","SQLFiler58",,"User_MessageVolume"_"."_"Listing",%rowid) do ..%SQLEExit() QUIT  }
+	if %e(4)'="" { set sn=$p(%e(4),$e(%e(4)),$l(%e(4),$e(%e(4)))-1) if "User.MessageVolume.Listing"'=sn { new %f do ..%SQLCopyIcolIntoName() do $classmethod(sn,"%SQLDelete",%rowid,%check,%tstart,%mv,1) QUIT  }}
+	if '$a(%check),'$zu(115,7) do  if sqlcode set SQLCODE=sqlcode do ..%SQLEExit() QUIT  
+	. new %fk,%k,%p,%st,%t,%z set %k="",%p("%1")="%d(1),",%p("ID")="%d(2),%d(3),,"
+	. for  quit:sqlcode<0  set %k=$o(^rINDEXEXT("F","User.MessageVolume.Listing",%k)) quit:%k=""  set %t="" for  set %t=$o(^rINDEXEXT("F","User.MessageVolume.Listing",%k,"f",%t)) quit:%t=""  set %st=(%t="User.MessageVolume.Listing") set %fk="" for  set %fk=$o(^rINDEXEXT("F","User.MessageVolume.Listing",%k,"f",%t,%fk)) quit:%fk=""  x "set %z=$classmethod(%t,%fk_""SQLFKeyRefAction"",%st,%k,$a(%check,2),"_%p(%k)_")" if %z set sqlcode=-124 quit  
+	set ce="" for  { set ce=$order(^oddSQL("User_MessageVolume","Listing","DC",ce)) quit:ce=""   do $classmethod(ce,"%SQLDeleteChildren",%d(1),%check,.sqlcode) quit:sqlcode<0  } if sqlcode<0 { set SQLCODE=sqlcode do ..%SQLEExit() QUIT } // Delete any children
+	if '$a(%check,3) {
+	}
+	k ^DeepSee.Listing("MESSAGEVOLUME",%d(2),%d(3))
+	do ..%SQLUnlock() TCOMMIT:%tstart&&($zu(115,1)=1)
+	set SQLCODE=0 kill:$g(omcall) %0CacheSQLRA
+	QUIT
+ERRORDelete	set $zt="",SQLCODE=-415,%msg=$s($g(%msg)'="":%msg_" -- ",1:"")_$$FormatMessage^%occMessages(,"%SQL.Filer","SQLFiler51",,%oper,"User_MessageVolume"_"."_"Listing",$ze) if $ze["<FRAMESTACK>" { set %msg=$$FormatMessage^%occMessages(,"%SQL.Filer","SQLFiler52",,$ze,%oper,"User_MessageVolume"_"."_"Listing") do ##Class(%SYS.System).WriteToConsoleLog(%msg) if ($zu(67,10,$j)=1)||($zu(67,10,$j)=3) { write !,%msg h 3 } HALT  } do ..%SQLEExit() QUIT
+	Return
+%SQLDeleteTempStreams()
+	// Delete all temporary streams
+	QUIT
+%SQLEExit()
+	do:%oper'="DELETE" ..%SQLUnlock2() do ..%SQLUnlock() 
+	if %tstart,$zu(115,1)=1,$TLEVEL { set %tstart=0 TROLLBACK 1 } kill:$g(omcall) %0CacheSQLRA QUIT  
+	Return
+%SQLExists(pLockOnly=0,pUnlockRef,%pVal...)
+	// SQL Foreign Key validation entry point for Key %1.  Called by FKeys that reference this Key to see if the row is defined
+	new id set id=%pVal(1)
+	if pLockOnly>=0 { if '..%SQLGetLock(id,1,.pUnlockRef) { set sqlcode=-114,%msg=$$FormatMessage^%occMessages(,"%SQL.Filer","SQLFiler39",,"User_MessageVolume"_"."_"Listing"_":"_"%1") QUIT 0 } }
+	if pLockOnly<1 {
+		new qv set qv='..%SQLCheckUnique(0,,%pVal(1)) QUIT:pLockOnly=-1 qv
+		do:'$g(pUnlockRef) ..%SQLReleaseLock(id,1) quit qv
+	}
+	else { do:'$g(pUnlockRef) ..%SQLReleaseLock(id,1) QUIT 1 }
+	Return
+%SQLGetLock(pRowId,pShared=0,pUnlockRef)
+	if $tlevel,$i(%0CacheLock("User.MessageVolume.Listing"))>$zu(156,50,1) { new s set s=$e("S",pShared) lock +^DeepSee.Listing("MESSAGEVOLUME")#s:$zu(115,4) lock:$t -^DeepSee.Listing("MESSAGEVOLUME")#s QUIT $s($t:2,1:0) } 
+	QUIT ..%SQLAcquireLock(pRowId,pShared,.pUnlockRef)
+%SQLGetOld(%rowid,%d,%e,sqlcode)
+	new s set %d(1)=%rowid,%d(2)=$p(%d(1),"||",1),%d(3)=$p(%d(1),"||",2),s="" if '$d(^DeepSee.Listing("MESSAGEVOLUME",%d(2),%d(3)),s) { set sqlcode=100 quit  }
+	 S %e(4)=$lg(s)
+	QUIT
+%SQLGetOldAll()
+	new s set %d(1)=%rowid,%d(2)=$p(%d(1),"||",1),%d(3)=$p(%d(1),"||",2),s="" if '$d(^DeepSee.Listing("MESSAGEVOLUME",%d(2),%d(3)),s) { set sqlcode=100 quit  }
+	 S %e(4)=$lg(s)
+	QUIT
+%SQLInsert(%d,%check,%inssel,%vco,%tstart=1,%mv=0)
+	// SQL INSERT method for table User_MessageVolume.Listing
+	new bva,%ele,%itm,%key,%f,%l,%n,%nc,%oper,%pos,%s,sqlcode,sn,subs,icol set %oper="INSERT",sqlcode=0,%l=$c(0,0,0)
+	if $a(%check,7) { new %diu merge %diu=%d }
+	if '$a(%check),'..%SQLValidateFields(.sqlcode) { set SQLCODE=sqlcode RETURN "" }
+	if %tstart { TSTART:($zu(115,1)=1)||('$TLEVEL&&($zu(115,1)=2))  } set $zt="ERRORInsert"
+	if '$a(%check) { if $g(%d(2))="" { do ..%SQLMissing("_DSqueryKey") set SQLCODE=sqlcode do ..%SQLEExit() RETURN "" } if $g(%d(3))="" { do ..%SQLMissing("_DSsourceId") set SQLCODE=sqlcode do ..%SQLEExit() RETURN "" } }
+	set %d(1)=%d(2)_"||"_%d(3)
+	if '$a(%check) {
+		do {
+			if $g(%vco)'="" { d @%vco quit:sqlcode<0  }
+				// Constraint ID
+				if '$a(%check,2) { lock +^DeepSee.Listing("MESSAGEVOLUME",%d(2),%d(3)):$zu(115,4) if $t { set $e(%l,2)=$c(1) } else { do ..%SQLUnlockError("ID") quit  } }
+				if '$a(%check,7) { if $d(^DeepSee.Listing("MESSAGEVOLUME",%d(2),%d(3))) { set sqlcode=-119,%msg=$$FormatMessage^%occMessages(,"%SQL.Filer","SQLFiler10",,"User_MessageVolume"_"."_"Listing","ID","_DSqueryKey"_"="_$$quoter^%apiSQL($g(%d(2)))_","_"_DSsourceId"_"="_$$quoter^%apiSQL($g(%d(3)))) quit  }} // INSERT
+				else { new tID set tID=..IDSQLFindRowIDByConstraint($lb(%d(2),%d(3)),1) if tID'="" { kill %d merge %d=%diu kill %diu do ..%SQLUpdate(tID,%check,.%d),..%SQLUnlock2() set $e(%check,7)=$c(2) quit  }} // INSERT OR UPDATE
+		} while 0
+		QUIT:$a(%check,7)=2 $s('SQLCODE:tID,1:"")				// INSERT became UPDATE
+		if sqlcode<0 { set SQLCODE=sqlcode do ..%SQLEExit() RETURN "" }		// A constraint failed
+	}
+	set:'($d(%d(4))#2) %d(4)=""
+	if '$a(%check,2) { new %ls if $tlevel,$i(%0CacheLock("User.MessageVolume.Listing"))>$zu(156,50,1) { lock +^DeepSee.Listing("MESSAGEVOLUME"):$zu(115,4) lock:$t -^DeepSee.Listing("MESSAGEVOLUME") set %ls=$s($t:2,1:0) } else { lock +^DeepSee.Listing("MESSAGEVOLUME",%d(2),%d(3)):$zu(115,4) set %ls=$t } set:%ls=2 $e(%check,2)=$c(1) set:%ls=1 $e(%l)=$c(1) if '%ls set SQLCODE=-110,%msg=$$FormatMessage^%occMessages(,"%SQL.Filer","SQLFiler40",,%oper,"User_MessageVolume"_"."_"Listing",$g(%d(1))) do ..%SQLEExit() RETURN ""  }
+	set ^DeepSee.Listing("MESSAGEVOLUME",%d(2),%d(3))=$lb(%d(4))
+	lock:$a(%l,2) -^DeepSee.Listing("MESSAGEVOLUME",%d(2),%d(3))#"D" 
+	lock:$a(%l) -^DeepSee.Listing("MESSAGEVOLUME",%d(2),%d(3))
+	TCOMMIT:%tstart&&($zu(115,1)=1)
+	set SQLCODE=0
+	QUIT %d(1) 			// %SQLInsert
+ERRORInsert	set $zt="",SQLCODE=-415,%msg=$s($g(%msg)'="":%msg_" -- ",1:"")_$$FormatMessage^%occMessages(,"%SQL.Filer","SQLFiler51",,%oper,"User_MessageVolume"_"."_"Listing",$ze)
+	if $ze["<FRAMESTACK>" { set %msg=$$FormatMessage^%occMessages(,"%SQL.Filer","SQLFiler52",,$ze,%oper,"User_MessageVolume"_"."_"Listing") do ##Class(%SYS.System).WriteToConsoleLog(%msg) if ($zu(67,10,$j)=1)||($zu(67,10,$j)=3) { write !,%msg h 3 } HALT  }
+	do ..%SQLEExit()
+	RETURN ""
+%SQLInvalid(pIcol,pVal) public {
+	set:$l($g(pVal))>40 pVal=$e(pVal,1,40)_"..." do:'$d(%n) ..%SQLnBuild() set %msg=$s($g(%msg)'="":%msg_$c(13,10),1:"")_$$FormatMessage^%occMessages(,"%SQL.Filer","SQLFiler37",,"User_MessageVolume"_"."_"Listing"_"."_$lg(%n,pIcol),$s($g(pVal)'="":$s(pVal="":"<NULL>",pVal=$c(0):"<EMPTY STRING>",1:"'"_pVal_"'"),1:"")),sqlcode=$s(%oper="INSERT":-104,1:-105)
+	QUIT sqlcode }
+%SQLMissing(fname)
+	set sqlcode=-108,%msg=$$FormatMessage^%occMessages(,"%SQL.Filer","SQLFiler47",,fname,"User_MessageVolume"_"."_"Listing") quit
+%SQLPurgeIndices(pIndices="",pLockExtent=0,pIgnoreIndexList="")
+	QUIT ..%PurgeIndices(pIndices,pLockExtent,pIgnoreIndexList)
+%SQLQuickLoad(%rowid,%nolock=0,pkey=0,qq=0)
+	// Get fields from row where SQLRowID=%rowid
+	new d,i,il,subs set:%nolock=2 %nolock=1
+	if %nolock=0 { if '..%SQLAcquireLock(%rowid) { set %qrc=114,%msg=$$FormatMessage^%occMessages(,"%SQL.Filer","SQLFiler45",,"User_MessageVolume"_"."_"Listing",%rowid),%ROWCOUNT=0 QUIT  } set:$zu(115,2) il=$zu(115,2,0) }
+	set d(1)=%rowid,d(2)=$p(d(1),"||",1),d(3)=$p(d(1),"||",2)
+	new s,ul set ul=0,d(1)=%rowid if $zu(115,2)=1 { lock +^DeepSee.Listing("MESSAGEVOLUME",d(2),d(3))#"S":$zu(115,4) if $t { set ul=1 } else { set %qrc=114,%msg=$$FormatMessage^%occMessages(,"%SQL.Filer","SQLFiler46",,"User_MessageVolume"_"."_"Listing",%rowid),%ROWCOUNT=0 quit  } }
+	if '$d(^DeepSee.Listing("MESSAGEVOLUME",d(2),d(3)),s) { set SQLCODE=100,%qrc=100 if %nolock=0 { do:$g(il) $zu(115,2,il) }} else { set SQLCODE=0
+	if qq { set d(4)=$lg(s) if d(4)'="" { new sn set sn=$p(d(4),$e(d(4)),$l(d(4),$e(d(4)))-1) if "User.MessageVolume.Listing"'=sn { if %nolock=0 { do ..%SQLReleaseLock(%rowid,0,1) do:$g(il) $zu(115,2,il) } kill d set:sn'["." sn="User."_sn do $classmethod(sn,"%SQLQuickLoad",%rowid,%nolock,0,1) QUIT  }}}
+	set d(4)=$lg(s)  }
+	do ..%SQLQuickLogicalToOdbc(.d)
+	if SQLCODE set %ROWCOUNT=0 set:SQLCODE<0 SQLCODE=-SQLCODE lock:ul -^DeepSee.Listing("MESSAGEVOLUME",d(2),d(3))#"SI" set %qrc=SQLCODE QUIT
+	set:qq d=$zobjexport("User.MessageVolume.Listing",18),d=$zobjexport(4,18) set i=-1 for  { set i=$o(d(i)) quit:i=""  set d=$zobjexport(d(i),18) } set %qrc=0,%ROWCOUNT=1 lock:ul -^DeepSee.Listing("MESSAGEVOLUME",d(2),d(3))#"SI" if %nolock=0 { do ..%SQLReleaseLock(%rowid,0,0) do:$g(il) $zu(115,2,il) } QUIT
+	Return
+%SQLReleaseLock(%rowid,s=0,i=0,e="")
+	new %d
+	set %d(1)=%rowid,%d(2)=$p(%d(1),"||",1),%d(3)=$p(%d(1),"||",2) set s=$e("S",s)_$e("D",i)
+	lock -^DeepSee.Listing("MESSAGEVOLUME",%d(2),%d(3))#s
+	set:i&&($g(%0CacheLock("User.MessageVolume.Listing"))) %0CacheLock("User.MessageVolume.Listing")=%0CacheLock("User.MessageVolume.Listing")-1
+	QUIT
+%SQLReleaseTableLock(s=0,i=0)
+	set s=$e("S",s)_$e("D",i) lock -^DeepSee.Listing("MESSAGEVOLUME")#s QUIT 1
+	Return
+%SQLUnlock()
+	lock:$a(%l) -^DeepSee.Listing("MESSAGEVOLUME",%d(2),%d(3))
+	QUIT
+%SQLUnlock2()
+	lock:$a(%l,2) -^DeepSee.Listing("MESSAGEVOLUME",%d(2),%d(3))#"D" QUIT
+%SQLUnlockError(cname)
+	set sqlcode=-110 if %oper="DELETE" { set %msg=$$FormatMessage^%occMessages(,"%SQL.Filer","SQLFiler48",,"User_MessageVolume"_"."_"Listing",cname) } else { set %msg=$$FormatMessage^%occMessages(,"%SQL.Filer","SQLFiler49",,"User_MessageVolume"_"."_"Listing",cname) } quit
+	Return
+%SQLUpdate(%rowid,%check,%d,%vco,%tstart=1,%mv=0,%polymorphic=0,%soid)
+	// SQL UPDATE method for table User_MessageVolume.Listing
+	new %e,bva,%ele,%itm,%key,%f,%l,%n,%nc,%oper,%pos,%s,icol,omcall,s,sn,sqlcode,subs,t set %oper="UPDATE",sqlcode=0,%ROWID=%rowid,$e(%e,1)=$c(0),%l=$c(0,0,0)
+	if '$d(%0CacheSQLRA) { new %0CacheSQLRA set omcall=1 }
+	if '$a(%check,7) {
+		if '$a(%check),'..%SQLValidateFields(.sqlcode) { set SQLCODE=sqlcode QUIT  }
+	}
+	if ($d(%d(1))&&($g(%d(1))'=%rowid))||($d(%d(2))&&($g(%d(2))'=$p(%rowid,"||",1)))||($d(%d(3))&&($g(%d(3))'=$p(%rowid,"||",2))) { set SQLCODE=-107,%msg=$$FormatMessage^%occMessages(,"%SQL.Filer","SQLFiler17",,"'_DSListingId', '_DSqueryKey', or '_DSsourceId'","User_MessageVolume"_"."_"Listing") QUIT  }
+	for icol=2:1:4 { set $e(%e,icol)=$c($d(%d(icol))) }
+	set %d(1)=%rowid,%e(1)=%rowid,%d(2)=$p(%d(1),"||",1),%d(3)=$p(%d(1),"||",2)
+	if '$a(%check,2) { new %ls if $tlevel,$i(%0CacheLock("User.MessageVolume.Listing"))>$zu(156,50,1) { lock +^DeepSee.Listing("MESSAGEVOLUME"):$zu(115,4) lock:$t -^DeepSee.Listing("MESSAGEVOLUME") set %ls=$s($t:2,1:0) } else { lock +^DeepSee.Listing("MESSAGEVOLUME",%d(2),%d(3)):$zu(115,4) set %ls=$t } set:%ls=2 $e(%check,2)=$c(1) set:%ls=1 $e(%l)=$c(1) if '%ls { set SQLCODE=-110,%msg=$$FormatMessage^%occMessages(,"%SQL.Filer","SQLFiler40",,%oper,"User_MessageVolume"_"."_"Listing",$g(%d(1))) RETURN  }} if %tstart { TSTART:($zu(115,1)=1)||('$TLEVEL&&($zu(115,1)=2))  }
+	set $zt="ERRORUpdate"
+	if $g(%vco)="" { do ..%SQLGetOld(%rowid,.%d,.%e,.sqlcode) i sqlcode { s SQLCODE=-109,%msg=$$FormatMessage^%occMessages(,"%SQL.Filer","SQLFiler59",,"User_MessageVolume"_"."_"Listing",%rowid) do ..%SQLEExit() QUIT  } set:'$d(%d(4)) %d(4)=%e(4) set:%d(4)=%e(4) $e(%e,4)=$c(0) } else { do ..%SQLGetOldAll() if sqlcode { set SQLCODE=-109,%msg=$$FormatMessage^%occMessages(,"%SQL.Filer","SQLFiler59",,"User_MessageVolume"_"."_"Listing",%rowid) do ..%SQLEExit() QUIT  } set:'$d(%d(4)) %d(4)=%e(4) set:%d(4)=%e(4) $e(%e,4)=$c(0)}
+	if %e(4)'="" set sn=$p(%e(4),$e(%e(4)),$l(%e(4),$e(%e(4)))-1) if "User.MessageVolume.Listing"'=sn new %f do ..%SQLCopyIcolIntoName() do $classmethod(sn,"%SQLUpdate",%rowid,%check,.%d,$g(%vco),%tstart,%mv,1) QUIT
+	if '$a(%check) {
+		do {
+			if $g(%vco)'="" { d @%vco quit:sqlcode<0  }
+		} while 0
+		if sqlcode { set SQLCODE=sqlcode do ..%SQLEExit() QUIT  }
+	}
+	set:$a(%e,4) ^DeepSee.Listing("MESSAGEVOLUME",%d(2),%d(3))=$lb(%d(4))
+	do ..%SQLUnlock2()
+	do ..%SQLUnlock() TCOMMIT:%tstart&&($zu(115,1)=1)
+	set SQLCODE=0 kill:$g(omcall) %0CacheSQLRA
+	QUIT
+ERRORUpdate	set $zt="",SQLCODE=-415,%msg=$s($g(%msg)'="":%msg_" -- ",1:"")_$$FormatMessage^%occMessages(,"%SQL.Filer","SQLFiler51",,%oper,"User_MessageVolume"_"."_"Listing",$ze) if $ze["<FRAMESTACK>" { set %msg=$$FormatMessage^%occMessages(,"%SQL.Filer","SQLFiler52",,$ze,%oper,"User_MessageVolume"_"."_"Listing") do ##Class(%SYS.System).WriteToConsoleLog(%msg) if ($zu(67,10,$j)=1)||($zu(67,10,$j)=3) { write !,%msg h 3 } HALT  } do ..%SQLEExit() QUIT  
+	Return
+%SQLValidateFields(sqlcode)
+	new %f for %f=2,3 { if $g(%d(%f))'="",'(($l(%d(%f))'>255)) set sqlcode=..%SQLInvalid(%f+1,$g(%d(%f))) quit  } 
+	QUIT 'sqlcode
+%SQLnBuild() public {
+	set %n=$lb(,"_DSListingId","_DSqueryKey","_DSsourceId","x__classname")
+	QUIT }
+%SaveData(id) public {
+	try {
+		set id=$listget(i%"%%OID") if id'="" { set insert=0,idassigned=1 } else { set insert=1,idassigned=0 }
+		set lock=0,lockok=0,tSharedLock=0
+		if 'idassigned { set id=i%queryKey_"||"_i%sourceId do ..%IdSet(id) set:$g(%objtxSTATUS)=2 %objtxOIDASSIGNED(+$this)="" }
+		try {
+			set tInnerException = ""
+			;
+			if 'insert {
+				if (i%%Concurrency<4)&&(i%%Concurrency) { If $tlevel,$i(%0CacheLock($classname()))>$zu(156,50,1) { lock +(^DeepSee.Listing("MESSAGEVOLUME")):$zu(115,4) Set lockok=$s($test:2,1:0) Lock:lockok -(^DeepSee.Listing("MESSAGEVOLUME")) } else { lock +(^DeepSee.Listing("MESSAGEVOLUME",i%queryKey,i%sourceId)):$zu(115,4) Set lockok=$Select($test:1,1:0),lock=lockok } If 'lockok { Throw ##class(%Exception.StatusException).ThrowIfInterrupt($$Error^%apiOBJ(5803,$classname())) } }
+				if ('$Data(^DeepSee.Listing("MESSAGEVOLUME",i%queryKey,i%sourceId))) {
+					set insert=1
+					if lock { lock -(^DeepSee.Listing("MESSAGEVOLUME",i%queryKey,i%sourceId)) set (lock,lockok) = 0 }
+				}
+			}
+			if insert {
+				if ('lockok&&i%%Concurrency&&$tlevel)||(i%%Concurrency=4) { If i%%Concurrency < 4,$i(%0CacheLock($classname()))>$zu(156,50,1) { lock +(^DeepSee.Listing("MESSAGEVOLUME")):$zu(115,4) Set lockok=$Select($test:2,1:0) Lock:lockok -(^DeepSee.Listing("MESSAGEVOLUME")) } Else { lock +(^DeepSee.Listing("MESSAGEVOLUME",i%queryKey,i%sourceId)):$zu(115,4) set lockok=$Select($test:1,1:0) set:i%%Concurrency'=4 lock=lockok } if 'lockok { Throw ##class(%Exception.StatusException).ThrowIfInterrupt($$Error^%apiOBJ(5803,$classname())) } }
+				if i%%Concurrency=3 { lock +(^DeepSee.Listing("MESSAGEVOLUME",i%queryKey,i%sourceId)#"S") set tSharedLock=1 }
+				if (idassigned) && ((i%queryKey'=$p(id,"||",1))||(i%sourceId'=$p(id,"||",2))) { Throw ##class(%Exception.StatusException).ThrowIfInterrupt($$Error^%apiOBJ(5814,$classname(),id)) }
+				if $data(^DeepSee.Listing("MESSAGEVOLUME",i%queryKey,i%sourceId)) Throw ##class(%Exception.StatusException).ThrowIfInterrupt($$Error^%apiOBJ(5805,$classname(),$Name(^DeepSee.Listing("MESSAGEVOLUME",i%queryKey,i%sourceId)),"""^DeepSee.Listing(""""MESSAGEVOLUME"""")"""))
+				set ^DeepSee.Listing("MESSAGEVOLUME",i%queryKey,i%sourceId)=$lb("")
+			}
+			else {
+				if (i%queryKey'=$p(id,"||",1))||(i%sourceId'=$p(id,"||",2)) { Throw ##class(%Exception.StatusException).ThrowIfInterrupt($$Error^%apiOBJ(5814,$classname(),id)) }
+				set ^DeepSee.Listing("MESSAGEVOLUME",i%queryKey,i%sourceId)=$lb("")
+			}
+			set tStatus = 1
+		}
+		catch tInnerException {
+			if ('idassigned) { Set $zobjoid("",$listget(i%"%%OID"))="",i%"%%OID"="" kill:$g(%objtxSTATUS)=2 %objtxOIDASSIGNED(+$this) }
+			if (tSharedLock) {  lock -(^DeepSee.Listing("MESSAGEVOLUME",i%queryKey,i%sourceId)#"S") } elseif (lockok=1)&&(insert)&&(i%%Concurrency=4) {  lock -(^DeepSee.Listing("MESSAGEVOLUME",i%queryKey,i%sourceId)) }
+		}
+		if lock lock -(^DeepSee.Listing("MESSAGEVOLUME",i%queryKey,i%sourceId))
+		if $Isobject(tInnerException) { throw tInnerException }
+	}
+	catch tException {
+		set tStatus = tException.AsStatus()
+	}
+	quit tStatus }
+%SaveDirect(id="",idList="",data,concurrency=-1) public {
+	try {
+		set zzc5v1=$lg(idList,2)
+		set zzc5v2=$lg(idList,1)
+		if concurrency=-1 { set concurrency=$zu(115,10) }
+		if id'="" { set insert=0,idassigned=1 } else { set insert=1,idassigned=0 }
+		set lock=0,tSharedLock=0
+		if 'idassigned { set id=zzc5v2_"||"_zzc5v1 }
+		try {
+			set tInnerException = ""
+			;
+			if 'insert {
+				if concurrency { if $tlevel,$i(%0CacheLock($classname()))>$zu(156,50,1) { lock +(^DeepSee.Listing("MESSAGEVOLUME")):$zu(115,4) set lock=$Select($test:2,1:0) lock:lock -(^DeepSee.Listing("MESSAGEVOLUME")) } else { lock +(^DeepSee.Listing("MESSAGEVOLUME",zzc5v2,zzc5v1)):$zu(115,4) set lock=$Select($test:1,1:0) } if 'lock { Throw ##class(%Exception.StatusException).ThrowIfInterrupt($$Error^%apiOBJ(5803,$classname())) } }
+				if ('$Data(^DeepSee.Listing("MESSAGEVOLUME",zzc5v2,zzc5v1))) {
+					set insert=1
+					if lock { lock -(^DeepSee.Listing("MESSAGEVOLUME",zzc5v2,zzc5v1)) set (lock,lockok) = 0 }
+				}
+			}
+			if insert {
+				if concurrency { if $tlevel,$i(%0CacheLock($classname()))>$zu(156,50,1) { lock +(^DeepSee.Listing("MESSAGEVOLUME")):$zu(115,4) set lock=$Select($test:2,1:0) lock:lock -(^DeepSee.Listing("MESSAGEVOLUME")) } else { lock +(^DeepSee.Listing("MESSAGEVOLUME",zzc5v2,zzc5v1)):$zu(115,4) set lock=$Select($test:1,1:0) } if 'lock { Throw ##class(%Exception.StatusException).ThrowIfInterrupt($$Error^%apiOBJ(5803,$classname())) } }
+				if (idassigned) && ((zzc5v2'=$p(id,"||",1))||(zzc5v1'=$p(id,"||",2))) { Throw ##class(%Exception.StatusException).ThrowIfInterrupt($$Error^%apiOBJ(5814,$classname(),id)) }
+				if $data(^DeepSee.Listing("MESSAGEVOLUME",zzc5v2,zzc5v1)) Throw ##class(%Exception.StatusException).ThrowIfInterrupt($$Error^%apiOBJ(5805,$classname(),$Name(^DeepSee.Listing("MESSAGEVOLUME",zzc5v2,zzc5v1)),"""^DeepSee.Listing(""""MESSAGEVOLUME"""")"""))
+				set ^DeepSee.Listing("MESSAGEVOLUME",zzc5v2,zzc5v1)=data
+			}
+			else {
+				if (zzc5v2'=$p(id,"||",1))||(zzc5v1'=$p(id,"||",2)) { Throw ##class(%Exception.StatusException).ThrowIfInterrupt($$Error^%apiOBJ(5814,$classname(),id)) }
+				set ^DeepSee.Listing("MESSAGEVOLUME",zzc5v2,zzc5v1)=data
+			}
+			set tStatus = 1
+		}
+		catch tInnerException {
+		}
+		if lock lock -(^DeepSee.Listing("MESSAGEVOLUME",zzc5v2,zzc5v1))
+		if $Isobject(tInnerException) { throw tInnerException }
+	}
+	catch tException {
+		set tStatus = tException.AsStatus()
+	}
+	quit tStatus }
+%SaveIndices(pStartId="",pEndId="",lockExtent=0) public {
+	Quit 1 }
+%SortBegin(idxlist="",excludeunique=0)
+	Quit 1
+%SortEnd(idxlist="",commit=1,excludeunique=0) public {
+	Quit 1 }
+%UnlockExtent(shared=0,immediate=0) public {
+	If 'shared {
+		If 'immediate {
+			Lock -^DeepSee.Listing("MESSAGEVOLUME")
+			 Quit 1
+		}
+		Lock -^DeepSee.Listing("MESSAGEVOLUME")#"I"
+		Quit 1
+	}
+	If 'immediate {
+		Lock -^DeepSee.Listing("MESSAGEVOLUME")#"S"
+		Quit 1
+	}
+	Lock -^DeepSee.Listing("MESSAGEVOLUME")#"SI"
+	Quit 1 }
+%UnlockId(id,shared=0,immediate=0) public {
+	Set o1=$piece(id,"||",1),o2=$piece(id,"||",2)
+	If (o1="")||(o2="") { Quit $$Error^%apiOBJ(5832,$classname(),id) }
+	If 'shared {
+		If 'immediate {
+			Lock -(^DeepSee.Listing("MESSAGEVOLUME",o1,o2))
+			Quit 1
+		}
+		Lock -(^DeepSee.Listing("MESSAGEVOLUME",o1,o2)#"I")
+		Quit 1
+	}
+	If 'immediate {
+		Lock -(^DeepSee.Listing("MESSAGEVOLUME",o1,o2)#"S")
+		Quit 1
+	}
+	Lock -(^DeepSee.Listing("MESSAGEVOLUME",o1,o2)#"SI")
+	Quit 1 }
+%ValidateIndices(idxList="",autoCorrect=0,lockOption=1,multiProcess=1,mapList,verbose=1,errors)
+	w !,"There are no indices to validate for class 'User.MessageVolume.Listing'"
+	QUIT 1
+zqueryKeyGetStored(id) public {
+	Quit $Select(id'="":$p(id,"||",1),1:"") }
+zsourceIdGetStored(id) public {
+	Quit $Select(id'="":$p(id,"||",2),1:"") }
+zExtentClose(%qHandle) [ SQLCODE ] public {
+	New SQLCODE
+	Do %qHandle.%Destruct() Kill %qHandle
+	If SQLCODE { Set:$isobject($g(%sqlcontext)) %sqlcontext.%SQLCODE=SQLCODE,%sqlcontext.%Message=$g(%msg) Set sc=$$Error^%apiOBJ(5540,SQLCODE,$get(%msg)) } Else { Set sc=1 }
+	Quit sc }
+zExtentExecute(%qHandle) [ SQLCODE ] public { New %ROWCOUNT,%ROWID,%msg,SQLCODE 
+	Set sc=1
+	 ;---&sql(DECLARE QExtent CURSOR FOR
+ 	 ;---		 SELECT _DSListingId FROM User_MessageVolume.Listing)
+ 	 ;--- ** SQL PUBLIC Variables: SQLCODE
+	 
+	 ;---&sql(OPEN QExtent)
+	try { if $g(%qHandle)'="" { s SQLCODE=-101 } else { s %qHandle=$classmethod("%sqlcq."_$tr($namespace,"%_-$@:/\[]^ ","pudsssssssss")_".xEXk7vys5aswVarJgtbXTRpuJ2p4","%New") if '$isobject(%qHandle) s %qHandle=$$%0dsqlF() } } catch { if $ze["<CLASS DOES NOT EXIST>"&&($ze["%sqlcq."_$tr($namespace,"%_-$@:/\[]^ ","pudsssssssss")_".xEXk7vys5aswVarJgtbXTRpuJ2p4")||($ze["<ZSQLU>") { s %qHandle=$$%0dsqlF() } else { throw } }
+	If SQLCODE { Set:$isobject($g(%sqlcontext)) %sqlcontext.%SQLCODE=SQLCODE,%sqlcontext.%Message=$g(%msg) Set sc=$$Error^%apiOBJ(5821,"SQLCODE = "_SQLCODE) } Else { Set sc=1 }
+	Quit sc }
+zExtentFetch(%qHandle,Row,AtEnd=0) [ SQLCODE ] public { New %ROWCOUNT,%ROWID,%msg,SQLCODE 
+	Set Row="",AtEnd=0
+	 ;---&sql(FETCH QExtent INTO :c1)
+ 	 ;--- ** SQL PUBLIC Variables: %ROWCOUNT, %ROWID, %msg, SQLCODE
+	if $isobject($g(%qHandle))'=1 { s SQLCODE=-102 } else { do %qHandle.FET() if SQLCODE=0 { s c1=%qHandle.sqlcol1 } }
+	If 'SQLCODE { Set Row=$lb(c1) Set sc=1 }
+	ElseIf SQLCODE=100 { Set AtEnd=1,sc=1 Set:$isobject($g(%sqlcontext)) %sqlcontext.%SQLCODE=SQLCODE,%sqlcontext.%ROWCOUNT=$g(%ROWCOUNT) }
+	Else { Set:$isobject($g(%sqlcontext)) %sqlcontext.%SQLCODE=SQLCODE,%sqlcontext.Message=$g(%msg) Set AtEnd=1,sc=$$Error^%apiOBJ(5540,SQLCODE,$get(%msg)) }
+	QUIT sc }
+zExtentFetchRows(%qHandle,FetchCount=0,RowSet,ReturnCount,AtEnd) [ SQLCODE ] public { New %ROWCOUNT,%ROWID,%msg,SQLCODE 
+	Set RowSet="",ReturnCount=0,AtEnd=0
+	For {
+		 ;---&sql(FETCH QExtent INTO :c1)
+ 		 ;--- ** SQL PUBLIC Variables: %ROWCOUNT, %ROWID, %msg, SQLCODE
+		if $isobject($g(%qHandle))'=1 { s SQLCODE=-102 } else { do %qHandle.FET() if SQLCODE=0 { s c1=%qHandle.sqlcol1 } }
+		If 'SQLCODE { Set RowSet=RowSet_$lb(c1),ReturnCount=ReturnCount+1 Quit:(ReturnCount=FetchCount)||(($l(RowSet)+($l(RowSet)\ReturnCount))>24000) } Else { Set AtEnd=1 Quit }
+	}
+	If 'SQLCODE { Set sc=1 } ElseIf SQLCODE=100 { Set sc=1 Set:$isobject($g(%sqlcontext)) %sqlcontext.%SQLCODE=SQLCODE,%sqlcontext.%ROWCOUNT=$g(%ROWCOUNT) } Else { Set:$isobject($g(%sqlcontext)) %sqlcontext.%SQLCODE=SQLCODE,%sqlcontext.Message=$g(%msg) Set sc=$$Error^%apiOBJ(5540,SQLCODE,$get(%msg)) }
+	Quit sc }
+zExtentSendODBC(%qHandle,array,qacn,%qrc,piece,ColumnCount) [ SQLCODE ] public { New %ROWCOUNT,%ROWID,%msg,SQLCODE 
+	set %qrc=0,piece=0
+	for {
+		set rc=..ExtentFetch(.%qHandle,.row,.atend)
+		if ('rc) { set %qrc=-400 set:$isobject($get(%sqlcontext)) %sqlcontext.SQLCode=-400,%sqlcontext.Message=$g(%msg) do ProcessError^%ourProcedure(rc,$get(%sqlcontext),.%qrc,.%msg),Logerr^%SYS.SQLSRV(%qrc,"","SP",.%msg) RETURN  }
+		if row="" { set %qrc=100 set:$isobject($get(%sqlcontext)) %sqlcontext.SQLCode=100 RETURN  }
+		if $g(%protocol)>50 { RETURN:$zobjexport(row,60) }
+		else {
+			if %protocol>46 { for piece=1:1:ColumnCount { goto:$zobjexport($lg(row,piece),50) SPDone } }
+			else { for piece=1:1:ColumnCount { goto:$zobjexport($lg(row,piece),7) SPDone } }
+		}
+	}
+	QUIT
+SPDone	set:%protocol>46 piece=piece+1
+	kill array(qacn)
+	for i=piece:1:ColumnCount { set array(qacn,i)=$lg(row,i) }
+	QUIT }
+ q
+%0dsqlF()	n %xxsql
+	s %xxsql("S",1)="DECLARE QExtent CURSOR FOR SELECT _DSListingId "
+	s %xxsql("S",2)="INTO  :i%sqlcol1"
+	s %xxsql("S",3)="FROM User_MessageVolume . Listing"
+	s %xxsql("M","%occSqlfuncinc")=$c(1),%xxsql("I","%DeepSee")="",%xxsql("I","%occSqlfunc")="",%xxsql("I","%systemInclude")=""
+	s %xxsql("NS")="DEMONSTRATION"
+	return $$BuildQuery^%SYS.SQLSRV(.%xxsql,$lb("Runtime","","","User.MessageVolume",0,"",),",1,QExtent,","User.MessageVolume.Listing.CLS",1)
+zExtentFunc() public {
+	try {
+		set tSchemaPath = ##class(%SQL.Statement).%ClassPath($classname())
+			set tStatement = ##class(%SQL.Statement).%New(,tSchemaPath)
+			do tStatement.prepare(" SELECT _DSListingId FROM User_MessageVolume . Listing")
+		set tResult = tStatement.%Execute()
+	}
+	catch tException { if '$Isobject($Get(tResult)) { set tResult = ##class(%SQL.StatementResult).%New() } set tResult.%SQLCODE=tException.AsSQLCODE(),tResult.%Message=tException.AsSQLMessage() }
+	Quit tResult }
+zExtentGetInfo(colinfo,parminfo,idinfo,%qHandle,extoption=0,extinfo) public {
+ s parminfo=""
+	s:'($d(^oddCOM($classname(),"q","Extent",21),clientinfo)#2)&&'$s($d(^(2),clientinfo)#2&&(clientinfo'=$classname()):$d(^oddCOM(clientinfo,"q","Extent",21),clientinfo)#2||($d(^oddDEF(clientinfo,"q","Extent",21),clientinfo)#2),1:$d(^oddDEF($classname(),"q","Extent",21),clientinfo)#2) clientinfo=""
+	Set:extoption extinfo=$s($d(^oddCOM($classname(),"q","Extent",38))#2:^(38),$d(^oddCOM($g(^(2),$classname()),"q","Extent",38))#2:^(38),1:$s($d(^oddDEF($g(^oddCOM($classname(),"q","Extent",2),$classname()),"q","Extent",38))#2:^(38),1:""))
+	If clientinfo'="" Set colinfo=$listget(clientinfo,1),parminfo=$listget(clientinfo,2),idinfo=$listget(clientinfo,3) Quit 1
+	Set colinfo="",parminfo="",idinfo=$listbuild(0)
+	Set sc=$$externaltype^%apiOLE("%Library.RawString",.exttypes,"0")
+	Quit:('sc) sc
+	s:'($d(^oddCOM($classname(),"q","Extent",23),names)#2)&&'$s($d(^(2),names)#2&&(names'=$classname()):$d(^oddCOM(names,"q","Extent",23),names)#2||($d(^oddDEF(names,"q","Extent",23),names)#2),1:$d(^oddDEF($classname(),"q","Extent",23),names)#2) names=""
+	s:'($d(^oddCOM($classname(),"q","Extent",22),captions)#2)&&'$s($d(^(2),captions)#2&&(captions'=$classname()):$d(^oddCOM(captions,"q","Extent",22),captions)#2||($d(^oddDEF(captions,"q","Extent",22),captions)#2),1:$d(^oddDEF($classname(),"q","Extent",22),captions)#2) captions=""
+	For i=1:1:1 Set colinfo=colinfo_$listbuild($listbuild($listget(names,i),$piece(exttypes,",",i),$listget(captions,i)))
+	Set idinfo=$listbuild(1,$classname())
+	s ^oddCOM($classname(),"q","Extent",21)=$listbuild(colinfo,parminfo,idinfo)
+	Quit 1 }
+zExtentGetODBCInfo(colinfo,parminfo,qHandle) public {
+	set version = $Select($Get(%protocol,41)>40:4,1:3)
+	Set metadata=$lb(1,1,"ID",12,4096,0,2,"ID","Listing","User_MessageVolume","",$c(0,0,0,0,0,0,0,0,0,0,0,1),0)
+	Set colcount=$li(metadata,2),cmdlen=colcount*10,parmcount=$li(metadata,3+cmdlen),pmdlen=parmcount*6,parminfo=$li(metadata,cmdlen+3,cmdlen+pmdlen+3)
+	If version=4 {
+		Set colinfo=$li(metadata,2,2+cmdlen)
+	} Else {
+		Set colinfo=$li(metadata,2,2)
+		For i=0:1:colcount-1 Set colinfo=colinfo_$list(metadata,3+(i*10),11+(i*10))
+	}
+	Quit 1 }
+zIDCheck(K1,K2,lockonly=0,concurrency=-1) public {
+	s id=K1_"||"_K2,exists=..%ExistsId(id) q:'exists $s('lockonly:$$Error^%apiOBJ(5797,$classname(),"ID",id),1:1) s:concurrency=-1 concurrency=$select(..#DEFAULTCONCURRENCY="$zu(115,10)":$zu(115,10),1:$xecute("q "_..#DEFAULTCONCURRENCY)) if concurrency { s status=..%LockId(id,1) q:('status) status } if 'lockonly { s exists=..%ExistsId(id) d:concurrency ..%UnlockId(id,1,0) quit $s('exists:$$Error^%apiOBJ(5797,$classname(),"ID",id),1:1) } else { d:concurrency ..%UnlockId(id,1,0) q 1 }
+}
+zIDDelete(K1,K2,concurrency=-1) public {
+	Quit ..%DeleteId(K1_"||"_K2,concurrency) }
+zIDExists(K1,K2,id="") public {
+	s id=K1_"||"_K2 q ..%ExistsId(K1_"||"_K2) }
+zIDOpen(K1,K2,concurrency=-1,sc) public { s:'($d(sc)#2) sc=1
+	Quit ..%OpenId(K1_"||"_K2,concurrency,.sc) }
+zIDSQLExists(pLockOnly=0,pUnlockRef,%pVal...)
+	// SQL Foreign Key validation entry point for Key ID.  Called by FKeys that reference this Key to see if the row is defined
+	new id set id=%pVal(1)_"||"_%pVal(2)
+	if pLockOnly>=0 { if '..%SQLGetLock(id,1,.pUnlockRef) { set sqlcode=-114,%msg=$$FormatMessage^%occMessages(,"%SQL.Filer","SQLFiler39",,"User_MessageVolume"_"."_"Listing"_":"_"ID") QUIT 0 } }
+	if pLockOnly<1 {
+		new qv set qv=$d(^DeepSee.Listing("MESSAGEVOLUME",%pVal(1),%pVal(2))) QUIT:pLockOnly=-1 qv
+		do:'$g(pUnlockRef) ..%SQLReleaseLock(id,1) quit qv
+	}
+	else { do:'$g(pUnlockRef) ..%SQLReleaseLock(id,1) QUIT 1 }
+	Return
+zIDSQLFindRowIDByConstraint(%con,pInternal=0)
+	// Get ROWID value for UNIQUE Key ID value given in %con
+	new %d,id,rtm set rtm=$zu(115,5,$s(pInternal:0,1:1)) set %d(2)=$lg(%con,1) set %d(3)=$lg(%con,2)
+	set %ROWCOUNT=0 set:'pInternal %qrc=0
+	 ;---&sql(SELECT %ID INTO :id FROM User_MessageVolume.Listing WHERE _DSqueryKey = :%d(2) AND _DSsourceId = :%d(3))
+ 	 ;--- ** SQL PUBLIC Variables: %d, SQLCODE, id
+	try { d $classmethod("%sqlcq."_$tr($namespace,"%_-$@:/\[]^ ","pudsssssssss")_".xEJDAfPTPv9WoEoGOK7DwbeIyBlz","%New") } catch { if $ze["<CLASS DOES NOT EXIST>"&&($ze["%sqlcq."_$tr($namespace,"%_-$@:/\[]^ ","pudsssssssss")_".xEJDAfPTPv9WoEoGOK7DwbeIyBlz")||($ze["<ZSQLU>") { d %0dsqlJ } else { throw } }
+	do $zu(115,5,rtm)
+	if pInternal { QUIT:'SQLCODE $g(id) RETURN "" }
+	if SQLCODE { set:SQLCODE<0 %qrc=-SQLCODE set:'%ROWCOUNT&&(SQLCODE=100) id="",%qrc=0 } set d=$zobjexport(id,18) QUIT
+	Return
+ q
+%0dsqlJ	n %xxsql
+	s %xxsql("S",1)="SELECT %ID INTO :id FROM User_MessageVolume . Listing WHERE _DSqueryKey = :%d(2) AND _DSsourceId = :%d(3)"
+	s %xxsql("M","%occSqlfuncinc")=$c(1),%xxsql("I","%DeepSee")="",%xxsql("I","%occSqlfunc")="",%xxsql("I","%systemInclude")=""
+	s %xxsql("NS")="DEMONSTRATION"
+	d BuildQuery^%SYS.SQLSRV(.%xxsql,$lb("Runtime","","","User.MessageVolume",0,"",),,"User.MessageVolume.Listing.CLS")
+	q

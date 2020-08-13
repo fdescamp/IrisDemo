@@ -1,0 +1,110 @@
+ROUTINE Hospital.FromEpicADTRoutingRule.1 [Type=INT,Generated]
+ ;Hospital.FromEpicADTRoutingRule.1
+ ;Generated for class Hospital.FromEpicADTRoutingRule.  Do NOT edit. 08/13/2020 09:37:08AM
+ ;;2F324F6D;Hospital.FromEpicADTRoutingRule
+ ;
+zevaluateRuleDefinition(pContext,pRuleSet,pEffectiveBegin,pEffectiveEnd,pReturnValue,pReason,pLogLevel,pDebugId="") public { s:'($d(pLogLevel)#2) pLogLevel="r"
+    set tSC=1,$ZE=""
+    try {
+        set pReturnValue="",pReason=""
+        ; Initialize temporary variables
+        ; No ruleSet dispatching code generated.
+        set pEffectiveBegin=""
+        set pEffectiveEnd=""
+        set pRuleSet=""
+        ;
+ruleSet1 ; effectiveBegin = (not-specified); effectiveEnd = (not-specified)
+        if (pLogLevel [ "c") set tSC = ##class(Ens.Rule.DebugLog).Log(pDebugId,"c","","Executing ruleSet1: effectiveBegin = (not-specified); effectiveEnd = (not-specified)",0) quit:('tSC)
+        ;
+        ; Evaluating rule: rule#1(ADT To Lab)
+        kill tConstraints
+        set tConstraints("source")="From_Epic_ADT"
+        set tConstraints("docCategory")="2.4"
+        set tConstraints("docName")="ADT_A01,ADT_A08,ADT_A04,ADT_A05"
+        set tSC=##class(EnsLib.HL7.MsgRouter.RuleAssist).RuntimeConstraintCheck(.tConstraints,pContext,.pPassed) quit:('tSC)
+        if (pLogLevel [ "c") set tSC = ##class(Ens.Rule.DebugLog).Log(pDebugId,"c","rule#1(ADT To Lab)","Constraints for rule 'ADT To Lab' "_$select(pPassed: "passed",1: "failed"),0) quit:('tSC)
+        if pPassed {
+            if ((((pContext.HL7.GetValueAt("PV1:PatientClass"))'=("O"))&&(##class(Ens.Rule.FunctionSet).In((pContext.HL7.GetValueAt("PV1:PatientClass")),("I,XYZ,ABC"))||##class(Ens.Rule.FunctionSet).In((pContext.HL7.GetValueAt("PV1:PatientClass")),("xyz,abc,123"))))) {
+                set pReason=pReason_",rule#1(ADT To Lab):when#1"
+                if (pLogLevel [ "c") set tSC = ##class(Ens.Rule.DebugLog).Log(pDebugId,"c","rule#1(ADT To Lab):when#1","When ((HL7.{PV1:PatientClass}!=""O"")&&((HL7.{PV1:PatientClass} In ""I,XYZ,ABC"")||(HL7.{PV1:PatientClass} In ""xyz,abc,123""))) succeeded",0) quit:('tSC)
+                set pReturnValue=pReturnValue_$s(pReturnValue'="":";",1:"")_"send:To_Lab:LookupSample.LookupSampleDTL"
+            } elseif (pLogLevel [ "c") {
+                set tSC = ##class(Ens.Rule.DebugLog).Log(pDebugId,"c","rule#1(ADT To Lab)","For rule 'ADT To Lab', no whens matched and no otherwise defined",0) quit:('tSC)
+            }
+        }
+        ; Evaluating rule: rule#2(ADT To Radiology)
+        kill tConstraints
+        set tConstraints("source")="From_Epic_ADT"
+        set tConstraints("docCategory")="2.4"
+        set tConstraints("docName")="ADT_A01,ADT_A08,ADT_A02,ADT_A04"
+        set tSC=##class(EnsLib.HL7.MsgRouter.RuleAssist).RuntimeConstraintCheck(.tConstraints,pContext,.pPassed) quit:('tSC)
+        if (pLogLevel [ "c") set tSC = ##class(Ens.Rule.DebugLog).Log(pDebugId,"c","rule#2(ADT To Radiology)","Constraints for rule 'ADT To Radiology' "_$select(pPassed: "passed",1: "failed"),0) quit:('tSC)
+        if pPassed {
+            if (((##class(Ens.Rule.FunctionSet).In((pContext.HL7.GetValueAt("PV1:PatientClass")),("I,O,ER,ED"))&&((pContext.HL7.GetValueAt("MSH:SendingFacility"))=("Cape Canaveral"))&&##class(Ens.Rule.FunctionSet).In((pContext.HL7.GetValueAt("MSH:4")),("X,Y"))&&((pContext.HL7.GetValueAt("PV1:PatientClass"))=("XYZ"))&&((pContext.HL7.GetValueAt("PID:PatientID.ID"))=("1234")))||((pContext.HL7.GetValueAt("MSH:SendingFacility"))=("BAYSTATE"))||((pContext.HL7.GetValueAt("PV1:PatientClass"))=##class(Ens.Rule.FunctionSet).ToUpper(("Outpatient"))))) {
+                set pReason=pReason_",rule#2(ADT To Radiology):when#1"
+                if (pLogLevel [ "c") set tSC = ##class(Ens.Rule.DebugLog).Log(pDebugId,"c","rule#2(ADT To Radiology):when#1","When (((HL7.{PV1:PatientClass} In ""I,O,ER,ED"")&&(HL7.{MSH:SendingFacility}=""Cape Canaveral"")&&(HL7.{MSH:4} In ""X,Y"")&&(HL7.{PV1:PatientClass}=""XYZ"")&&(HL7.{PID:PatientID.ID}=""1234""))||(HL7.{MSH:SendingFacility}=""BAYSTATE"")||(HL7.{PV1:PatientClass}=ToUpper(""Outpatient""))) succeeded",0) quit:('tSC)
+                set pReturnValue=pReturnValue_$s(pReturnValue'="":";",1:"")_"send:To_Radiology:"
+            } elseif (pLogLevel [ "c") {
+                set tSC = ##class(Ens.Rule.DebugLog).Log(pDebugId,"c","rule#2(ADT To Radiology)","For rule 'ADT To Radiology', no whens matched and no otherwise defined",0) quit:('tSC)
+            }
+        }
+        ; Evaluating rule: rule#3(ADT To Dictaphone)
+        kill tConstraints
+        set tConstraints("source")="From_Epic_ADT"
+        set tConstraints("docCategory")="2.4"
+        set tConstraints("docName")="ADT_A01,ADT_A08"
+        set tSC=##class(EnsLib.HL7.MsgRouter.RuleAssist).RuntimeConstraintCheck(.tConstraints,pContext,.pPassed) quit:('tSC)
+        if (pLogLevel [ "c") set tSC = ##class(Ens.Rule.DebugLog).Log(pDebugId,"c","rule#3(ADT To Dictaphone)","Constraints for rule 'ADT To Dictaphone' "_$select(pPassed: "passed",1: "failed"),0) quit:('tSC)
+        if pPassed {
+            if (((##class(Ens.Rule.FunctionSet).In((pContext.HL7.GetValueAt("PV1:PatientClass")),("I,E,O"))||(##class(Ens.Rule.FunctionSet).StartsWith((pContext.HL7.GetValueAt("PV1:PatientClass")),("I"))&&((pContext.HL7.GetValueAt("MSH:SendingApplication"))=("CERNER"))&&(((pContext.HL7.GetValueAt("PV1:PatientClass"))=("123"))||##class(Ens.Rule.FunctionSet).StartsWith((pContext.HL7.GetValueAt("PV1:PatientClass")),("BDBD"))||##class(Ens.Rule.FunctionSet).StartsWith((pContext.HL7.GetValueAt("PID:3")),("99")))))&&##class(Ens.Rule.FunctionSet).Exists(("GenderLookup"),(pContext.HL7.GetValueAt("PID:AdministrativeSex")))&&((pContext.HL7.GetValueAt("PID:PatientID.ID"))=("123")))) {
+                set pReason=pReason_",rule#3(ADT To Dictaphone):when#1"
+                if (pLogLevel [ "c") set tSC = ##class(Ens.Rule.DebugLog).Log(pDebugId,"c","rule#3(ADT To Dictaphone):when#1","When (((HL7.{PV1:PatientClass} In ""I,E,O"")||((HL7.{PV1:PatientClass} StartsWith ""I"")&&(HL7.{MSH:SendingApplication}=""CERNER"")&&((HL7.{PV1:PatientClass}=""123"")||(HL7.{PV1:PatientClass} StartsWith ""BDBD"")||(HL7.{PID:3} StartsWith ""99""))))&&Exists(""GenderLookup"",HL7.{PID:AdministrativeSex})&&(HL7.{PID:PatientID.ID}=""123"")) succeeded",0) quit:('tSC)
+                set pReturnValue=pReturnValue_$s(pReturnValue'="":";",1:"")_"send:To_Dictaphone:"
+                quit
+            } elseif (pLogLevel [ "c") {
+                set tSC = ##class(Ens.Rule.DebugLog).Log(pDebugId,"c","rule#3(ADT To Dictaphone)","For rule 'ADT To Dictaphone', no whens matched and no otherwise defined",0) quit:('tSC)
+            }
+        }
+        ; Evaluating rule: rule#4(ADT To Intellilab)
+        kill tConstraints
+        set tConstraints("source")="From_Epic_ADT"
+        set tConstraints("docCategory")="2.4"
+        set tConstraints("docName")="ADT_A01,ADT_A02,ADT_A03,ADT_A04,ADT_A05,ADT_A06,ADT_A07,ADT_A08"
+        set tSC=##class(EnsLib.HL7.MsgRouter.RuleAssist).RuntimeConstraintCheck(.tConstraints,pContext,.pPassed) quit:('tSC)
+        if (pLogLevel [ "c") set tSC = ##class(Ens.Rule.DebugLog).Log(pDebugId,"c","rule#4(ADT To Intellilab)","Constraints for rule 'ADT To Intellilab' "_$select(pPassed: "passed",1: "failed"),0) quit:('tSC)
+        if pPassed {
+            if ((1)) {
+                set pReason=pReason_",rule#4(ADT To Intellilab):when#1"
+                if (pLogLevel [ "c") set tSC = ##class(Ens.Rule.DebugLog).Log(pDebugId,"c","rule#4(ADT To Intellilab):when#1","When (1) succeeded",0) quit:('tSC)
+                set pReturnValue=pReturnValue_$s(pReturnValue'="":";",1:"")_"send:To_Intellilab:"
+                quit
+            } elseif (pLogLevel [ "c") {
+                set tSC = ##class(Ens.Rule.DebugLog).Log(pDebugId,"c","rule#4(ADT To Intellilab)","For rule 'ADT To Intellilab', no whens matched and no otherwise defined",0) quit:('tSC)
+            }
+        }
+        ; Evaluating rule: rule#5(ADT To Intellilab)
+        kill tConstraints
+        set tConstraints("source")="From_Epic_ADT"
+        set tConstraints("docCategory")="2.5"
+        set tConstraints("docName")="ADT_A01"
+        set tSC=##class(EnsLib.HL7.MsgRouter.RuleAssist).RuntimeConstraintCheck(.tConstraints,pContext,.pPassed) quit:('tSC)
+        if (pLogLevel [ "c") set tSC = ##class(Ens.Rule.DebugLog).Log(pDebugId,"c","rule#5(ADT To Intellilab)","Constraints for rule 'ADT To Intellilab' "_$select(pPassed: "passed",1: "failed"),0) quit:('tSC)
+        if pPassed {
+            if ((((pContext.HL7.GetValueAt("PV1:PatientClass"))=("o"))&&((pContext.HL7.GetValueAt("MSH:5"))=("12345"))&&(((pContext.HL7.GetValueAt("PV1:4"))=("XYX"))||##class(Ens.Rule.FunctionSet).StartsWith((pContext.HL7.GetValueAt("MSH:SendingApplication")),("ABC"))))) {
+                set pReason=pReason_",rule#5(ADT To Intellilab):when#1"
+                if (pLogLevel [ "c") set tSC = ##class(Ens.Rule.DebugLog).Log(pDebugId,"c","rule#5(ADT To Intellilab):when#1","When ((HL7.{PV1:PatientClass}=""o"")&&(HL7.{MSH:5}=""12345"")&&((HL7.{PV1:4}=""XYX"")||(HL7.{MSH:SendingApplication} StartsWith ""ABC""))) succeeded",0) quit:('tSC)
+                set pReturnValue=pReturnValue_$s(pReturnValue'="":";",1:"")_"send:To_Intellilab:"
+                quit
+            } elseif (pLogLevel [ "c") {
+                set tSC = ##class(Ens.Rule.DebugLog).Log(pDebugId,"c","rule#5(ADT To Intellilab)","For rule 'ADT To Intellilab', no whens matched and no otherwise defined",0) quit:('tSC)
+            }
+        }
+        quit
+        ;
+    } catch err {
+        if $ZE="" {set tSC=err.AsStatus()} Else {set tSC=##class(Ens.Util.Error).ExceptionStatus()}
+    }
+    set pReason=$e(pReason,2,*)
+    quit tSC
+    ;
+}

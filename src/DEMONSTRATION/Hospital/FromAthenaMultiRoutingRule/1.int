@@ -1,0 +1,78 @@
+ROUTINE Hospital.FromAthenaMultiRoutingRule.1 [Type=INT,Generated]
+ ;Hospital.FromAthenaMultiRoutingRule.1
+ ;Generated for class Hospital.FromAthenaMultiRoutingRule.  Do NOT edit. 08/13/2020 09:37:08AM
+ ;;3762316E;Hospital.FromAthenaMultiRoutingRule
+ ;
+zevaluateRuleDefinition(pContext,pRuleSet,pEffectiveBegin,pEffectiveEnd,pReturnValue,pReason,pLogLevel,pDebugId="") public { s:'($d(pLogLevel)#2) pLogLevel="r"
+    set tSC=1,$ZE=""
+    try {
+        set pReturnValue="",pReason=""
+        ; Initialize temporary variables
+        ; No ruleSet dispatching code generated.
+        set pEffectiveBegin=""
+        set pEffectiveEnd=""
+        set pRuleSet=""
+        ;
+ruleSet1 ; effectiveBegin = (not-specified); effectiveEnd = (not-specified)
+        if (pLogLevel [ "c") set tSC = ##class(Ens.Rule.DebugLog).Log(pDebugId,"c","","Executing ruleSet1: effectiveBegin = (not-specified); effectiveEnd = (not-specified)",0) quit:('tSC)
+        ;
+        ; Evaluating rule: rule#1(Athena ADT Rule)
+        kill tConstraints
+        set tConstraints("source")="From_Athena_Multi"
+        set tConstraints("docCategory")="2.5"
+        set tConstraints("docName")="ADT_A01,ADT_A02,ADT_A03,ADT_A04,ADT_A05,ADT_A06,ADT_A07,ADT_A08,ADT_A17,ADT_A31"
+        set tSC=##class(EnsLib.HL7.MsgRouter.RuleAssist).RuntimeConstraintCheck(.tConstraints,pContext,.pPassed) quit:('tSC)
+        if (pLogLevel [ "c") set tSC = ##class(Ens.Rule.DebugLog).Log(pDebugId,"c","rule#1(Athena ADT Rule)","Constraints for rule 'Athena ADT Rule' "_$select(pPassed: "passed",1: "failed"),0) quit:('tSC)
+        if pPassed {
+            if (((pContext.HL7.GetValueAt("PV1:PatientClass"))=("O"))) {
+                set pReason=pReason_",rule#1(Athena ADT Rule):when#1"
+                if (pLogLevel [ "c") set tSC = ##class(Ens.Rule.DebugLog).Log(pDebugId,"c","rule#1(Athena ADT Rule):when#1","When (HL7.{PV1:PatientClass}=""O"") succeeded",0) quit:('tSC)
+                set pReturnValue=pReturnValue_$s(pReturnValue'="":";",1:"")_"send:To_Intellilab,To_Lab:"
+                quit
+            } elseif (pLogLevel [ "c") {
+                set tSC = ##class(Ens.Rule.DebugLog).Log(pDebugId,"c","rule#1(Athena ADT Rule)","For rule 'Athena ADT Rule', no whens matched and no otherwise defined",0) quit:('tSC)
+            }
+        }
+        ; Evaluating rule: rule#2(Athena ORM Rule)
+        kill tConstraints
+        set tConstraints("source")="From_Athena_Multi"
+        set tConstraints("docCategory")="2.5"
+        set tConstraints("docName")="ORM_O01"
+        set tSC=##class(EnsLib.HL7.MsgRouter.RuleAssist).RuntimeConstraintCheck(.tConstraints,pContext,.pPassed) quit:('tSC)
+        if (pLogLevel [ "c") set tSC = ##class(Ens.Rule.DebugLog).Log(pDebugId,"c","rule#2(Athena ORM Rule)","Constraints for rule 'Athena ORM Rule' "_$select(pPassed: "passed",1: "failed"),0) quit:('tSC)
+        if pPassed {
+            if ((1)) {
+                set pReason=pReason_",rule#2(Athena ORM Rule):when#1"
+                if (pLogLevel [ "c") set tSC = ##class(Ens.Rule.DebugLog).Log(pDebugId,"c","rule#2(Athena ORM Rule):when#1","When (1) succeeded",0) quit:('tSC)
+                set pReturnValue=pReturnValue_$s(pReturnValue'="":";",1:"")_"send:To_Intellilab:"
+                quit
+            } elseif (pLogLevel [ "c") {
+                set tSC = ##class(Ens.Rule.DebugLog).Log(pDebugId,"c","rule#2(Athena ORM Rule)","For rule 'Athena ORM Rule', no whens matched and no otherwise defined",0) quit:('tSC)
+            }
+        }
+        ; Evaluating rule: rule#3(Athena MDM Rule)
+        kill tConstraints
+        set tConstraints("source")="From_Athena_Multi"
+        set tConstraints("docCategory")="2.5"
+        set tConstraints("docName")="MDM_T02,MDM_T03"
+        set tSC=##class(EnsLib.HL7.MsgRouter.RuleAssist).RuntimeConstraintCheck(.tConstraints,pContext,.pPassed) quit:('tSC)
+        if (pLogLevel [ "c") set tSC = ##class(Ens.Rule.DebugLog).Log(pDebugId,"c","rule#3(Athena MDM Rule)","Constraints for rule 'Athena MDM Rule' "_$select(pPassed: "passed",1: "failed"),0) quit:('tSC)
+        if pPassed {
+            if ((1)) {
+                set pReason=pReason_",rule#3(Athena MDM Rule):when#1"
+                if (pLogLevel [ "c") set tSC = ##class(Ens.Rule.DebugLog).Log(pDebugId,"c","rule#3(Athena MDM Rule):when#1","When (1) succeeded",0) quit:('tSC)
+                set pReturnValue=pReturnValue_$s(pReturnValue'="":";",1:"")_"send:To_Cerner_Results:"
+                quit
+            } elseif (pLogLevel [ "c") {
+                set tSC = ##class(Ens.Rule.DebugLog).Log(pDebugId,"c","rule#3(Athena MDM Rule)","For rule 'Athena MDM Rule', no whens matched and no otherwise defined",0) quit:('tSC)
+            }
+        }
+        quit
+        ;
+    } catch err {
+        if $ZE="" {set tSC=err.AsStatus()} Else {set tSC=##class(Ens.Util.Error).ExceptionStatus()}
+    }
+    set pReason=$e(pReason,2,*)
+    quit tSC
+    ;
+}

@@ -1,0 +1,155 @@
+ROUTINE User.TestPatientsCSV.1 [Type=INT,Generated]
+ ;User.TestPatientsCSV.1
+ ;Generated for class User.TestPatientsCSV.  Do NOT edit. 08/13/2020 09:37:10AM
+ ;;48316C38;User.TestPatientsCSV
+ ;
+zGetGeneratedClasses(pClasses) public {
+	Kill pClasses
+	Set pClasses("User.TestPatientsCSV.Record")=""
+	Set pClasses($classname())=""
+	Quit 1 }
+zGetObject(pStream,pObject,pTimeout=-1,pLookAhead="",pLabelFound=0) public {
+	Try {
+		Set tStatus = 1
+		Set pObject = ""
+		If '$IsObject(pStream) {
+			Set tFilename = pStream
+			Set pStream = ##class(%IO.FileStream).%New()
+			Do pStream.Open(tFilename,,pTimeout,"UTF-8", .tStatus)
+			If ('tStatus) Quit
+		}
+		Set tObjectName = $parameter($this,"OBJECTNAME")
+		Set tObject = $classmethod(tObjectName,"%New")
+		If '$IsObject(tObject) {
+			Set tStatus = $$Error^%apiOBJ(6201,tObjectName)
+			Quit
+		}
+		Set tObject.%Source = pStream.Name
+		Set tGetTopFields = $parameter(tObject,"INCLUDETOPFIELDS")
+		If pStream.AtEnd && (""=pLookAhead) {
+			Set tStatus = $$Error^%apiOBJ("<EnsRecordMap>ErrStreamAtEnd", pStream.Name)
+			Quit
+		}
+		Set pStream.CharEncoding = "UTF-8"
+		Set tStatus = ..GetRecord(pStream, tObject, tGetTopFields, pTimeout, .pLookAhead, pLabelFound)
+		If ('tStatus) Quit
+	}
+	Catch ex {
+		Set tStatus = ex.AsStatus()
+	}
+	If ('tStatus) { Set pObject = "" }
+	Else { Set pObject = tObject }
+	Quit tStatus }
+zGetRecord(pStream,pObject,pGetTopFields,pTimeout,pLookAhead="",pLabelFound=0) public {
+	Set tStatus = 1
+	If pLabelFound { Set tRecLabel = "" } 
+	Else { Set tRecLabel = "" } 
+	Set tStatus = ..chunkRecord(pStream, .tRecordData, .tCharCount, "", pTimeout, $char(13,10), tRecLabel, .pLookAhead, "")
+	If ('tStatus) Quit tStatus
+	Set tMaxLocal = $zutil(96,39)
+	Set tRecordData("charcount") = +$get(tCharCount)
+	Set tCurrChunk = 1
+	Set tTopPiece = 1
+	Set tCurrSep = 1
+	Set tStrings = 1
+	Set tCurrString = ""
+	Set tSeps = $listbuild($char(124))
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Else {
+		Set tCurrString = tRecordData(tCurrChunk)
+		Set tCurrPiece = 1
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Prénom = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Nom = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.DateDeNaissance = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Sexe = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Rue = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Ville = tCurrString
+	}
+	Quit tStatus }
+zPutObject(pStream,pObject,pFlush=1,pPadArray) public {
+	Try {
+		Set tStatus = 1
+		If '$IsObject(pStream) {
+			Set tFilename = pStream
+			Set pStream = ##class(%IO.FileStream).%New()
+			Do pStream.Open(tFilename,"WAE",,"UTF-8", .tStatus)
+			If ('tStatus) Quit
+		}
+		Set tHasTopFields = $parameter(pObject,"INCLUDETOPFIELDS")
+		Set pStream.CharEncoding = "UTF-8"
+		Set tStatus = ..PutRecord(pStream, pObject, tHasTopFields, .pPadArray)
+		If ('tStatus) Quit
+		If pFlush Do pStream.Flush(.tStatus)
+		If ('tStatus) Quit
+	}
+	Catch ex {
+		Set tStatus = ex.AsStatus()
+	}
+	Quit tStatus }
+zPutRecord(pStream,pObject,pHasTopFields,pPadArray) public {
+	Set tStatus = 1
+	Do pStream.Write($select(pHasTopFields: pObject.Prénom,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Nom,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.DateDeNaissance,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Sexe,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Rue,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Ville,1: ""),0)
+	Do pStream.Write($char(13,10), 0, .tStatus)
+	If ('tStatus) Quit tStatus
+	Quit tStatus }
+zgetType() public {
+	Quit "delimited" }
+zListGetInfo(colinfo,parminfo,idinfo,qHandle,extoption=0,extinfo) public {
+	Set colinfo=$lb($lb("name",10,"name"),$lb("modified",9,"modified"),$lb("size",5,"size"))
+	Set parminfo=""
+	Set idinfo=$lb(0,"")
+	If extoption {
+		Set extinfo=$lb("",$lb($lb("",""),$lb("",""),$lb("","")))
+	}
+	Quit 1 }
+zListGetODBCInfo(colinfo,parminfo,qHandle) public {
+	set version = $Select($Get(%protocol,41)>40:4,1:3)
+	Set metadata=$lb(1,3,"name",12,50,0,2,"name","TestPatientsCSV","SQLUser","",$c(0,0,0,0,0,0,0,0,0,0,0,0),"modified",11,23,3,2,"modified","TestPatientsCSV","SQLUser","",$c(0,0,0,0,0,0,0,0,0,0,0,0),"size",4,10,0,2,"size","TestPatientsCSV","SQLUser","",$c(0,0,0,0,0,0,0,0,0,0,0,0),0)
+	Set colcount=$li(metadata,2),cmdlen=colcount*10,parmcount=$li(metadata,3+cmdlen),pmdlen=parmcount*6,parminfo=$li(metadata,cmdlen+3,cmdlen+pmdlen+3)
+	If version=4 {
+		Set colinfo=$li(metadata,2,2+cmdlen)
+	} Else {
+		Set colinfo=$li(metadata,2,2)
+		For i=0:1:colcount-1 Set colinfo=colinfo_$list(metadata,3+(i*10),11+(i*10))
+	}
+	Quit 1 }

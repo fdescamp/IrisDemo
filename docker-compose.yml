@@ -1,0 +1,24 @@
+version: '3.3'
+services:
+
+  irisdemo:
+    build:
+      context: .
+    image: irisdemo:iris
+    hostname: irisdemo
+    ports:
+    - "51776:51773" # 51773 is the superserver default port
+    - "52776:52773" # 52773 is the webserver/management portal port
+    volumes: 
+    - //C/Users/fdescamp/Documents/17-Git/FHIR-HL7v2-SQL-Demo/share:/share
+
+
+  fhirhl7v2ui:
+    build: ./fhirhl7ui
+    image: irisdemo:fhirhl7ui
+    ports:
+      - "4201:4200"
+    working_dir: /home/node/app
+    environment:
+      - NODE_ENV=production
+    command: "npm run proxy"

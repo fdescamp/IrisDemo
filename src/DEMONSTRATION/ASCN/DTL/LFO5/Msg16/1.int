@@ -1,0 +1,47 @@
+ROUTINE ASCN.DTL.LFO5.Msg16.1 [Type=INT,Generated]
+ ;ASCN.DTL.LFO5.Msg16.1
+ ;Generated for class ASCN.DTL.LFO5.Msg16.  Do NOT edit. 08/13/2020 09:37:54AM
+ ;;30436972;ASCN.DTL.LFO5.Msg16
+ ;
+zGetSourceType() public {
+ Quit "ASCN.Msg.RecMap.LFO5.Msg16.Record" }
+zGetTargetType(pCreate) public {
+ Set pCreate="copy"
+ Quit "ASCN.Msg.RecMap.LFO5.Msg16.Record" }
+zTransform(source,target,aux="") [ process,context ] public {
+	Set (tSC,tSCTrans)=1
+	Try {
+		If '$IsObject(source) Set tSC=$$Error^%apiOBJ(5001,"No source object") Quit
+		Set target = source.%ConstructClone(1)
+		If '$IsObject(target) Set tSC=%objlasterror Quit
+		Do:$S($D(%Ensemble("DoTrace")):%Ensemble("DoTrace"),1:##class(Ens.Util.Trace).DoTrace()) ##class(Ens.Util.Trace).WriteTrace("xform",$classname(),"Transform","transform from source "_source_$S(source.%Extends("%Persistent"):"/"_source.%Id(),1:"")_" to target "_target_$S(target.%Extends("%Persistent"):"/"_target.%Id(),1:"")_"")
+		Set tIgnore = 0
+		Try { Set zVALz=source.Field26, zVALz=$S($IsObject(zVALz):zVALz.%ConstructClone(), 1:zVALz) }
+		Catch ex { If (..#IGNOREMISSINGSOURCE&&($$GetOneStatusText^%apiOBJ(ex.AsStatus())["<INVALID OREF>")) { Set tIgnore=1 } Else { Set tSC=ex.AsStatus() } }
+		If ('tSC) Quit
+		If 'tIgnore { Set target.Field19=zVALz }
+		Set tIgnore = 0
+		Try { Set zVALz=source.Field19, zVALz=$S($IsObject(zVALz):zVALz.%ConstructClone(), 1:zVALz) }
+		Catch ex { If (..#IGNOREMISSINGSOURCE&&($$GetOneStatusText^%apiOBJ(ex.AsStatus())["<INVALID OREF>")) { Set tIgnore=1 } Else { Set tSC=ex.AsStatus() } }
+		If ('tSC) Quit
+		If 'tIgnore { Set target.Field26=zVALz }
+		Set tIgnore = 0
+		Try { Set zVALz=source.Field20, zVALz=$S($IsObject(zVALz):zVALz.%ConstructClone(), 1:zVALz) }
+		Catch ex { If (..#IGNOREMISSINGSOURCE&&($$GetOneStatusText^%apiOBJ(ex.AsStatus())["<INVALID OREF>")) { Set tIgnore=1 } Else { Set tSC=ex.AsStatus() } }
+		If ('tSC) Quit
+		If 'tIgnore { Set target.Field24=zVALz }
+		Set tIgnore = 0
+		Try { Set zVALz=source.Field24, zVALz=$S($IsObject(zVALz):zVALz.%ConstructClone(), 1:zVALz) }
+		Catch ex { If (..#IGNOREMISSINGSOURCE&&($$GetOneStatusText^%apiOBJ(ex.AsStatus())["<INVALID OREF>")) { Set tIgnore=1 } Else { Set tSC=ex.AsStatus() } }
+		If ('tSC) Quit
+		If 'tIgnore { Set target.Field20=zVALz }
+	} Catch thrownErr {
+		If $ZE="" {
+			Set tSC=thrownErr.AsStatus()
+			Do ##class(Ens.Util.Log).LogStatus($classname(),"Transform",tSC)
+		} Else {
+			Set tSC=##class(Ens.Util.Error).EnsSystemError($classname(),"Transform")
+		}
+	}
+	If ('tSCTrans) Do ##class(Ens.Util.Log).LogStatus($classname(),"Transform",tSCTrans)  Quit:(''tSC) tSCTrans
+	Quit tSC }

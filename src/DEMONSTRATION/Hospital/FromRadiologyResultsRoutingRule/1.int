@@ -1,0 +1,44 @@
+ROUTINE Hospital.FromRadiologyResultsRoutingRule.1 [Type=INT,Generated]
+ ;Hospital.FromRadiologyResultsRoutingRule.1
+ ;Generated for class Hospital.FromRadiologyResultsRoutingRule.  Do NOT edit. 08/13/2020 09:37:08AM
+ ;;4D5A5761;Hospital.FromRadiologyResultsRoutingRule
+ ;
+zevaluateRuleDefinition(pContext,pRuleSet,pEffectiveBegin,pEffectiveEnd,pReturnValue,pReason,pLogLevel,pDebugId="") public { s:'($d(pLogLevel)#2) pLogLevel="r"
+    set tSC=1,$ZE=""
+    try {
+        set pReturnValue="",pReason=""
+        ; Initialize temporary variables
+        ; No ruleSet dispatching code generated.
+        set pEffectiveBegin=""
+        set pEffectiveEnd=""
+        set pRuleSet=""
+        ;
+ruleSet1 ; effectiveBegin = (not-specified); effectiveEnd = (not-specified)
+        if (pLogLevel [ "c") set tSC = ##class(Ens.Rule.DebugLog).Log(pDebugId,"c","","Executing ruleSet1: effectiveBegin = (not-specified); effectiveEnd = (not-specified)",0) quit:('tSC)
+        ;
+        ; Evaluating rule: rule#1
+        kill tConstraints
+        set tConstraints("source")="From_Radiology_Results"
+        set tConstraints("docCategory")="2.4"
+        set tConstraints("docName")="ORU_R01"
+        set tSC=##class(EnsLib.HL7.MsgRouter.RuleAssist).RuntimeConstraintCheck(.tConstraints,pContext,.pPassed) quit:('tSC)
+        if (pLogLevel [ "c") set tSC = ##class(Ens.Rule.DebugLog).Log(pDebugId,"c","rule#1","Constraints for rule 'rule#1' "_$select(pPassed: "passed",1: "failed"),0) quit:('tSC)
+        if pPassed {
+            if ((1)) {
+                set pReason=pReason_",rule#1:when#1"
+                if (pLogLevel [ "c") set tSC = ##class(Ens.Rule.DebugLog).Log(pDebugId,"c","rule#1:when#1","When (1) succeeded",0) quit:('tSC)
+                set pReturnValue=pReturnValue_$s(pReturnValue'="":";",1:"")_"send:To_Cerner_Results:"
+                quit
+            } elseif (pLogLevel [ "c") {
+                set tSC = ##class(Ens.Rule.DebugLog).Log(pDebugId,"c","rule#1","For rule 'rule#1', no whens matched and no otherwise defined",0) quit:('tSC)
+            }
+        }
+        quit
+        ;
+    } catch err {
+        if $ZE="" {set tSC=err.AsStatus()} Else {set tSC=##class(Ens.Util.Error).ExceptionStatus()}
+    }
+    set pReason=$e(pReason,2,*)
+    quit tSC
+    ;
+}

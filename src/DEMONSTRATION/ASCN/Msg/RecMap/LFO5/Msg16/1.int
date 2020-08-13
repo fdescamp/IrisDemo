@@ -1,0 +1,923 @@
+ROUTINE ASCN.Msg.RecMap.LFO5.Msg16.1 [Type=INT,Generated]
+ ;ASCN.Msg.RecMap.LFO5.Msg16.1
+ ;Generated for class ASCN.Msg.RecMap.LFO5.Msg16.  Do NOT edit. 08/13/2020 09:37:53AM
+ ;;59433265;ASCN.Msg.RecMap.LFO5.Msg16
+ ;
+zGetGeneratedClasses(pClasses) public {
+	Kill pClasses
+	Set pClasses("ASCN.Msg.RecMap.LFO5.Batch.Msg16")=""
+	Set pClasses("ASCN.Msg.RecMap.LFO5.Msg16.Record")=""
+	Set pClasses($classname())=""
+	Quit 1 }
+zGetObject(pStream,pObject,pTimeout=-1,pLookAhead="",pLabelFound=0) public {
+	Try {
+		Set tStatus = 1
+		Set pObject = ""
+		If '$IsObject(pStream) {
+			Set tFilename = pStream
+			Set pStream = ##class(%IO.FileStream).%New()
+			Do pStream.Open(tFilename,,pTimeout,"UTF-8", .tStatus)
+			If ('tStatus) Quit
+		}
+		Set tObjectName = $parameter($this,"OBJECTNAME")
+		Set tObject = $classmethod(tObjectName,"%New")
+		If '$IsObject(tObject) {
+			Set tStatus = $$Error^%apiOBJ(6201,tObjectName)
+			Quit
+		}
+		Set tObject.%Source = pStream.Name
+		Set tGetTopFields = $parameter(tObject,"INCLUDETOPFIELDS")
+		If pStream.AtEnd {
+			Set tStatus = $$Error^%apiOBJ("<EnsRecordMap>ErrStreamAtEnd", pStream.Name)
+			Quit
+		}
+		Set pStream.CharEncoding = "UTF-8"
+		Set tStatus = ..GetRecord(pStream, tObject, tGetTopFields, pTimeout, .pLookAhead, pLabelFound)
+		If ('tStatus) Quit
+	}
+	Catch ex {
+		Set tStatus = ex.AsStatus()
+	}
+	If ('tStatus) { Set pObject = "" }
+	Else { Set pObject = tObject }
+	Quit tStatus }
+zGetRecord(pStream,pObject,pGetTopFields,pTimeout,pLookAhead="",pLabelFound=0) public {
+	Set tStatus = 1
+	If pLabelFound { Set tRecLabel = "" } 
+	Else { Set tRecLabel = "" } 
+	Set tStatus = ..chunkRecord(pStream, .tRecordData, .tCharCount, "", pTimeout, $char(13,10), tRecLabel, .pLookAhead, "")
+	If ('tStatus) Quit tStatus
+	Set tMaxLocal = $zutil(96,39)
+	Set tRecordData("charcount") = +$get(tCharCount)
+	Set tCurrChunk = 1
+	Set tTopPiece = 1
+	Set tCurrSep = 1
+	Set tStrings = 1
+	Set tSeps = $listbuild($char(124))
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Else {
+		Set tCurrString = tRecordData(tCurrChunk)
+		Set tCurrPiece = 1
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.LeadingField = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.MsgID = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field2 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field3 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field4 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Ministry = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.FirstName = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.MiddleInitial = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.LastName = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field9 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field10 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.StreetAddress1 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.StreetAddress2 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field13 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field14 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.City = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.State = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Zipcode = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field18 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field19 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field20 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field21 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field22 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field23 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field24 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field25 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field26 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field27 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field28 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field29 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field30 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field31 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field33 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field32 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field34 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field35 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field36 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field37 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field38 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field39 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field40 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field41 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field42 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field43 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field44 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field45 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field46 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field47 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field48 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field49 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field50 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field51 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field52 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field53 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field54 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field55 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field56 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field57 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field58 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field59 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field60 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field61 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field62 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field63 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field64 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field65 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field66 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field67 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field68 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field69 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field70 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field71 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field72 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field73 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field74 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field75 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field76 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field77 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field78 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field79 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field80 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field81 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field82 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field83 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field84 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field85 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field86 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field87 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field88 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field89 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field90 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field91 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field92 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field93 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field94 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field95 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field96 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field97 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field98 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field99 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field100 = tCurrString
+	}
+	If '$data(tRecordData(tCurrChunk, "block")) {
+		Set tCurrString = $piece(tRecordData(tCurrChunk), $char(124), tTopPiece)
+	}
+	Do ..checkMerge(.tCurrChunk, .tRecordData, .tCurrString, $char(124), .tTopPiece)
+	If pGetTopFields {
+		Set pObject.Field101 = tCurrString
+	}
+	Quit tStatus }
+zPutObject(pStream,pObject,pFlush=1,pPadArray) public {
+	Try {
+		Set tStatus = 1
+		If '$IsObject(pStream) {
+			Set tFilename = pStream
+			Set pStream = ##class(%IO.FileStream).%New()
+			Do pStream.Open(tFilename,"WAE",,"UTF-8", .tStatus)
+			If ('tStatus) Quit
+		}
+		Set tHasTopFields = $parameter(pObject,"INCLUDETOPFIELDS")
+		Set pStream.CharEncoding = "UTF-8"
+		Set tStatus = ..PutRecord(pStream, pObject, tHasTopFields, .pPadArray)
+		If ('tStatus) Quit
+		If pFlush Do pStream.Flush(.tStatus)
+		If ('tStatus) Quit
+	}
+	Catch ex {
+		Set tStatus = ex.AsStatus()
+	}
+	Quit tStatus }
+zPutRecord(pStream,pObject,pHasTopFields,pPadArray) public {
+	Set tStatus = 1
+	Do pStream.Write($select(pHasTopFields: pObject.LeadingField,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.MsgID,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field2,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field3,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field4,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Ministry,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.FirstName,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.MiddleInitial,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.LastName,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field9,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field10,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.StreetAddress1,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.StreetAddress2,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field13,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field14,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.City,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.State,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Zipcode,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field18,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field19,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field20,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field21,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field22,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field23,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field24,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field25,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field26,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field27,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field28,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field29,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field30,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field31,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field33,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field32,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field34,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field35,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field36,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field37,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field38,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field39,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field40,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field41,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field42,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field43,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field44,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field45,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field46,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field47,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field48,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field49,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field50,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field51,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field52,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field53,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field54,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field55,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field56,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field57,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field58,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field59,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field60,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field61,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field62,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field63,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field64,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field65,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field66,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field67,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field68,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field69,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field70,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field71,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field72,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field73,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field74,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field75,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field76,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field77,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field78,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field79,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field80,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field81,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field82,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field83,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field84,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field85,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field86,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field87,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field88,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field89,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field90,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field91,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field92,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field93,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field94,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field95,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field96,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field97,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field98,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field99,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field100,1: ""),0)
+	Do pStream.Write($char(124) _ $select(pHasTopFields: pObject.Field101,1: ""),0)
+	Do pStream.Write($char(13,10), 0, .tStatus)
+	If ('tStatus) Quit tStatus
+	Quit tStatus }
+zgetType() public {
+	Quit "delimited" }
+zListGetInfo(colinfo,parminfo,idinfo,qHandle,extoption=0,extinfo) public {
+	Set colinfo=$lb($lb("name",10,"name"),$lb("modified",9,"modified"),$lb("size",5,"size"))
+	Set parminfo=""
+	Set idinfo=$lb(0,"")
+	If extoption {
+		Set extinfo=$lb("",$lb($lb("",""),$lb("",""),$lb("","")))
+	}
+	Quit 1 }
+zListGetODBCInfo(colinfo,parminfo,qHandle) public {
+	set version = $Select($Get(%protocol,41)>40:4,1:3)
+	Set metadata=$lb(1,3,"name",12,50,0,2,"name","Msg16","ASCN_Msg_RecMap_LFO5","",$c(0,0,0,0,0,0,0,0,0,0,0,0),"modified",11,23,3,2,"modified","Msg16","ASCN_Msg_RecMap_LFO5","",$c(0,0,0,0,0,0,0,0,0,0,0,0),"size",4,10,0,2,"size","Msg16","ASCN_Msg_RecMap_LFO5","",$c(0,0,0,0,0,0,0,0,0,0,0,0),0)
+	Set colcount=$li(metadata,2),cmdlen=colcount*10,parmcount=$li(metadata,3+cmdlen),pmdlen=parmcount*6,parminfo=$li(metadata,cmdlen+3,cmdlen+pmdlen+3)
+	If version=4 {
+		Set colinfo=$li(metadata,2,2+cmdlen)
+	} Else {
+		Set colinfo=$li(metadata,2,2)
+		For i=0:1:colcount-1 Set colinfo=colinfo_$list(metadata,3+(i*10),11+(i*10))
+	}
+	Quit 1 }

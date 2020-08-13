@@ -1,0 +1,2413 @@
+ROUTINE User.MessageVolume.Fact.1 [Type=INT,Generated]
+ ;User.MessageVolume.Fact.1
+ ;Generated for class User.MessageVolume.Fact.  Do NOT edit. 08/13/2020 09:37:10AM
+ ;;315A7361;User.MessageVolume.Fact
+ ;
+SQLUPPER(v,l) { quit $zu(28,v,7,$g(l,32767)) }
+ALPHAUP(v,r) { quit $zu(28,v,6) }
+STRING(v,l) { quit $zu(28,v,9,$g(l,32767)) }
+SQLSTRING(v,l) { quit $zu(28,v,8,$g(l,32767)) }
+UPPER(v) { quit $zu(28,v,5) }
+MVR(v) { quit $zu(28,v,2) }
+TRUNCATE(v,l) { quit $e(v,1,$g(l,3641144)) }
+quote(string) public { Quit $zutil(144,1,string) }
+quoteall(string) public { Quit """"_$replace(string,"""","""""")_"""" }
+%BMEBuilt(bmeName)
+	Set bmeName = "$Fact"
+	Quit ''$d(^DeepSee.Index("MESSAGEVOLUME","$Fact"))
+%BindExport(dev,Seen,RegisterOref,AllowedDepth,AllowedCapacity) public {
+   i $d(Seen(+$this)) q 1
+   Set Seen(+$this)=$this
+   s sc = 1
+ s proporef=..%sourceId
+ s proporef=..DxIsError
+ s proporef=..DxSourceConfigName
+ s proporef=..DxStatus
+ s proporef=..DxTargetConfigName
+   d:RegisterOref InitObjVar^%SYS.BINDSRV($this)
+   i dev'="" s t=$io u dev i $zobjexport($this_"",3)+$zobjexport($this."%%OID",3)+$zobjexport($this,3)!1 u t
+ If AllowedDepth>0 Set AllowedDepth = AllowedDepth - 1
+ If AllowedCapacity>0 Set AllowedCapacity = AllowedCapacity - 1/5
+ s proporef=..%sourceId
+       i proporef'="" s sc=1 i AllowedDepth'=0,AllowedCapacity'=0 s sc=proporef.%BindExport(dev,.Seen,RegisterOref,AllowedDepth,AllowedCapacity) q:('sc) sc
+ s proporef=..DxIsError
+       i proporef'="" s sc=1 i AllowedDepth'=0,AllowedCapacity'=0 s sc=proporef.%BindExport(dev,.Seen,RegisterOref,AllowedDepth,AllowedCapacity) q:('sc) sc
+ s proporef=..DxSourceConfigName
+       i proporef'="" s sc=1 i AllowedDepth'=0,AllowedCapacity'=0 s sc=proporef.%BindExport(dev,.Seen,RegisterOref,AllowedDepth,AllowedCapacity) q:('sc) sc
+ s proporef=..DxStatus
+       i proporef'="" s sc=1 i AllowedDepth'=0,AllowedCapacity'=0 s sc=proporef.%BindExport(dev,.Seen,RegisterOref,AllowedDepth,AllowedCapacity) q:('sc) sc
+ s proporef=..DxTargetConfigName
+       i proporef'="" s sc=1 i AllowedDepth'=0,AllowedCapacity'=0 s sc=proporef.%BindExport(dev,.Seen,RegisterOref,AllowedDepth,AllowedCapacity) q:('sc) sc
+   Quit sc }
+%BuildAllFacts(pVerbose=0,pFactList="") [ SQLCODE ] public { New %ROWCOUNT,%ROWID,%msg,SQLCODE 
+ Set tSC = 1
+ New %var,%source,%ROWID,%msg,%dsSourceId,%dsSourceObj
+ Try {
+ Set (SQLCODE,tStarId) = ""
+ Set tLastCount = 0
+ Set tID = ""
+ Set tRows = 0
+  Set tUseFactList = ($G(pFactList)'="")
+   ;---&sql(DECLARE sq2756875581 CURSOR FOR
+    ;---  SELECT %ID,%EXTERNAL(IsError) "DxIsError",%EXTERNAL(SourceConfigName) "DxSourceConfigName",Status "MxStatusN",%EXTERNAL(Status) "DxStatus",%EXTERNAL(TargetConfigName) "DxTargetConfigName",TimeProcessed "DxTimeProcessed",%EXTERNAL(TimeProcessed) "Dx2624988102" FROM Ens.MessageHeader
+    ;---  )
+    ;--- ** SQL PUBLIC Variables: SQLCODE
+   
+   ;---&sql(OPEN sq2756875581)
+  try { if $g(%sq27568755810267)'="" { s SQLCODE=-101 } else { s %sq27568755810267=$classmethod("%sqlcq."_$tr($namespace,"%_-$@:/\[]^ ","pudsssssssss")_".xEgKto8m5fz3z8j2dc9TpWhMcPgM","%New") if '$isobject(%sq27568755810267) s %sq27568755810267=$$%0dsqlA() } } catch { if $ze["<CLASS DOES NOT EXIST>"&&($ze["%sqlcq."_$tr($namespace,"%_-$@:/\[]^ ","pudsssssssss")_".xEgKto8m5fz3z8j2dc9TpWhMcPgM")||($ze["<ZSQLU>") { s %sq27568755810267=$$%0dsqlA() } else { throw } }
+  If (SQLCODE'=0) {
+   Set tSC = $$Error^%apiOBJ(5001,"Error opening SQL cursor: ("_$G(SQLCODE)_") "_$G(%msg))
+   Quit
+  }
+   ;---&sql(FETCH sq2756875581 INTO :tID,:%var("DxIsError"),:%var("DxSourceConfigName"),:%var("MxStatusN"),:%var("DxStatus"),:%var("DxTargetConfigName"),:%var("DxTimeProcessed"),:%var("Dx2624988102"))
+    ;--- ** SQL PUBLIC Variables: %ROWCOUNT, %ROWID, %msg, SQLCODE
+  if $isobject($g(%sq27568755810267))'=1 { s SQLCODE=-102 } else { do %sq27568755810267.FET() if SQLCODE=0 { s tID=%sq27568755810267.sqlcol1,%var("DxIsError")=%sq27568755810267.sqlcol2,%var("DxSourceConfigName")=%sq27568755810267.sqlcol3,%var("MxStatusN")=%sq27568755810267.sqlcol4,%var("DxStatus")=%sq27568755810267.sqlcol5,%var("DxTargetConfigName")=%sq27568755810267.sqlcol6,%var("DxTimeProcessed")=%sq27568755810267.sqlcol7,%var("Dx2624988102")=%sq27568755810267.sqlcol8 } }
+  If ((SQLCODE=100)&&pVerbose) {
+   Write "No source data found.",!
+  }
+  While (SQLCODE=0) {
+  If ($D(%dsmaxfacts)&&(tRows>=+$G(%dsmaxfacts))) Quit
+  Try {
+ Set %var("DxTimeProcessed") = ##class(%DeepSee.Utils).%ConvertDate(%var("DxTimeProcessed"),"TIMESTAMP")
+ Set %dsSourceId = $G(tID)
+ Set tExStartTime = $ZH
+ Set x = $I(^IRIS.Temp.DeepSeeBuildStats($namespace,"MESSAGEVOLUME","expr"),$ZH-tExStartTime)
+ Set tFactId = ""
+ Set tSC = ##class(User.MessageVolume.Fact).%ProcessFact(tID,1,.%var,.tFactId,.tErrorMsg,,,pFactList,.tUpdater)
+ Set:('tSC) err = $I(%dserrcount)
+ If (('tSC)&&pVerbose) {
+  Write "Error filing row: ",tID,!
+  Write:tErrorMsg'="" tErrorMsg,!
+  Write $System.Status.GetOneStatusText(tSC),!!
+  Set tSC = 1
+ }
+ If (tFactId'="") {
+  Set tRows = tRows + 1
+  Set %dsfactcount = tRows
+  If (pVerbose&&'(tRows#1000)) Write $C(13,27)_"[0J"_"Building fact table: ",?25,$J($FN(tRows,",",0),10)," fact(s) updated."
+  If (pVerbose&&'(tRows#1000)&&(+$G(%dserrcount))) Write " ",$J($FN(%dserrcount,",",0),10)," error(s)"
+ } ;factId
+  }
+  Catch (ex) {
+    Set tSC = ex.AsStatus()
+    If ($G(tID)'="") {
+      Do ##class(%DeepSee.Utils).%LogBuildError("MESSAGEVOLUME",tID,tSC)
+    }
+  }
+   ;---&sql(FETCH sq2756875581 INTO :tID,:%var("DxIsError"),:%var("DxSourceConfigName"),:%var("MxStatusN"),:%var("DxStatus"),:%var("DxTargetConfigName"),:%var("DxTimeProcessed"),:%var("Dx2624988102"))
+    ;--- ** SQL PUBLIC Variables: %ROWCOUNT, %ROWID, %msg, SQLCODE
+  if $isobject($g(%sq27568755810267))'=1 { s SQLCODE=-102 } else { do %sq27568755810267.FET() if SQLCODE=0 { s tID=%sq27568755810267.sqlcol1,%var("DxIsError")=%sq27568755810267.sqlcol2,%var("DxSourceConfigName")=%sq27568755810267.sqlcol3,%var("MxStatusN")=%sq27568755810267.sqlcol4,%var("DxStatus")=%sq27568755810267.sqlcol5,%var("DxTargetConfigName")=%sq27568755810267.sqlcol6,%var("DxTimeProcessed")=%sq27568755810267.sqlcol7,%var("Dx2624988102")=%sq27568755810267.sqlcol8 } }
+ } ;while
+   ;---&sql(CLOSE sq2756875581)
+  if '$isobject($get(%sq27568755810267)) { set SQLCODE=-102 } else { set SQLCODE=0 kill %sq27568755810267 }
+ If (pVerbose) Write $C(13,27)_"[0J"_"Building fact table: "_$FN(+$G(tRows),",",0)_" fact(s) updated"
+ }
+ Catch(ex) {
+  Set tSC = ex.AsStatus()
+   ;---&sql(CLOSE sq2756875581)
+  if '$isobject($get(%sq27568755810267)) { set SQLCODE=-102 } else { set SQLCODE=0 kill %sq27568755810267 }
+ }
+ If (('tSC)) {
+  Do ..%LogError(tSC)
+  If (pVerbose) {
+   Do $System.Status.DisplayError(tSC)
+  }
+  If ($G(tID)'="") {
+   Do ##class(%DeepSee.Utils).%LogBuildError("MESSAGEVOLUME",tID,tSC)
+  }
+ }
+ Quit tSC }
+%0dsqlA()	n %xxsql
+	s %xxsql("S",1)="DECLARE sq2756875581 CURSOR FOR SELECT %ID , %EXTERNAL ( IsError ) ""DxIsError"" , %EXTERNAL ( SourceConfigName ) ""DxSourceConfigName"" , Status ""MxStatusN"" , %EXTERNAL ( Status ) ""DxStatus"" , %EXTERNAL ( TargetConfigName ) ""DxTargetConfigName"" , TimeProcessed ""DxTimeProcessed"" , %EXTERNAL ( TimeProcessed ) ""Dx2624988102"" "
+	s %xxsql("S",2)="INTO  :i%sqlcol1, :i%sqlcol2, :i%sqlcol3, :i%sqlcol4, :i%sqlcol5, :i%sqlcol6, :i%sqlcol7, :i%sqlcol8"
+	s %xxsql("S",3)="FROM Ens . MessageHeader"
+	s %xxsql("M","%occSqlfuncinc")=$c(1),%xxsql("M","DEBUG")=$c(1),%xxsql("I","%DeepSee")="",%xxsql("I","%occSqlfunc")="",%xxsql("I","%systemInclude")=""
+	s %xxsql("I","EnsUtil")="",%xxsql("NS")="DEMONSTRATION"
+	return $$BuildQuery^%SYS.SQLSRV(.%xxsql,$lb("Logical","","","User.MessageVolume",0,"",),",8,sq2756875581,","User.MessageVolume.Fact.CLS",1)
+%BuildIndices(pIndexList="",pAutoPurge=1,pLockFlag=0,pJournalFlag=1,pStartID="",pEndID="",pIgnoreIndexList="") public {
+	if ($listlength(pIndexList)=1)&&($listget(pIndexList,1)="") { return 1 }
+	Set class=$classname(),tBuildFlags=1,tBuildFlags(class)=$c(0,0,0,0,0,0,0,0)
+	Set tPtr=0,tStatus=1,pJournalFlag=''pJournalFlag
+	While $listnext(pIndexList,tPtr,tIndex) {
+		continue:tIndex=""
+		If '$d(^oddCOM(class,"i",tIndex)) {
+			Set tStatus=$select(+tStatus:$$Error^%apiOBJ(5066,class_"::"_tIndex),1:$$AppendStatus^%occSystem(tStatus,$$Error^%apiOBJ(5066,class_"::"_tIndex)))
+		}
+	}
+	If ('tStatus) RETURN tStatus
+	if ((pIndexList="")||($listfind(pIndexList,"$Fact"))),'$listfind(pIgnoreIndexList,"$Fact") { set $Extract(tBuildFlags(class),1)=$c(1) }
+	if ((pIndexList="")||($listfind(pIndexList,"Dx2624988102"))),'$listfind(pIgnoreIndexList,"Dx2624988102") { set $Extract(tBuildFlags(class),2)=$c(1) }
+	if ((pIndexList="")||($listfind(pIndexList,"DxIsError"))),'$listfind(pIgnoreIndexList,"DxIsError") { set $Extract(tBuildFlags(class),3)=$c(1) }
+	if ((pIndexList="")||($listfind(pIndexList,"DxSourceConfigName"))),'$listfind(pIgnoreIndexList,"DxSourceConfigName") { set $Extract(tBuildFlags(class),4)=$c(1) }
+	if ((pIndexList="")||($listfind(pIndexList,"DxStatus"))),'$listfind(pIgnoreIndexList,"DxStatus") { set $Extract(tBuildFlags(class),5)=$c(1) }
+	if ((pIndexList="")||($listfind(pIndexList,"DxTargetConfigName"))),'$listfind(pIgnoreIndexList,"DxTargetConfigName") { set $Extract(tBuildFlags(class),6)=$c(1) }
+	if ((pIndexList="")||($listfind(pIndexList,"DxTimeProcessedFxHourNumber"))),'$listfind(pIgnoreIndexList,"DxTimeProcessedFxHourNumber") { set $Extract(tBuildFlags(class),7)=$c(1) }
+	if ((pIndexList="")||($listfind(pIndexList,"MxStatusN"))),'$listfind(pIgnoreIndexList,"MxStatusN") { set $Extract(tBuildFlags(class),8)=$c(1) }
+	If ($Ascii(tBuildFlags(class),2))||($Ascii(tBuildFlags(class),3))||($Ascii(tBuildFlags(class),4))||($Ascii(tBuildFlags(class),5))||($Ascii(tBuildFlags(class),6))||($Ascii(tBuildFlags(class),7))||($Ascii(tBuildFlags(class),8)),'$listfind(pIgnoreIndexList,"$Fact") { set $extract(tBuildFlags(class),1)=$c(1) }
+	Quit ..%BuildIndexInternal(.pLockFlag,.pAutoPurge,.pStartID,.pEndID,.pIndexList,.tBuildFlags,"^DeepSee.Fact(""USER.MESSAGEVOLUME.FACT""",1,.pJournalFlag,0) }
+%BuildIndicesSegment(pStartID,pEndID,pIndexHandle=0,pLockFlag=1,pFirstRange=0,pJob="") public {
+	New %tIndexBuffer
+	Try {
+		set tStatus=1,tLocked=0
+		Set tPrefetch=$prefetchon(^DeepSee.Fact)
+		If 'pFirstRange||('$data(^DeepSee.Fact("USER.MESSAGEVOLUME.FACT",pStartID))) { Set tID=$order(^DeepSee.Fact("USER.MESSAGEVOLUME.FACT",pStartID)) } Else { Set tID=pStartID }
+		Set tCurrentChunk=tID\64000+1
+		While tID'="",(pEndID="")||(tID']]pEndID) {
+			If pLockFlag=2 {
+				Set tSC = ..%LockId(tID,1)
+				If (''tSC) {
+					If $data(^DeepSee.Fact("USER.MESSAGEVOLUME.FACT",tID)) {
+						Set tSC=..%FileIndices(tID,.pIndexHandle)
+					}
+					Do ..%UnlockId(tID,1,1)
+				}
+				If ('tSC) Set tStatus=$select(+tStatus:tSC,1:$$AppendStatus^%occSystem(tStatus,tSC))
+				Set tID=$order(^DeepSee.Fact("USER.MESSAGEVOLUME.FACT",tID))
+				Continue
+			}
+			Set tChunk=tID\64000+1
+			If tChunk'=tCurrentChunk {
+				Do BitMerge^%occLibrary($name(^DeepSee.Index("MESSAGEVOLUME","$Fact")),$name(%tIndexBuffer(2)))
+				Do BitMerge^%occLibrary($name(^DeepSee.Index("MESSAGEVOLUME",4)),$name(%tIndexBuffer(3)))
+				Do BitMerge^%occLibrary($name(^DeepSee.Index("MESSAGEVOLUME",6)),$name(%tIndexBuffer(4)))
+				Do BitMerge^%occLibrary($name(^DeepSee.Index("MESSAGEVOLUME",2)),$name(%tIndexBuffer(5)))
+				Do BitMerge^%occLibrary($name(^DeepSee.Index("MESSAGEVOLUME",7)),$name(%tIndexBuffer(6)))
+				Do BitMerge^%occLibrary($name(^DeepSee.Index("MESSAGEVOLUME",3)),$name(%tIndexBuffer(7)))
+				Do BitMerge^%occLibrary($name(^DeepSee.Index("MESSAGEVOLUME",5)),$name(%tIndexBuffer(8)))
+				Do BitMerge^%occLibrary($name(^DeepSee.Index("MESSAGEVOLUME","M1")),$name(%tIndexBuffer(9)))
+				kill %tIndexBuffer(2),%tIndexBuffer(3),%tIndexBuffer(4),%tIndexBuffer(5),%tIndexBuffer(6),%tIndexBuffer(7),%tIndexBuffer(8),%tIndexBuffer(9)
+				Set tCurrentChunk=tChunk
+			}
+			Set tSC=..%FileIndicesBuffered(tID,.pIndexHandle,.%tIndexBuffer)
+			If ('tSC) {
+				Set tStatus=$select(+tStatus:tSC,1:$$AppendStatus^%occSystem(tStatus,tSC))
+			}
+			Set tID=$order(^DeepSee.Fact("USER.MESSAGEVOLUME.FACT",tID))
+		}
+		Do BitMerge^%occLibrary($name(^DeepSee.Index("MESSAGEVOLUME","$Fact")),$name(%tIndexBuffer(2)))
+		Do BitMerge^%occLibrary($name(^DeepSee.Index("MESSAGEVOLUME",4)),$name(%tIndexBuffer(3)))
+		Do BitMerge^%occLibrary($name(^DeepSee.Index("MESSAGEVOLUME",6)),$name(%tIndexBuffer(4)))
+		Do BitMerge^%occLibrary($name(^DeepSee.Index("MESSAGEVOLUME",2)),$name(%tIndexBuffer(5)))
+		Do BitMerge^%occLibrary($name(^DeepSee.Index("MESSAGEVOLUME",7)),$name(%tIndexBuffer(6)))
+		Do BitMerge^%occLibrary($name(^DeepSee.Index("MESSAGEVOLUME",3)),$name(%tIndexBuffer(7)))
+		Do BitMerge^%occLibrary($name(^DeepSee.Index("MESSAGEVOLUME",5)),$name(%tIndexBuffer(8)))
+		Do BitMerge^%occLibrary($name(^DeepSee.Index("MESSAGEVOLUME","M1")),$name(%tIndexBuffer(9)))
+	}
+	Catch tException {
+		Set tSC=tException.AsStatus(),tStatus=$select(+tStatus:tSC,1:$$AppendStatus^%occSystem(tStatus,tSC))
+	}
+	Set:$Get(tPrefetch) tPrefetch=$prefetchoff(^DeepSee.Fact)
+	Quit tStatus }
+%BuildTempFile(pTempKey,pImplemented,pVerbose=0) [ SQLCODE ] public { New %ROWCOUNT,%ROWID,%msg,SQLCODE 
+ Set tSC = 1
+ New %var,%source,%ROWID,%msg,%dsSourceId,%dsSourceObj
+ Set pImplemented = 1
+ Try {
+ Set (SQLCODE,tStarId) = ""
+ Kill ^IRIS.Temp.DeepSeeSourceId(pTempKey)
+ Set tID = ""
+ Set tRows = 0
+ Set tUpdate = ..%Count()
+  If tUpdate {
+   Set %dsmaxfacts = tUpdate
+    ;---&sql(DECLARE sq3756875581 CURSOR FOR
+     ;---   SELECT %sourceId FROM User_MessageVolume.Fact
+     ;---   )
+     ;--- ** SQL PUBLIC Variables: SQLCODE
+    
+  }
+  Else {
+    ;---&sql(DECLARE sq3756875581 CURSOR FOR
+     ;---   SELECT %ID FROM Ens.MessageHeader
+     ;---   )
+     ;--- ** SQL PUBLIC Variables: SQLCODE
+    
+  }
+   ;---&sql(OPEN sq3756875581)
+  try { if $g(%sq37568755810269)'="" { s SQLCODE=-101 } else { s %sq37568755810269=$classmethod("%sqlcq."_$tr($namespace,"%_-$@:/\[]^ ","pudsssssssss")_".xEGh63XiNPaSYhwu8TpolJhEg8ZK","%New") if '$isobject(%sq37568755810269) s %sq37568755810269=$$%0dsqlG() } } catch { if $ze["<CLASS DOES NOT EXIST>"&&($ze["%sqlcq."_$tr($namespace,"%_-$@:/\[]^ ","pudsssssssss")_".xEGh63XiNPaSYhwu8TpolJhEg8ZK")||($ze["<ZSQLU>") { s %sq37568755810269=$$%0dsqlG() } else { throw } }
+  If (SQLCODE'=0) {
+   Set tSC = $$Error^%apiOBJ(5001,"Error opening SQL cursor: ("_$G(SQLCODE)_") "_$G(%msg))
+   Quit
+  }
+   ;---&sql(FETCH sq3756875581 INTO :tID)
+    ;--- ** SQL PUBLIC Variables: %ROWCOUNT, %ROWID, %msg, SQLCODE
+  if $isobject($g(%sq37568755810269))'=1 { s SQLCODE=-102 } else { do %sq37568755810269.FET() if SQLCODE=0 { s tID=%sq37568755810269.sqlcol1 } }
+  If ((SQLCODE=100)&&pVerbose) {
+   Write "No source data found.",!
+  }
+  While (SQLCODE=0) {
+  Set tRows = tRows+1
+  Set tChunk = tRows\64000+1
+  Set tOffset = tRows#64000+1
+  Set:tID'="" ^IRIS.Temp.DeepSeeSourceId(pTempKey,tChunk,tOffset) = $LB(tID,''tUpdate)
+  If (pVerbose&&'(tRows#10000)) Write $C(13,27)_"[0J"_"Building temp file: ",?25,$J($FN(tRows,",",0),10)," record(s) processed."
+  If ($D(%dsmaxfacts)&&(tRows>=+$G(%dsmaxfacts))) Quit
+   ;---&sql(FETCH sq3756875581 INTO :tID)
+    ;--- ** SQL PUBLIC Variables: %ROWCOUNT, %ROWID, %msg, SQLCODE
+  if $isobject($g(%sq37568755810269))'=1 { s SQLCODE=-102 } else { do %sq37568755810269.FET() if SQLCODE=0 { s tID=%sq37568755810269.sqlcol1 } }
+ } ;while
+   ;---&sql(CLOSE sq3756875581)
+  if '$isobject($get(%sq37568755810269)) { set SQLCODE=-102 } else { set SQLCODE=0 kill %sq37568755810269 }
+ If (pVerbose) Write $C(13,27)_"[0J"_"Building temp file: "_$FN(+$G(tRows),",",0)_" record(s) processed"
+ }
+ Catch(ex) {
+  Set tSC = ex.AsStatus()
+   ;---&sql(CLOSE sq3756875581)
+  if '$isobject($get(%sq37568755810269)) { set SQLCODE=-102 } else { set SQLCODE=0 kill %sq37568755810269 }
+ }
+ If (('tSC)) {
+  Do ..%LogError(tSC)
+  If (pVerbose) {
+   Do $System.Status.DisplayError(tSC)
+  }
+ }
+ Quit tSC }
+%0dsqlE()	n %xxsql
+	s %xxsql("S",1)="DECLARE sq3756875581 CURSOR FOR SELECT %sourceId "
+	s %xxsql("S",2)="INTO  :i%sqlcol1"
+	s %xxsql("S",3)="FROM User_MessageVolume . Fact"
+	s %xxsql("M","%occSqlfuncinc")=$c(1),%xxsql("M","DEBUG")=$c(1),%xxsql("I","%DeepSee")="",%xxsql("I","%occSqlfunc")="",%xxsql("I","%systemInclude")=""
+	s %xxsql("I","EnsUtil")="",%xxsql("NS")="DEMONSTRATION"
+	return $$BuildQuery^%SYS.SQLSRV(.%xxsql,$lb("Logical","","","User.MessageVolume",0,"",),",1,sq3756875581,","User.MessageVolume.Fact.CLS",1)
+%0dsqlG()	n %xxsql
+	s %xxsql("S",1)="DECLARE sq3756875581 CURSOR FOR SELECT %ID "
+	s %xxsql("S",2)="INTO  :i%sqlcol1"
+	s %xxsql("S",3)="FROM Ens . MessageHeader"
+	s %xxsql("M","%occSqlfuncinc")=$c(1),%xxsql("M","DEBUG")=$c(1),%xxsql("I","%DeepSee")="",%xxsql("I","%occSqlfunc")="",%xxsql("I","%systemInclude")=""
+	s %xxsql("I","EnsUtil")="",%xxsql("NS")="DEMONSTRATION"
+	return $$BuildQuery^%SYS.SQLSRV(.%xxsql,$lb("Logical","","","User.MessageVolume",0,"",),",1,sq3756875581,","User.MessageVolume.Fact.CLS",1)
+%CheckConstraints(pID,pConstraintList="",pCheckDisabled=0,pErrorInfo) [ SQLCODE,pID,tCol1,tCol2,tCol3,tCol4 ] public { New SQLCODE,tCol1,tCol2,tCol3,tCol4 
+	set tStatus = 1, pErrorInfo = ""
+	 ;---&sql(select DxIsError,DxSourceConfigName,DxStatus,DxTargetConfigName INTO :tCol1,:tCol2,:tCol3,:tCol4 FROM User_MessageVolume.Fact WHERE %ID = :pID)
+ 	 ;--- ** SQL PUBLIC Variables: SQLCODE, pID, tCol1, tCol2, tCol3, tCol4
+	try { d $classmethod("%sqlcq."_$tr($namespace,"%_-$@:/\[]^ ","pudsssssssss")_".xEs6nlvkT83djilpjYJkj0iuUuTr","%New") } catch { if $ze["<CLASS DOES NOT EXIST>"&&($ze["%sqlcq."_$tr($namespace,"%_-$@:/\[]^ ","pudsssssssss")_".xEs6nlvkT83djilpjYJkj0iuUuTr")||($ze["<ZSQLU>") { d %0dsqlK } else { throw } }
+	if 'SQLCODE {
+		if (pCheckDisabled)&&((pConstraintList="")||($lf(pConstraintList,"DxIsError"))) && ('..DxIsErrorCheck(tCol1)) { set tStatus = $select(+tStatus:$$Error^%apiOBJ(5829,$classname()_".DxIsError","CHECK"),1:$$AppendStatus^%occSystem(tStatus,$$Error^%apiOBJ(5829,$classname()_".DxIsError","CHECK"))) }
+		if (pCheckDisabled)&&((pConstraintList="")||($lf(pConstraintList,"DxSourceConfigName"))) && ('..DxSourceConfigNameCheck(tCol2)) { set tStatus = $select(+tStatus:$$Error^%apiOBJ(5829,$classname()_".DxSourceConfigName","CHECK"),1:$$AppendStatus^%occSystem(tStatus,$$Error^%apiOBJ(5829,$classname()_".DxSourceConfigName","CHECK"))) }
+		if (pCheckDisabled)&&((pConstraintList="")||($lf(pConstraintList,"DxStatus"))) && ('..DxStatusCheck(tCol3)) { set tStatus = $select(+tStatus:$$Error^%apiOBJ(5829,$classname()_".DxStatus","CHECK"),1:$$AppendStatus^%occSystem(tStatus,$$Error^%apiOBJ(5829,$classname()_".DxStatus","CHECK"))) }
+		if (pCheckDisabled)&&((pConstraintList="")||($lf(pConstraintList,"DxTargetConfigName"))) && ('..DxTargetConfigNameCheck(tCol4)) { set tStatus = $select(+tStatus:$$Error^%apiOBJ(5829,$classname()_".DxTargetConfigName","CHECK"),1:$$AppendStatus^%occSystem(tStatus,$$Error^%apiOBJ(5829,$classname()_".DxTargetConfigName","CHECK"))) }
+		set pErrorInfo = $Listbuild(pID,tCol1,tCol2,tCol3,tCol4)
+	} elseif SQLCODE < 0 { set tStatus = $$Error^%apiOBJ(5540,SQLCODE,$Get(%msg)) }
+	quit tStatus }
+ q
+%0dsqlK	n %xxsql
+	s %xxsql("S",1)="SELECT DxIsError , DxSourceConfigName , DxStatus , DxTargetConfigName INTO :tCol1 , :tCol2 , :tCol3 , :tCol4 FROM User_MessageVolume . Fact WHERE %ID = :pID"
+	s %xxsql("M","%occSqlfuncinc")=$c(1),%xxsql("M","DEBUG")=$c(1),%xxsql("I","%DeepSee")="",%xxsql("I","%occSqlfunc")="",%xxsql("I","%systemInclude")=""
+	s %xxsql("I","EnsUtil")="",%xxsql("NS")="DEMONSTRATION"
+	d BuildQuery^%SYS.SQLSRV(.%xxsql,$lb("Logical","","","User.MessageVolume",0,"",),,"User.MessageVolume.Fact.CLS")
+	q
+%CheckConstraintsForExtent(pConstraintList="",pCheckDisabled=0,pErrorLog) [ SQLCODE,tID ] public { New %ROWCOUNT,%ROWID,%msg,SQLCODE,tID 
+	kill pErrorLog set tStatusAll = 1, pErrorLog = 0 if '$listvalid(pConstraintList) { set pConstraintList = $listfromstring(pConstraintList) }
+	 ;---&sql(declare ext cursor for select %ID into :tID FROM User_MessageVolume.Fact)
+ 	 ;--- ** SQL PUBLIC Variables: SQLCODE, tID
+	 
+	 ;---&sql(open ext)
+	try { if $g(%ext0270)'="" { s SQLCODE=-101 } else { s %ext0270=$classmethod("%sqlcq."_$tr($namespace,"%_-$@:/\[]^ ","pudsssssssss")_".xEqz7iJ4suA8c8FePgvRbau9UtSA","%New") if '$isobject(%ext0270) s %ext0270=$$%0dsqlM() } } catch { if $ze["<CLASS DOES NOT EXIST>"&&($ze["%sqlcq."_$tr($namespace,"%_-$@:/\[]^ ","pudsssssssss")_".xEqz7iJ4suA8c8FePgvRbau9UtSA")||($ze["<ZSQLU>") { s %ext0270=$$%0dsqlM() } else { throw } }
+	if SQLCODE '< 0 {
+		for {
+			 ;---&sql(fetch ext)
+ 			 ;--- ** SQL PUBLIC Variables: %ROWCOUNT, %ROWID, %msg, SQLCODE
+			if $isobject($g(%ext0270))'=1 { s SQLCODE=-102 } else { do %ext0270.FET() if SQLCODE=0 { } }
+			if SQLCODE { if SQLCODE=100 { quit } elseif SQLCODE<0 { set tStatusAll = $select(+tStatusAll:$$Error^%apiOBJ(5521,SQLCODE,$Get(%msg)),1:$$AppendStatus^%occSystem(tStatusAll,$$Error^%apiOBJ(5521,SQLCODE,$Get(%msg)))) quit } }
+			set tStatus = ..%CheckConstraints(tID,pConstraintList,pCheckDisabled,.tErrorInfo)
+			if ('tStatus) { set tStatusAll = $select(+tStatusAll:tStatus,1:$$AppendStatus^%occSystem(tStatusAll,tStatus)) set:pErrorLog<1000 pErrorLog = pErrorLog + 1, pErrorLog(pErrorLog) = tErrorInfo _ $Listbuild(tStatus) }
+		}
+		 ;---&sql(close ext)
+		if '$isobject($get(%ext0270)) { set SQLCODE=-102 } else { set SQLCODE=0 kill %ext0270 }
+	}
+	quit tStatusAll }
+ q
+%0dsqlM()	n %xxsql
+	s %xxsql("S",1)="DECLARE ext CURSOR FOR SELECT %ID INTO :tID FROM User_MessageVolume . Fact"
+	s %xxsql("M","%occSqlfuncinc")=$c(1),%xxsql("M","DEBUG")=$c(1),%xxsql("I","%DeepSee")="",%xxsql("I","%occSqlfunc")="",%xxsql("I","%systemInclude")=""
+	s %xxsql("I","EnsUtil")="",%xxsql("NS")="DEMONSTRATION"
+	return $$BuildQuery^%SYS.SQLSRV(.%xxsql,$lb("Logical","","","User.MessageVolume",0,"",),",0,ext,","User.MessageVolume.Fact.CLS",1)
+%CheckSourceId(pTestId,pVerbose=0,pSC) [ SQLCODE,pTestId,tExists ] public { New SQLCODE,tExists 
+ // Method generation added by DTB422
+ Set tSourceExists = 0
+ Set pSC = 1
+ Try {
+   ;---&sql(SELECT COUNT(%ID) INTO :tExists FROM Ens.MessageHeader WHERE %ID = :pTestId)
+    ;--- ** SQL PUBLIC Variables: SQLCODE, pTestId, tExists
+  try { d $classmethod("%sqlcq."_$tr($namespace,"%_-$@:/\[]^ ","pudsssssssss")_".xEIgX3LDvgvfgjgloXT5n8ecRGtp","%New") } catch { if $ze["<CLASS DOES NOT EXIST>"&&($ze["%sqlcq."_$tr($namespace,"%_-$@:/\[]^ ","pudsssssssss")_".xEIgX3LDvgvfgjgloXT5n8ecRGtp")||($ze["<ZSQLU>") { d %0dsqlP } else { throw } }
+  If (tExists) {
+   Set tSourceExists = 1
+  }
+ }
+ Catch(ex) {
+  Set pSC = ex.AsStatus()
+ }
+ If (('pSC)) {
+  Do ..%LogError(pSC)
+  If (pVerbose) {
+   Do $System.Status.DisplayError(pSC)
+  }
+ }
+ Quit tSourceExists }
+%0dsqlP	n %xxsql
+	s %xxsql("S",1)="SELECT COUNT ( %ID ) INTO :tExists FROM Ens . MessageHeader WHERE %ID = :pTestId"
+	s %xxsql("M","%occSqlfuncinc")=$c(1),%xxsql("M","DEBUG")=$c(1),%xxsql("I","%DeepSee")="",%xxsql("I","%occSqlfunc")="",%xxsql("I","%systemInclude")=""
+	s %xxsql("I","EnsUtil")="",%xxsql("NS")="DEMONSTRATION"
+	d BuildQuery^%SYS.SQLSRV(.%xxsql,$lb("Logical","","","User.MessageVolume",0,"",),,"User.MessageVolume.Fact.CLS")
+	q
+%ComposeOid(id) public {
+	Quit $select(id="":"",1:$listbuild(id_"",$classname())) }
+%ConstructCloneInit(object,deep=0,cloned,location) public {
+	Set i%"%%OID"=""
+	If deep>0 {
+		If $isobject(..%sourceId)=1 Set r%%sourceId=r%%sourceId.%ConstructClone(1,.cloned),i%%sourceId=""
+		If $isobject(..DxIsError)=1 Set r%DxIsError=r%DxIsError.%ConstructClone(1,.cloned),i%DxIsError=""
+		If $isobject(..DxSourceConfigName)=1 Set r%DxSourceConfigName=r%DxSourceConfigName.%ConstructClone(1,.cloned),i%DxSourceConfigName=""
+		If $isobject(..DxStatus)=1 Set r%DxStatus=r%DxStatus.%ConstructClone(1,.cloned),i%DxStatus=""
+		If $isobject(..DxTargetConfigName)=1 Set r%DxTargetConfigName=r%DxTargetConfigName.%ConstructClone(1,.cloned),i%DxTargetConfigName=""
+	}
+	Quit 1 }
+%ConstructIndices(pStartId,pEndId) public {
+	s tChunk=0
+	kill ^||%isc.dsci(1),^||%isc.dsci(2),^||%isc.dsci(3),^||%isc.dsci(4),^||%isc.dsci(5),^||%isc.dsci(6),^||%isc.dsci(7),^||%isc.dsci(8)
+	Set id=$order(^DeepSee.Fact("USER.MESSAGEVOLUME.FACT",pStartId-1),1,tBaseNode),tEndId=$S(pEndId'="":pEndId,1:pStartId)
+	while ('(id]]tEndId)) && (id'="") {
+		Set bsv0N1=$listget(tBaseNode,2)
+		set pidchunk=id\64000+1,pidoffset=id#64000+1
+		if tChunk'=pidchunk {
+			if tChunk {
+				Merge ^DeepSee.Index("MESSAGEVOLUME","$Fact")=^||%isc.dsci(1)
+				Merge ^DeepSee.Index("MESSAGEVOLUME",4)=^||%isc.dsci(2)
+				Merge ^DeepSee.Index("MESSAGEVOLUME",6)=^||%isc.dsci(3)
+				Merge ^DeepSee.Index("MESSAGEVOLUME",2)=^||%isc.dsci(4)
+				Merge ^DeepSee.Index("MESSAGEVOLUME",7)=^||%isc.dsci(5)
+				Merge ^DeepSee.Index("MESSAGEVOLUME",3)=^||%isc.dsci(6)
+				Merge ^DeepSee.Index("MESSAGEVOLUME",5)=^||%isc.dsci(7)
+				Merge ^DeepSee.Index("MESSAGEVOLUME","M1")=^||%isc.dsci(8)
+				kill ^||%isc.dsci(1),^||%isc.dsci(2),^||%isc.dsci(3),^||%isc.dsci(4),^||%isc.dsci(5),^||%isc.dsci(6),^||%isc.dsci(7),^||%isc.dsci(8)
+			}
+			s tChunk=pidchunk
+		}
+		Set $bit(^||%isc.dsci(1,pidchunk),pidoffset)=1
+		Set bsv0N2=..Dx2624988102Compute(id,bsv0N1)
+		Set $bit(^||%isc.dsci(2,$s(bsv0N2'="":bsv0N2,1:-1E14),pidchunk),pidoffset)=1
+		Set bsv0N3=$listget(tBaseNode,5)
+		Set $bit(^||%isc.dsci(3,$s(bsv0N3'="":bsv0N3,1:-1E14),pidchunk),pidoffset)=1
+		Set bsv0N4=$listget(tBaseNode,3)
+		Set $bit(^||%isc.dsci(4,$s(bsv0N4'="":bsv0N4,1:-1E14),pidchunk),pidoffset)=1
+		Set bsv0N5=$listget(tBaseNode,6)
+		Set $bit(^||%isc.dsci(5,$s(bsv0N5'="":bsv0N5,1:-1E14),pidchunk),pidoffset)=1
+		Set bsv0N6=$listget(tBaseNode,4)
+		Set $bit(^||%isc.dsci(6,$s(bsv0N6'="":bsv0N6,1:-1E14),pidchunk),pidoffset)=1
+		Set bsv0N7=..DxTimeProcessedFxHourNumberCompute(id,bsv0N1)
+		Set $bit(^||%isc.dsci(7,$s(bsv0N7'="":bsv0N7,1:-1E14),pidchunk),pidoffset)=1
+		If $listget(tBaseNode,7) { If $listget(tBaseNode,7) < 0 { Set bsv41N1 = "-",$Bit(^||%isc.dsci(8,bsv41N1,pidchunk),pidoffset)=1 } Set bsv42N1=$Factor($zabs($listget(tBaseNode,7)),2) Set bsv41N1=0 For { Set bsv41N1=$BitFind(bsv42N1,1,bsv41N1+1) Quit:bsv41N1=0  Set $Bit(^||%isc.dsci(8,bsv41N1,pidchunk),pidoffset)=1 } }
+		Else { Set bsv41N1 = $Case($listget(tBaseNode,7),"":"N",:"Z"),$Bit(^||%isc.dsci(8,bsv41N1,pidchunk),pidoffset)=1 }
+		s id=$order(^DeepSee.Fact("USER.MESSAGEVOLUME.FACT",id),1,tBaseNode)
+	}
+	if tChunk {
+		merge ^DeepSee.Index("MESSAGEVOLUME","$Fact")=^||%isc.dsci(1)
+		merge ^DeepSee.Index("MESSAGEVOLUME",4)=^||%isc.dsci(2)
+		merge ^DeepSee.Index("MESSAGEVOLUME",6)=^||%isc.dsci(3)
+		merge ^DeepSee.Index("MESSAGEVOLUME",2)=^||%isc.dsci(4)
+		merge ^DeepSee.Index("MESSAGEVOLUME",7)=^||%isc.dsci(5)
+		merge ^DeepSee.Index("MESSAGEVOLUME",3)=^||%isc.dsci(6)
+		merge ^DeepSee.Index("MESSAGEVOLUME",5)=^||%isc.dsci(7)
+		merge ^DeepSee.Index("MESSAGEVOLUME","M1")=^||%isc.dsci(8)
+		kill ^||%isc.dsci(1),^||%isc.dsci(2),^||%isc.dsci(3),^||%isc.dsci(4),^||%isc.dsci(5),^||%isc.dsci(6),^||%isc.dsci(7),^||%isc.dsci(8)
+	}
+	Quit 1 }
+%ConstructIndicesStartTask(pTaskId,pSortBegin) public {
+	job ##class(User.MessageVolume.Fact).%ConstructIndicesParallel(pTaskId,0,-1,pSortBegin,0)::10
+	if $Test { set tChild = $zchild } else { set tChild = "" }
+	quit tChild }
+%Count() [ SQLCODE,tCount ] public { New SQLCODE,tCount 
+ Set tCount = 0
+  ;---&sql(SELECT COUNT(*) INTO :tCount FROM User_MessageVolume.Fact)
+   ;--- ** SQL PUBLIC Variables: SQLCODE, tCount
+ try { d $classmethod("%sqlcq."_$tr($namespace,"%_-$@:/\[]^ ","pudsssssssss")_".xEtqVlOiubpKaQsJQUfK49DUPfcb","%New") } catch { if $ze["<CLASS DOES NOT EXIST>"&&($ze["%sqlcq."_$tr($namespace,"%_-$@:/\[]^ ","pudsssssssss")_".xEtqVlOiubpKaQsJQUfK49DUPfcb")||($ze["<ZSQLU>") { d %0dsqlR } else { throw } }
+ Quit tCount }
+%0dsqlR	n %xxsql
+	s %xxsql("S",1)="SELECT COUNT ( * ) INTO :tCount FROM User_MessageVolume . Fact"
+	s %xxsql("M","%occSqlfuncinc")=$c(1),%xxsql("M","DEBUG")=$c(1),%xxsql("I","%DeepSee")="",%xxsql("I","%occSqlfunc")="",%xxsql("I","%systemInclude")=""
+	s %xxsql("I","EnsUtil")="",%xxsql("NS")="DEMONSTRATION"
+	d BuildQuery^%SYS.SQLSRV(.%xxsql,$lb("Logical","","","User.MessageVolume",0,"",),,"User.MessageVolume.Fact.CLS")
+	q
+%DeleteData(id,concurrency) public {
+	Quit:id="" $$Error^%apiOBJ(5812)
+	set $Ztrap="DeleteDataERR" set lockok=0,sc=""
+	If concurrency {
+		Lock +(^DeepSee.Fact("USER.MESSAGEVOLUME.FACT",id)#"E"):$zu(115,4)
+		Set lockok=$s('$t:0,1:$case($SYSTEM.Lock.ReturnCode(),0:1,2:2,4:2,:0))
+		Set:lockok=2&&($tlevel) %0CacheLock($classname(),"E")=1
+		If 'lockok {
+			Quit $$Error^%apiOBJ(5803,$classname())
+		}
+	}
+	If ($Data(^DeepSee.Fact("USER.MESSAGEVOLUME.FACT",id))) {
+		Set bsv0N1=^DeepSee.Fact("USER.MESSAGEVOLUME.FACT",id)
+		Set bsv0N2=$listget(bsv0N1,2)
+		Set pidchunk=id\64000+1,pidoffset=id#64000+1
+		If $data(^oddEXTR($classname())) {
+			Set fc=""
+			For {
+				Set fc=$order(^rINDEXEXT("F",$classname(),"%1","f",fc))
+				Quit:fc=""
+				Set fk=""
+				For {
+					Set fk=$order(^rINDEXEXT("F",$classname(),"%1","f",fc,fk))
+					Quit:fk=""
+					Set sc=$classmethod(fc,fk_"Delete",id)
+					If ('sc) { Goto DeleteDataEXIT }
+				}
+			}
+			Set fc=""
+			For {
+				Set fc=$order(^rINDEXEXT("F",$classname(),"IDKEY","f",fc))
+				Quit:fc=""
+				Set fk=""
+				For {
+					Set fk=$order(^rINDEXEXT("F",$classname(),"IDKEY","f",fc,fk))
+					Quit:fk=""
+					Set sc=$classmethod(fc,fk_"Delete",id)
+					If ('sc) { Goto DeleteDataEXIT }
+				}
+			}
+		}
+		If $listget(bsv0N1,7) {
+			If $listget(bsv0N1,7) < 0 {
+				Set bsv20N1 = "-",$Bit(^DeepSee.Index("MESSAGEVOLUME","M1",bsv20N1,pidchunk),pidoffset)=0
+			}
+			Set bsv21N1=$Factor($zabs($listget(bsv0N1,7)),2),bsv20N1=0
+			For {
+				Set bsv20N1=$BitFind(bsv21N1,1,bsv20N1+1) Quit:bsv20N1=0  Set $Bit(^DeepSee.Index("MESSAGEVOLUME","M1",bsv20N1,pidchunk),pidoffset)=0
+			}
+		} Else {
+			Set bsv20N1 = $Case($listget(bsv0N1,7),"":"N",:"Z"),$Bit(^DeepSee.Index("MESSAGEVOLUME","M1",bsv20N1,pidchunk),pidoffset)=0
+		}
+		Set bsv0N3=$listget(bsv0N1,4)
+		Set bsv0N4=$listget(bsv0N1,6)
+		Set bsv0N5=$listget(bsv0N1,3)
+		Set bsv0N6=$listget(bsv0N1,5)
+		Set bsv0N7=..DxTimeProcessedFxHourNumberCompute(id,bsv0N2)
+		Set bsv0N8=..Dx2624988102Compute(id,bsv0N2)
+		Set $bit(^DeepSee.Index("MESSAGEVOLUME","$Fact",pidchunk),pidoffset)=0
+		Set $bit(^DeepSee.Index("MESSAGEVOLUME",4,$s(bsv0N8'="":bsv0N8,1:-1E14),pidchunk),pidoffset)=0
+		Set $bit(^DeepSee.Index("MESSAGEVOLUME",6,$s(bsv0N6'="":bsv0N6,1:-1E14),pidchunk),pidoffset)=0
+		Set $bit(^DeepSee.Index("MESSAGEVOLUME",2,$s(bsv0N5'="":bsv0N5,1:-1E14),pidchunk),pidoffset)=0
+		Set $bit(^DeepSee.Index("MESSAGEVOLUME",7,$s(bsv0N4'="":bsv0N4,1:-1E14),pidchunk),pidoffset)=0
+		Set $bit(^DeepSee.Index("MESSAGEVOLUME",3,$s(bsv0N3'="":bsv0N3,1:-1E14),pidchunk),pidoffset)=0
+		Set $bit(^DeepSee.Index("MESSAGEVOLUME",5,$s(bsv0N7'="":bsv0N7,1:-1E14),pidchunk),pidoffset)=0
+		Kill ^DeepSee.Fact("USER.MESSAGEVOLUME.FACT",id)
+		Set sc=1
+	}
+	Else { Set sc=$$Error^%apiOBJ(5810,$classname(),id) }
+DeleteDataEXIT
+	If concurrency,lockok {
+		Lock -(^DeepSee.Fact("USER.MESSAGEVOLUME.FACT",id)#"E")
+	}
+DeleteDataRET	Set $Ztrap = ""
+	QUIT sc
+DeleteDataERR	Set $Ztrap = "DeleteDataRET"
+	Set sc = $$Error^%apiOBJ(5002,$ZE)
+	Goto DeleteDataEXIT }
+%DeleteFact(pID,pFactId,pErrorMsg) [ SQLCODE,pFactId ] public { New SQLCODE 
+ Set tSC = 1
+ New %ROWID,%msg
+ Try {
+  Set (SQLCODE,tStarId) = ""
+  Set pErrorMsg = ""
+  Set pFactId = ""
+  Set pFactId = $O(^DeepSee.Index("MESSAGEVOLUME","%sourceId",pID,""))
+  If (pFactId'="") {
+    ;---&sql(DELETE FROM User_MessageVolume.Fact WHERE %ID = :pFactId)
+     ;--- ** SQL PUBLIC Variables: SQLCODE, pFactId
+   try { d $classmethod("%sqlcq."_$tr($namespace,"%_-$@:/\[]^ ","pudsssssssss")_".xEV8Xm3ZKD315ddJUmIrpY9nyf7y","%New") } catch { if $ze["<CLASS DOES NOT EXIST>"&&($ze["%sqlcq."_$tr($namespace,"%_-$@:/\[]^ ","pudsssssssss")_".xEV8Xm3ZKD315ddJUmIrpY9nyf7y")||($ze["<ZSQLU>") { d %0dsqlT } else { throw } }
+   Kill ^DeepSee.Index("MESSAGEVOLUME","%sourceId",pID,pFactId)
+   Kill ^DeepSee.Index("MESSAGEVOLUME","%sourceIdReverse",pFactId)
+  }
+ }
+ Catch(ex) {
+  Set tSC = ex.AsStatus()
+  Set pErrorMsg = $ZE
+  Do ..%LogError(tSC)
+ }
+ Quit tSC }
+%0dsqlT	n %xxsql
+	s %xxsql("S",1)="DELETE FROM User_MessageVolume . Fact WHERE %ID = :pFactId"
+	s %xxsql("M","%occSqlfuncinc")=$c(1),%xxsql("M","DEBUG")=$c(1),%xxsql("I","%DeepSee")="",%xxsql("I","%occSqlfunc")="",%xxsql("I","%systemInclude")=""
+	s %xxsql("I","EnsUtil")="",%xxsql("NS")="DEMONSTRATION"
+	d BuildQuery^%SYS.SQLSRV(.%xxsql,$lb("Logical","","","User.MessageVolume",0,"",),,"User.MessageVolume.Fact.CLS")
+	q
+%Exists(oid="") public {
+	Quit ..%ExistsId($listget(oid)) }
+%ExistsId(id) public {
+	Try { set tExists = $s(id="":0,$d(^DeepSee.Fact("USER.MESSAGEVOLUME.FACT",id)):1,1:0) } catch tException { set tExists = 0 if '(tException.%IsA("%Exception.SystemException")) { throw tException } elseif tException.Name'="<SUBSCRIPT>" { ZT $ZE } } quit tExists }
+%FileIndices(id,pIndexHandle=0) public {
+	Set $ZTrap="CatchError",sc=1
+	Set bsv0N1=$Get(^DeepSee.Fact("USER.MESSAGEVOLUME.FACT",id))
+	Set bsv0N2=$listget(bsv0N1,2)
+	Set pidchunk=id\64000+1,pidoffset=id#64000+1
+	If ('pIndexHandle)||($Ascii($Get(pIndexHandle("User.MessageVolume.Fact")),1)=1) {
+		Set $bit(^DeepSee.Index("MESSAGEVOLUME","$Fact",pidchunk),pidoffset)=1
+	}
+	If ('pIndexHandle)||($Ascii($Get(pIndexHandle("User.MessageVolume.Fact")),2)=1) {
+		Set bsv0N3=..Dx2624988102Compute(id,bsv0N2)
+		Set $bit(^DeepSee.Index("MESSAGEVOLUME",4,$s(bsv0N3'="":bsv0N3,1:-1E14),pidchunk),pidoffset)=1
+	}
+	If ('pIndexHandle)||($Ascii($Get(pIndexHandle("User.MessageVolume.Fact")),3)=1) {
+		Set bsv0N4=$listget(bsv0N1,5)
+		Set $bit(^DeepSee.Index("MESSAGEVOLUME",6,$s(bsv0N4'="":bsv0N4,1:-1E14),pidchunk),pidoffset)=1
+	}
+	If ('pIndexHandle)||($Ascii($Get(pIndexHandle("User.MessageVolume.Fact")),4)=1) {
+		Set bsv0N5=$listget(bsv0N1,3)
+		Set $bit(^DeepSee.Index("MESSAGEVOLUME",2,$s(bsv0N5'="":bsv0N5,1:-1E14),pidchunk),pidoffset)=1
+	}
+	If ('pIndexHandle)||($Ascii($Get(pIndexHandle("User.MessageVolume.Fact")),5)=1) {
+		Set bsv0N6=$listget(bsv0N1,6)
+		Set $bit(^DeepSee.Index("MESSAGEVOLUME",7,$s(bsv0N6'="":bsv0N6,1:-1E14),pidchunk),pidoffset)=1
+	}
+	If ('pIndexHandle)||($Ascii($Get(pIndexHandle("User.MessageVolume.Fact")),6)=1) {
+		Set bsv0N7=$listget(bsv0N1,4)
+		Set $bit(^DeepSee.Index("MESSAGEVOLUME",3,$s(bsv0N7'="":bsv0N7,1:-1E14),pidchunk),pidoffset)=1
+	}
+	If ('pIndexHandle)||($Ascii($Get(pIndexHandle("User.MessageVolume.Fact")),7)=1) {
+		Set bsv0N8=..DxTimeProcessedFxHourNumberCompute(id,bsv0N2)
+		Set $bit(^DeepSee.Index("MESSAGEVOLUME",5,$s(bsv0N8'="":bsv0N8,1:-1E14),pidchunk),pidoffset)=1
+	}
+	If ('pIndexHandle)||($Ascii($Get(pIndexHandle("User.MessageVolume.Fact")),8)=1) {
+		If $listget(bsv0N1,7) {
+			If $listget(bsv0N1,7) < 0 {
+				Set bsv39N1 = "-",$Bit(^DeepSee.Index("MESSAGEVOLUME","M1",bsv39N1,pidchunk),pidoffset)=1
+			}
+			Set bsv40N1=$Factor($zabs($listget(bsv0N1,7)),2),bsv39N1=0
+			For {
+				Set bsv39N1=$BitFind(bsv40N1,1,bsv39N1+1) Quit:bsv39N1=0  Set $Bit(^DeepSee.Index("MESSAGEVOLUME","M1",bsv39N1,pidchunk),pidoffset)=1
+			}
+		} Else {
+			Set bsv39N1 = $Case($listget(bsv0N1,7),"":"N",:"Z"),$Bit(^DeepSee.Index("MESSAGEVOLUME","M1",bsv39N1,pidchunk),pidoffset)=1
+		}
+	}
+	QUIT 1
+CatchError	s $ZTrap="" i $ZE'="" { s sc = $$Error^%apiOBJ(5002,$ZE) } q sc }
+%FileIndicesBuffered(id,pIndexHandle=0,pIndexBuffer="") public {
+	Set $ZTrap="CatchError",sc=1
+	Set bsv0N1=$Get(^DeepSee.Fact("USER.MESSAGEVOLUME.FACT",id))
+	Set bsv0N2=$listget(bsv0N1,2)
+	Set pidchunk=id\64000+1,pidoffset=id#64000+1
+	If ('pIndexHandle)||($Ascii($Get(pIndexHandle("User.MessageVolume.Fact")),1)=1) {
+		Set $bit(pIndexBuffer(2,pidchunk),pidoffset)=1
+	}
+	If ('pIndexHandle)||($Ascii($Get(pIndexHandle("User.MessageVolume.Fact")),2)=1) {
+		Set bsv0N3=..Dx2624988102Compute(id,bsv0N2)
+		Set $bit(pIndexBuffer(3,$s(bsv0N3'="":bsv0N3,1:-1E14),pidchunk),pidoffset)=1
+	}
+	If ('pIndexHandle)||($Ascii($Get(pIndexHandle("User.MessageVolume.Fact")),3)=1) {
+		Set bsv0N4=$listget(bsv0N1,5)
+		Set $bit(pIndexBuffer(4,$s(bsv0N4'="":bsv0N4,1:-1E14),pidchunk),pidoffset)=1
+	}
+	If ('pIndexHandle)||($Ascii($Get(pIndexHandle("User.MessageVolume.Fact")),4)=1) {
+		Set bsv0N5=$listget(bsv0N1,3)
+		Set $bit(pIndexBuffer(5,$s(bsv0N5'="":bsv0N5,1:-1E14),pidchunk),pidoffset)=1
+	}
+	If ('pIndexHandle)||($Ascii($Get(pIndexHandle("User.MessageVolume.Fact")),5)=1) {
+		Set bsv0N6=$listget(bsv0N1,6)
+		Set $bit(pIndexBuffer(6,$s(bsv0N6'="":bsv0N6,1:-1E14),pidchunk),pidoffset)=1
+	}
+	If ('pIndexHandle)||($Ascii($Get(pIndexHandle("User.MessageVolume.Fact")),6)=1) {
+		Set bsv0N7=$listget(bsv0N1,4)
+		Set $bit(pIndexBuffer(7,$s(bsv0N7'="":bsv0N7,1:-1E14),pidchunk),pidoffset)=1
+	}
+	If ('pIndexHandle)||($Ascii($Get(pIndexHandle("User.MessageVolume.Fact")),7)=1) {
+		Set bsv0N8=..DxTimeProcessedFxHourNumberCompute(id,bsv0N2)
+		Set $bit(pIndexBuffer(8,$s(bsv0N8'="":bsv0N8,1:-1E14),pidchunk),pidoffset)=1
+	}
+	If ('pIndexHandle)||($Ascii($Get(pIndexHandle("User.MessageVolume.Fact")),8)=1) {
+		If $listget(bsv0N1,7) {
+			If $listget(bsv0N1,7) < 0 {
+				Set bsv39N1 = "-",$Bit(pIndexBuffer(9,bsv39N1,pidchunk),pidoffset)=1
+			}
+			Set bsv40N1=$Factor($zabs($listget(bsv0N1,7)),2),bsv39N1=0
+			For {
+				Set bsv39N1=$BitFind(bsv40N1,1,bsv39N1+1) Quit:bsv39N1=0  Set $Bit(pIndexBuffer(9,bsv39N1,pidchunk),pidoffset)=1
+			}
+		} Else {
+			Set bsv39N1 = $Case($listget(bsv0N1,7),"":"N",:"Z"),$Bit(pIndexBuffer(9,bsv39N1,pidchunk),pidoffset)=1
+		}
+	}
+	QUIT 1
+CatchError	s $ZTrap="" i $ZE'="" { s sc = $$Error^%apiOBJ(5002,$ZE) } q sc }
+%InjectFact(pFactId,pValues,pChunks,pDimensionsOnly=0,pFactList="") public {
+ New %var,%source,%value
+ Set tSC = 1
+ Try {
+  Set %value=""
+  Set %var("DxIsError") = $G(pValues("IsError~~EXTERNAL"),$G(pValues("IsError")))
+  Set %var("DxSourceConfigName") = $G(pValues("SourceConfigName~~EXTERNAL"),$G(pValues("SourceConfigName")))
+  Set %var("MxStatusN") = $G(pValues("Status"))
+  Set %var("DxStatus") = $G(pValues("Status~~EXTERNAL"),$G(pValues("Status")))
+  Set %var("DxTargetConfigName") = $G(pValues("TargetConfigName~~EXTERNAL"),$G(pValues("TargetConfigName")))
+  Set %var("DxTimeProcessed") = $G(pValues("TimeProcessed"))
+  Set %var("Dx2624988102") = $G(pValues("TimeProcessed~~EXTERNAL"),$G(pValues("TimeProcessed")))
+  Set tUseFactList = ($G(pFactList)'="")
+  Set %var("DxTimeProcessed") = ##class(%DeepSee.Utils).%ConvertDate(%var("DxTimeProcessed"),"TIMESTAMP")
+  Set pFactId = $G(pFactId)
+  Set tSC = ##class(User.MessageVolume.Fact).%ProcessFact("",0,.%var,.pFactId,.pErrorMsg,,pDimensionsOnly,pFactList,.tUpdater)
+  If (''tSC) {
+   Set:(pFactId'="")&&('pDimensionsOnly) pChunks(pFactId\64000+1) = ""
+  }
+ }
+ Catch(ex) {
+  Set tSC = ex.AsStatus()
+  Do ..%LogError(tSC)
+ }
+ Quit tSC }
+%InsertBatch(objects,concurrency=0,useTransactions=0) public {
+ QUIT $$Error^%apiOBJ(5758,$classname()_"::%InsertBatch") }
+%KillExtentData(killstreams=0)
+	If killstreams Kill ^DeepSee.FactS("USER.MESSAGEVOLUME.FACT")
+	Kill ^DeepSee.Fact("USER.MESSAGEVOLUME.FACT")
+	Quit 1
+%LoadData(id) public {
+	New %s1
+	set $ZTrap="CatchError",locked=0,userze=$ze,$ze=""
+	If i%%Concurrency=4 {
+		Lock +(^DeepSee.Fact("USER.MESSAGEVOLUME.FACT",id)#"E"):$zu(115,4)
+		if '$t do init s i%%Concurrency=0 s:$ze="" $ze=userze return $$Error^%apiOBJ(5803,$classname())
+	} ElseIf i%%Concurrency>1 {
+		Lock +(^DeepSee.Fact("USER.MESSAGEVOLUME.FACT",id)#"SE"):$zu(115,4)
+		if '$t do init s i%%Concurrency=0 s:$ze="" $ze=userze return $$Error^%apiOBJ(5804,$classname())
+		set locked = 1
+	}
+	If $d(^DeepSee.Fact("USER.MESSAGEVOLUME.FACT",id),%s1)#2 {
+		If i%%Concurrency=2 { Lock -(^DeepSee.Fact("USER.MESSAGEVOLUME.FACT",id)#"SIE") }
+		S i%%sourceId=$lg(%s1),i%DxTimeProcessed=$lg(%s1,2),i%DxSourceConfigName=$lg(%s1,3),i%DxTargetConfigName=$lg(%s1,4),i%DxIsError=$lg(%s1,5),i%DxStatus=$lg(%s1,6),i%MxStatusN=$lg(%s1,7)
+		s:$ze="" $ze=userze
+		Quit 1
+	} Else {
+		If i%%Concurrency=2 { Lock -(^DeepSee.Fact("USER.MESSAGEVOLUME.FACT",id)#"SIE") }
+		do init
+		set sc = $$Error^%apiOBJ(5809,$classname(),id) goto CatchError
+	}
+CatchError	set $ZTrap = "" if $ZE'="" { s sc = $$Error^%apiOBJ(5002,$ZE) }
+	If ($get(locked))&&(i%%Concurrency<3) { Lock -(^DeepSee.Fact("USER.MESSAGEVOLUME.FACT",id)#"SIE") }
+	if '('sc) { set sc=$$Error^%apiOBJ(5809,$classname(),id) }
+	s:$ze="" $ze=userze
+	return sc
+init	Set i%%sourceId="",i%DxIsError="",i%DxSourceConfigName="",i%DxStatus="",i%DxTargetConfigName="",i%DxTimeProcessed="",i%MxStatusN=""
+	quit }
+%LoadDataFromMemory(id,objstate,obj) public {
+	New %s1
+	If $d(objstate("USER.MESSAGEVOLUME.FACT",id)) {
+		Set %s1=$g(objstate("USER.MESSAGEVOLUME.FACT",id))
+		S i%%sourceId=$lg(%s1),i%DxTimeProcessed=$lg(%s1,2),i%DxSourceConfigName=$lg(%s1,3),i%DxTargetConfigName=$lg(%s1,4),i%DxIsError=$lg(%s1,5),i%DxStatus=$lg(%s1,6),i%MxStatusN=$lg(%s1,7)
+		Quit 1
+	} Else {
+		Set i%%sourceId="",i%DxIsError="",i%DxSourceConfigName="",i%DxStatus="",i%DxTargetConfigName="",i%DxTimeProcessed="",i%MxStatusN=""
+		Quit $$Error^%apiOBJ(5809,$classname(),id)
+	} }
+%LoadInit(oid="",concurrency="",reset=0) public {
+	Set:concurrency'="" i%%Concurrency=concurrency
+	If reset {
+		Kill i%%sourceId,i%DxIsError,i%DxSourceConfigName,i%DxStatus,i%DxTargetConfigName
+	}
+	Set r%%sourceId="",r%DxIsError="",r%DxSourceConfigName="",r%DxStatus="",r%DxTargetConfigName=""
+	If 'reset { Set gbl=..#DATALOCATIONGLOBAL If gbl="" { Set oref=$zobjoid("",$listget(oid)),sfn=$zu(40,0,41) } Else { Set oref=$zobjoid("",$listget(oid),@gbl,.sfn) } Set $zobjoid("",$listget(oid),,sfn)=$this,i%"%%OID"=oid }
+	Quit 1 }
+%LockExtent(shared=0) public {
+	If shared {
+		Lock +(^DeepSee.Fact("USER.MESSAGEVOLUME.FACT")#"S"):$zu(115,4) Quit:$t 1
+		Quit $$Error^%apiOBJ(5799,$classname())
+	}
+	Lock +(^DeepSee.Fact("USER.MESSAGEVOLUME.FACT")):$zu(115,4) Quit:$t 1
+	Quit $$Error^%apiOBJ(5798,$classname()) }
+%LockId(id,shared=0,timeout) public { s:'($d(timeout)#2) timeout=$zu(115,4)
+	If id="" { Quit $$Error^%apiOBJ(5812) }
+	Set sc=1
+	If 'shared {
+		Lock +(^DeepSee.Fact("USER.MESSAGEVOLUME.FACT",id)#"E"):timeout Quit:$t 1
+		Quit $$Error^%apiOBJ(5803,id_":"_$classname())
+	}
+	Lock +(^DeepSee.Fact("USER.MESSAGEVOLUME.FACT",id)#"SE"):timeout Quit:$t 1
+	Quit $$Error^%apiOBJ(5804,id_":"_$classname()) }
+%NextId(pId,pDirection=1) public {
+	quit $Case(pDirection,1:$Order(^DeepSee.Fact("USER.MESSAGEVOLUME.FACT",pId)),:$Order(^DeepSee.Fact("USER.MESSAGEVOLUME.FACT",pId),-1)) }
+%NormalizeObject() public {
+	If '$system.CLS.GetModified() Quit 1
+	If m%DxTimeProcessed Set:i%DxTimeProcessed'="" i%DxTimeProcessed=(..DxTimeProcessedNormalize(i%DxTimeProcessed))
+	If m%MxStatusN Set:i%MxStatusN'="" i%MxStatusN=(..MxStatusNNormalize(i%MxStatusN))
+	Quit 1 }
+%OnDetermineClass(oid,class) public {
+ Set class=$classname() Quit 1 }
+%OnEndBatch(pCubeName,pVerbose=0) public {
+ Quit 1 }
+%OnKillFacts() public {
+ Set tSC = 1
+ Try {
+ }
+ Catch(ex) {
+  Set tSC = ex.AsStatus()
+  Do ..%LogError(tSC)
+ }
+ Quit tSC }
+%OnStartBatch(pCubeName,pVerbose=0) public {
+ Quit 1 }
+%PhysicalAddress(id,paddr)
+	if $Get(id)="" Quit $$Error^%apiOBJ(5813,$classname())
+	if (id="") { quit $$Error^%apiOBJ(5832,$classname(),id) }
+	s paddr(1)=$lb($Name(^DeepSee.Fact("USER.MESSAGEVOLUME.FACT",id)),$classname(),"IDKEY","listnode",id)
+	s paddr=1
+	Quit 1
+%PrecomputeAggregates(pStartChunk,pEndChunk,pAggGLVN,pVerbose=0,pTaskGroup="",pCount=0) public {
+ Set tSC = 1
+ New %ROWID,%msg,%var
+ Kill @pAggGLVN
+ Try {
+  Set (SQLCODE) = ""
+  Set tLastCount = 0
+ If (pTaskGroup'="") {
+  Set tDelta = pCount - tLastCount
+  Set inc=$I(^IRIS.Temp.DeepSeeUpdate($namespace,pTaskGroup,"facts"),tDelta)
+ }
+ }
+ Catch(ex) {
+  Set tSC = ex.AsStatus()
+  Set pErrorMsg = $ZE
+  Do ..%LogError(tSC)
+ }
+ Quit tSC }
+%ProcessFact(pID,pBatchMode=0,%var,pFactId,pErrorMsg,pDimTables,pDimensionsOnly=0,pFactList="",pSQLUpdate) [ SQLCODE,pID,tFactId ] public { New SQLCODE,tFactId  s:'($d(pSQLUpdate)#2) pSQLUpdate=""
+ Set tSC = 1
+ New %ROWID,%msg,%value,%source,%expression
+ Try {
+  Set (SQLCODE,tStarId) = ""
+  Set pErrorMsg = ""
+  Set pFactId = $G(pFactId)
+  Set %value = ""
+  // + DTB886 - Consult the pFactList. If defined, remove anything that is not in the list from %var
+  // It is assumed that pFactList is a $lb in this method
+  Set tLimitedList=0
+  If (pFactList'="") {
+    Set tLimitedList = 1
+    Set pBatchMode = 0
+    Merge tOriginalVar = %var
+    Set tFact = $O(%var(""))
+    While (tFact'="") {
+      Kill:'$ListFind(pFactList,tFact) %var(tFact)
+      Set tFact = $O(%var(tFact))
+    }
+  }
+  If tLimitedList {
+    If '$G(^DeepSee.Cubes("cubes","MESSAGEVOLUME","namedFactNums")) {
+      Set tSC = $$Error^%apiOBJ(5001,"Cube 'MESSAGEVOLUME' does not support updates using a fact list.")
+      Quit
+    }
+  }
+  // - DTB886
+  Set:$D(%var("DxIsError"))&&(($G(%var("DxIsError"))="")||($G(%var("DxIsError"))=$C(0))) %var("DxIsError") = "<null>"
+  Set:$D(%var("DxSourceConfigName"))&&(($G(%var("DxSourceConfigName"))="")||($G(%var("DxSourceConfigName"))=$C(0))) %var("DxSourceConfigName") = "<null>"
+  Set:$D(%var("DxStatus"))&&(($G(%var("DxStatus"))="")||($G(%var("DxStatus"))=$C(0))) %var("DxStatus") = "<null>"
+  Set:$D(%var("DxTargetConfigName"))&&(($G(%var("DxTargetConfigName"))="")||($G(%var("DxTargetConfigName"))=$C(0))) %var("DxTargetConfigName") = "<null>"
+  If (pDimensionsOnly) {
+   Set tFactId=""
+   Set tIsInsert = 1
+  }
+  ElseIf (pBatchMode) {
+   Set zuSetting = $zu(115,1,0)
+   Set tIsInsert = 1
+  }
+  ElseIf (pID'="") {
+   Set tFactId = $O(^DeepSee.Index("MESSAGEVOLUME","%sourceId",pID,""))
+   Set tIsInsert = ''(tFactId="")
+  }
+  ElseIf (pFactId'="") {
+   If ($D(^DeepSee.Index("MESSAGEVOLUME","%sourceIdReverse",pFactId))) {
+    Set tFactId = pFactId
+    Set tIsInsert = 0
+   }
+   Else {
+    Set tFactId = ""
+    Set tIsInsert = 1
+   }
+  }
+  Else {
+   Set tFactId = ""
+   Set tIsInsert = 1
+  }
+  If ('pBatchMode && tLimitedList && tIsInsert) {
+    Quit
+  }
+ If ($G(%var("DxIsError"))'="") {
+  Set tStarId = $O(^DeepSee.DimensionI("USER.MESSAGEVOLUME.STARISERROR","Primary",$zu(28,$G(%var("DxIsError")),7,113),""))
+  If (tStarId '= "") {
+   Set %var("DxIsError") = tStarId
+  }
+  Else {
+  Set tLockKey = $zu(28,%var("DxIsError"),7,113)
+  Lock +^DeepSee.Index("User.MessageVolume.StarIsError",tLockKey):15
+  If '$Test {
+   Set tSC = $$Error^%apiOBJ(5001,"Unable to acquire lock for dimension table: 'User_MessageVolume.StarIsError'")
+   Quit
+  }
+  Set tStarId = $O(^DeepSee.DimensionI("USER.MESSAGEVOLUME.STARISERROR","Primary",$zu(28,$G(%var("DxIsError")),7,113),""))
+   If (tStarId '= "") {
+    Set %var("DxIsError") = tStarId
+   }
+   Else {
+     ;---&sql(INSERT INTO User_MessageVolume.StarIsError (DxIsError) VALUES (:%var("DxIsError")))
+      ;--- ** SQL PUBLIC Variables: %var, SQLCODE
+    try { d $classmethod("%sqlcq."_$tr($namespace,"%_-$@:/\[]^ ","pudsssssssss")_".xEFQChOpSY43kO1PtpwYgt5IJFop","%New") } catch { if $ze["<CLASS DOES NOT EXIST>"&&($ze["%sqlcq."_$tr($namespace,"%_-$@:/\[]^ ","pudsssssssss")_".xEFQChOpSY43kO1PtpwYgt5IJFop")||($ze["<ZSQLU>") { d %0dsqlV } else { throw } }
+    If (SQLCODE'=0) {
+     Lock -^DeepSee.Index("User.MessageVolume.StarIsError",tLockKey)
+     Set tSC = $$Error^%apiOBJ(5001,"Insert into dimension table failed: 'User_MessageVolume.StarIsError' SQLCODE="_SQLCODE)
+     Quit
+    }
+    Set %var("DxIsError") = %ROWID
+   }
+   Lock -^DeepSee.Index("User.MessageVolume.StarIsError",tLockKey)
+  }
+ }
+ If ($G(%var("DxSourceConfigName"))'="") {
+  Set tStarId = $O(^DeepSee.DimensionI("USER.MESSAGEVOLUME.STARSOURCECONFIGNAME","Primary",$zu(28,$G(%var("DxSourceConfigName")),7,113),""))
+  If (tStarId '= "") {
+   Set %var("DxSourceConfigName") = tStarId
+  }
+  Else {
+  Set tLockKey = $zu(28,%var("DxSourceConfigName"),7,113)
+  Lock +^DeepSee.Index("User.MessageVolume.StarSourceConfigName",tLockKey):15
+  If '$Test {
+   Set tSC = $$Error^%apiOBJ(5001,"Unable to acquire lock for dimension table: 'User_MessageVolume.StarSourceConfigName'")
+   Quit
+  }
+  Set tStarId = $O(^DeepSee.DimensionI("USER.MESSAGEVOLUME.STARSOURCECONFIGNAME","Primary",$zu(28,$G(%var("DxSourceConfigName")),7,113),""))
+   If (tStarId '= "") {
+    Set %var("DxSourceConfigName") = tStarId
+   }
+   Else {
+     ;---&sql(INSERT INTO User_MessageVolume.StarSourceConfigName (DxSourceConfigName) VALUES (:%var("DxSourceConfigName")))
+      ;--- ** SQL PUBLIC Variables: %var, SQLCODE
+    try { d $classmethod("%sqlcq."_$tr($namespace,"%_-$@:/\[]^ ","pudsssssssss")_".xEiqigsXdUGtj52IssdMpDoLknvV","%New") } catch { if $ze["<CLASS DOES NOT EXIST>"&&($ze["%sqlcq."_$tr($namespace,"%_-$@:/\[]^ ","pudsssssssss")_".xEiqigsXdUGtj52IssdMpDoLknvV")||($ze["<ZSQLU>") { d %0dsqlX } else { throw } }
+    If (SQLCODE'=0) {
+     Lock -^DeepSee.Index("User.MessageVolume.StarSourceConfigName",tLockKey)
+     Set tSC = $$Error^%apiOBJ(5001,"Insert into dimension table failed: 'User_MessageVolume.StarSourceConfigName' SQLCODE="_SQLCODE)
+     Quit
+    }
+    Set %var("DxSourceConfigName") = %ROWID
+   }
+   Lock -^DeepSee.Index("User.MessageVolume.StarSourceConfigName",tLockKey)
+  }
+ }
+ If ($G(%var("DxStatus"))'="") {
+  Set tStarId = $O(^DeepSee.DimensionI("USER.MESSAGEVOLUME.STARSTATUS","Primary",$zu(28,$G(%var("DxStatus")),7,113),""))
+  If (tStarId '= "") {
+   Set %var("DxStatus") = tStarId
+  }
+  Else {
+  Set tLockKey = $zu(28,%var("DxStatus"),7,113)
+  Lock +^DeepSee.Index("User.MessageVolume.StarStatus",tLockKey):15
+  If '$Test {
+   Set tSC = $$Error^%apiOBJ(5001,"Unable to acquire lock for dimension table: 'User_MessageVolume.StarStatus'")
+   Quit
+  }
+  Set tStarId = $O(^DeepSee.DimensionI("USER.MESSAGEVOLUME.STARSTATUS","Primary",$zu(28,$G(%var("DxStatus")),7,113),""))
+   If (tStarId '= "") {
+    Set %var("DxStatus") = tStarId
+   }
+   Else {
+     ;---&sql(INSERT INTO User_MessageVolume.StarStatus (DxStatus) VALUES (:%var("DxStatus")))
+      ;--- ** SQL PUBLIC Variables: %var, SQLCODE
+    try { d $classmethod("%sqlcq."_$tr($namespace,"%_-$@:/\[]^ ","pudsssssssss")_".xEmYxitHEkGnPdimoqH5ddgjQ4Lw","%New") } catch { if $ze["<CLASS DOES NOT EXIST>"&&($ze["%sqlcq."_$tr($namespace,"%_-$@:/\[]^ ","pudsssssssss")_".xEmYxitHEkGnPdimoqH5ddgjQ4Lw")||($ze["<ZSQLU>") { d %0dsqlZ } else { throw } }
+    If (SQLCODE'=0) {
+     Lock -^DeepSee.Index("User.MessageVolume.StarStatus",tLockKey)
+     Set tSC = $$Error^%apiOBJ(5001,"Insert into dimension table failed: 'User_MessageVolume.StarStatus' SQLCODE="_SQLCODE)
+     Quit
+    }
+    Set %var("DxStatus") = %ROWID
+   }
+   Lock -^DeepSee.Index("User.MessageVolume.StarStatus",tLockKey)
+  }
+ }
+ If ($G(%var("DxTargetConfigName"))'="") {
+  Set tStarId = $O(^DeepSee.DimensionI("USER.MESSAGEVOLUME.STARTARGETCONFIGNAME","Primary",$zu(28,$G(%var("DxTargetConfigName")),7,113),""))
+  If (tStarId '= "") {
+   Set %var("DxTargetConfigName") = tStarId
+  }
+  Else {
+  Set tLockKey = $zu(28,%var("DxTargetConfigName"),7,113)
+  Lock +^DeepSee.Index("User.MessageVolume.StarTargetConfigName",tLockKey):15
+  If '$Test {
+   Set tSC = $$Error^%apiOBJ(5001,"Unable to acquire lock for dimension table: 'User_MessageVolume.StarTargetConfigName'")
+   Quit
+  }
+  Set tStarId = $O(^DeepSee.DimensionI("USER.MESSAGEVOLUME.STARTARGETCONFIGNAME","Primary",$zu(28,$G(%var("DxTargetConfigName")),7,113),""))
+   If (tStarId '= "") {
+    Set %var("DxTargetConfigName") = tStarId
+   }
+   Else {
+     ;---&sql(INSERT INTO User_MessageVolume.StarTargetConfigName (DxTargetConfigName) VALUES (:%var("DxTargetConfigName")))
+      ;--- ** SQL PUBLIC Variables: %var, SQLCODE
+    try { d $classmethod("%sqlcq."_$tr($namespace,"%_-$@:/\[]^ ","pudsssssssss")_".xEC4Svwgj9n57t6mi6tAk75SuAHy","%New") } catch { if $ze["<CLASS DOES NOT EXIST>"&&($ze["%sqlcq."_$tr($namespace,"%_-$@:/\[]^ ","pudsssssssss")_".xEC4Svwgj9n57t6mi6tAk75SuAHy")||($ze["<ZSQLU>") { d %0dsql1 } else { throw } }
+    If (SQLCODE'=0) {
+     Lock -^DeepSee.Index("User.MessageVolume.StarTargetConfigName",tLockKey)
+     Set tSC = $$Error^%apiOBJ(5001,"Insert into dimension table failed: 'User_MessageVolume.StarTargetConfigName' SQLCODE="_SQLCODE)
+     Quit
+    }
+    Set %var("DxTargetConfigName") = %ROWID
+   }
+   Lock -^DeepSee.Index("User.MessageVolume.StarTargetConfigName",tLockKey)
+  }
+ }
+ If ('pBatchMode) {
+    Set tVal = $G(%var("DxSourceConfigName"))
+    If ((tVal'="")&&('$D(^DeepSee.Index("MESSAGEVOLUME",2,tVal)))) {
+     Set ts = $I(^DeepSee.Cache.Results("MESSAGEVOLUME","fact",2))
+    }
+    Set tVal = $G(%var("DxTargetConfigName"))
+    If ((tVal'="")&&('$D(^DeepSee.Index("MESSAGEVOLUME",3,tVal)))) {
+     Set ts = $I(^DeepSee.Cache.Results("MESSAGEVOLUME","fact",3))
+    }
+    Set tVal = ##class(%DeepSee.Time.DayMonthYear).%Convert($G(%var("DxTimeProcessed")))
+    If ((tVal'="")&&('$D(^DeepSee.Index("MESSAGEVOLUME",4,tVal)))) {
+     Set ts = $I(^DeepSee.Cache.Results("MESSAGEVOLUME","fact",4))
+    }
+    Set tVal = ##class(%DeepSee.Time.HourNumber).%Convert($G(%var("DxTimeProcessed")))
+    If ((tVal'="")&&('$D(^DeepSee.Index("MESSAGEVOLUME",5,tVal)))) {
+     Set ts = $I(^DeepSee.Cache.Results("MESSAGEVOLUME","fact",5))
+    }
+    Set tVal = $G(%var("DxIsError"))
+    If ((tVal'="")&&('$D(^DeepSee.Index("MESSAGEVOLUME",6,tVal)))) {
+     Set ts = $I(^DeepSee.Cache.Results("MESSAGEVOLUME","fact",6))
+    }
+    Set tVal = $G(%var("DxStatus"))
+    If ((tVal'="")&&('$D(^DeepSee.Index("MESSAGEVOLUME",7,tVal)))) {
+     Set ts = $I(^DeepSee.Cache.Results("MESSAGEVOLUME","fact",7))
+    }
+ }
+ // DTB886 - Build these for relevant cases below.
+ Set tListINTO = "%sourceId"
+ Set tListParameters = "?"
+ Set tListVALUES($I(tListVALUES)) = pID
+ Set tFact = $O(%var(""))
+ While (tFact'="") {
+   Set tListINTO = tListINTO _ $S($L(tListINTO):",",1:"") _ tFact
+   Set tListParameters = tListParameters _ $S($L(tListParameters):",",1:"") _ "?"
+   Set tListVALUES($I(tListVALUES)) = $G(%var(tFact))
+   Set tFact = $O(%var(tFact))
+ }
+ Set:'tIsInsert tListVALUES($I(tListVALUES)) = tFactId
+ If (pDimensionsOnly) {
+ }
+ ElseIf (pBatchMode) {
+  If tLimitedList {
+    // DTB886 - Handle a defined incoming pFactList. This forces use of dynamic SQL and has trimmed the available %var
+    If '$IsObject(pSQLUpdate) {
+    	Set tSQL = "INSERT %NOLOCK %NOINDEX INTO User_MessageVolume.Fact ("_tListINTO_") VALUES ("_tListParameters_")"
+    	Set pSQLUpdate = ##class(%SQL.Statement).%New()
+    	Set tSC = pSQLUpdate.%Prepare(tSQL)
+    	If ('tSC) Quit
+    }
+    Set tListResult = pSQLUpdate.%Execute(tListVALUES...)
+    Set pFactId = tListResult.%ROWID
+    Set SQLCODE = tListResult.%SQLCODE
+  }
+  Else {
+     ;---&sql(INSERT %NOLOCK %NOINDEX INTO User_MessageVolume.Fact (%sourceId,DxIsError,DxSourceConfigName,DxStatus,DxTargetConfigName,DxTimeProcessed,MxStatusN)
+      ;---         VALUES (:pID,:%var("DxIsError"),:%var("DxSourceConfigName"),:%var("DxStatus"),:%var("DxTargetConfigName"),:%var("DxTimeProcessed"),:%var("MxStatusN")))
+      ;--- ** SQL PUBLIC Variables: %var, SQLCODE, pID
+    try { d $classmethod("%sqlcq."_$tr($namespace,"%_-$@:/\[]^ ","pudsssssssss")_".xEX8arzgxR5yfNhylW3KpdD7qOaf","%New") } catch { if $ze["<CLASS DOES NOT EXIST>"&&($ze["%sqlcq."_$tr($namespace,"%_-$@:/\[]^ ","pudsssssssss")_".xEX8arzgxR5yfNhylW3KpdD7qOaf")||($ze["<ZSQLU>") { d %0dsql3 } else { throw } }
+    Set pFactId = %ROWID
+  }
+  If (pFactId'="") {
+    Set:pID'="" ^DeepSee.Index("MESSAGEVOLUME","%sourceId",pID,pFactId) = ""
+    Set ^DeepSee.Index("MESSAGEVOLUME","%sourceIdReverse",pFactId) = pID
+  }
+ }
+ Else {
+  If ($G(tFactId)'="") {
+   If tLimitedList {
+    // DTB886 - Handle a defined incoming pFactList. This forces use of dynamic SQL and has trimmed the available %var
+    If '$IsObject(pSQLUpdate) {
+    	Set tSQL = "UPDATE User_MessageVolume.Fact ("_tListINTO_") VALUES ("_tListParameters_") WHERE %ID = ?"
+    	Set pSQLUpdate = ##class(%SQL.Statement).%New()
+    	Set tSC = pSQLUpdate.%Prepare(tSQL)
+    	If ('tSC) Quit
+    }
+    Set tListResult = pSQLUpdate.%Execute(tListVALUES...)
+    Set pFactId = tFactId
+    Set SQLCODE = tListResult.%SQLCODE
+   }
+   Else {
+     ;---&sql(UPDATE User_MessageVolume.Fact (%sourceId,DxIsError,DxSourceConfigName,DxStatus,DxTargetConfigName,DxTimeProcessed,MxStatusN)
+      ;---         VALUES (:pID,:%var("DxIsError"),:%var("DxSourceConfigName"),:%var("DxStatus"),:%var("DxTargetConfigName"),:%var("DxTimeProcessed"),:%var("MxStatusN")) WHERE %ID = :tFactId)
+      ;--- ** SQL PUBLIC Variables: %var, SQLCODE, pID, tFactId
+    try { d $classmethod("%sqlcq."_$tr($namespace,"%_-$@:/\[]^ ","pudsssssssss")_".xEGzCFlq8cdadiXfbDNLZu8A8yVv","%New") } catch { if $ze["<CLASS DOES NOT EXIST>"&&($ze["%sqlcq."_$tr($namespace,"%_-$@:/\[]^ ","pudsssssssss")_".xEGzCFlq8cdadiXfbDNLZu8A8yVv")||($ze["<ZSQLU>") { d %0dsql5 } else { throw } }
+    Set pFactId = tFactId
+   }
+  }
+  Else {
+   If tLimitedList {
+     // DTB886 - Handle a defined incoming pFactList. This forces use of dynamic SQL and has trimmed the available %var
+    If '$IsObject(pSQLUpdate) {
+    	Set tSQL = "INSERT INTO User_MessageVolume.Fact ("_tListINTO_") VALUES ("_tListParameters_")"
+    	Set pSQLUpdate = ##class(%SQL.Statement).%New()
+    	Set tSC = pSQLUpdate.%Prepare(tSQL)
+    	If ('tSC) Quit
+    }
+    Set tListResult = pSQLUpdate.%Execute(tListVALUES...)
+    Set pFactId = tListResult.%ROWID
+    Set SQLCODE = tListResult.%SQLCODE
+   }
+   Else {
+      ;---&sql(INSERT INTO User_MessageVolume.Fact (%sourceId,DxIsError,DxSourceConfigName,DxStatus,DxTargetConfigName,DxTimeProcessed,MxStatusN)
+       ;---          VALUES (:pID,:%var("DxIsError"),:%var("DxSourceConfigName"),:%var("DxStatus"),:%var("DxTargetConfigName"),:%var("DxTimeProcessed"),:%var("MxStatusN")))
+       ;--- ** SQL PUBLIC Variables: %var, SQLCODE, pID
+     try { d $classmethod("%sqlcq."_$tr($namespace,"%_-$@:/\[]^ ","pudsssssssss")_".xETBd5C5T0jKbBwIgTehba1meKMy","%New") } catch { if $ze["<CLASS DOES NOT EXIST>"&&($ze["%sqlcq."_$tr($namespace,"%_-$@:/\[]^ ","pudsssssssss")_".xETBd5C5T0jKbBwIgTehba1meKMy")||($ze["<ZSQLU>") { d %0dsql7 } else { throw } }
+     Set pFactId = %ROWID
+   }
+  }
+  If (pFactId'="") {
+    Set:pID'="" ^DeepSee.Index("MESSAGEVOLUME","%sourceId",pID,pFactId) = ""
+    Set ^DeepSee.Index("MESSAGEVOLUME","%sourceIdReverse",pFactId) = pID
+  }
+ }
+ If (SQLCODE'=0) {
+  Set pErrorMsg = $G(%msg)
+  Set tSC = $$Error^%apiOBJ(5001,"Error inserting/updating fact: (Source ID:'"_pID_"') "_pErrorMsg)
+ }
+ }
+ Catch(ex) {
+  Set tSC = ex.AsStatus()
+  Set pErrorMsg = $ZE
+ }
+ Set:$D(zuSetting) zuSetting = $zu(115,1,zuSetting)
+ // DTB886 - Restore original %var if it was trimmed by pFactList
+ Merge %var=tOriginalVar
+ If ('tSC) {
+  Do ..%LogError(tSC)
+  If ($G(pID)'="") {
+  Do ##class(%DeepSee.Utils).%LogBuildError("MESSAGEVOLUME",pID,tSC)
+ }
+ }
+ Quit tSC }
+%0dsqlV	n %xxsql
+	s %xxsql("S",1)="INSERT INTO User_MessageVolume . StarIsError ( DxIsError ) VALUES ( :%var(""DxIsError"") )"
+	s %xxsql("M","%occSqlfuncinc")=$c(1),%xxsql("M","DEBUG")=$c(1),%xxsql("I","%DeepSee")="",%xxsql("I","%occSqlfunc")="",%xxsql("I","%systemInclude")=""
+	s %xxsql("I","EnsUtil")="",%xxsql("NS")="DEMONSTRATION"
+	d BuildQuery^%SYS.SQLSRV(.%xxsql,$lb("Logical","","","User.MessageVolume",0,"",),,"User.MessageVolume.Fact.CLS")
+	q
+%0dsqlX	n %xxsql
+	s %xxsql("S",1)="INSERT INTO User_MessageVolume . StarSourceConfigName ( DxSourceConfigName ) VALUES ( :%var(""DxSourceConfigName"") )"
+	s %xxsql("M","%occSqlfuncinc")=$c(1),%xxsql("M","DEBUG")=$c(1),%xxsql("I","%DeepSee")="",%xxsql("I","%occSqlfunc")="",%xxsql("I","%systemInclude")=""
+	s %xxsql("I","EnsUtil")="",%xxsql("NS")="DEMONSTRATION"
+	d BuildQuery^%SYS.SQLSRV(.%xxsql,$lb("Logical","","","User.MessageVolume",0,"",),,"User.MessageVolume.Fact.CLS")
+	q
+%0dsqlZ	n %xxsql
+	s %xxsql("S",1)="INSERT INTO User_MessageVolume . StarStatus ( DxStatus ) VALUES ( :%var(""DxStatus"") )"
+	s %xxsql("M","%occSqlfuncinc")=$c(1),%xxsql("M","DEBUG")=$c(1),%xxsql("I","%DeepSee")="",%xxsql("I","%occSqlfunc")="",%xxsql("I","%systemInclude")=""
+	s %xxsql("I","EnsUtil")="",%xxsql("NS")="DEMONSTRATION"
+	d BuildQuery^%SYS.SQLSRV(.%xxsql,$lb("Logical","","","User.MessageVolume",0,"",),,"User.MessageVolume.Fact.CLS")
+	q
+%0dsql1	n %xxsql
+	s %xxsql("S",1)="INSERT INTO User_MessageVolume . StarTargetConfigName ( DxTargetConfigName ) VALUES ( :%var(""DxTargetConfigName"") )"
+	s %xxsql("M","%occSqlfuncinc")=$c(1),%xxsql("M","DEBUG")=$c(1),%xxsql("I","%DeepSee")="",%xxsql("I","%occSqlfunc")="",%xxsql("I","%systemInclude")=""
+	s %xxsql("I","EnsUtil")="",%xxsql("NS")="DEMONSTRATION"
+	d BuildQuery^%SYS.SQLSRV(.%xxsql,$lb("Logical","","","User.MessageVolume",0,"",),,"User.MessageVolume.Fact.CLS")
+	q
+%0dsql3	n %xxsql
+	s %xxsql("S",1)="INSERT %NOLOCK %NOINDEX INTO User_MessageVolume . Fact ( %sourceId , DxIsError , DxSourceConfigName , DxStatus , DxTargetConfigName , DxTimeProcessed , MxStatusN ) VALUES ( :pID , :%var(""DxIsError"") , :%var(""DxSourceConfigName"") , :%var(""DxStatus"") , :%var(""DxTargetConfigName"") , :%var(""DxTimeProcessed"") , :%var(""MxStatusN"") )"
+	s %xxsql("M","%occSqlfuncinc")=$c(1),%xxsql("M","DEBUG")=$c(1),%xxsql("I","%DeepSee")="",%xxsql("I","%occSqlfunc")="",%xxsql("I","%systemInclude")=""
+	s %xxsql("I","EnsUtil")="",%xxsql("NS")="DEMONSTRATION"
+	d BuildQuery^%SYS.SQLSRV(.%xxsql,$lb("Logical","","","User.MessageVolume",0,"",),,"User.MessageVolume.Fact.CLS")
+	q
+%0dsql5	n %xxsql
+	s %xxsql("S",1)="UPDATE User_MessageVolume . Fact ( %sourceId , DxIsError , DxSourceConfigName , DxStatus , DxTargetConfigName , DxTimeProcessed , MxStatusN ) VALUES ( :pID , :%var(""DxIsError"") , :%var(""DxSourceConfigName"") , :%var(""DxStatus"") , :%var(""DxTargetConfigName"") , :%var(""DxTimeProcessed"") , :%var(""MxStatusN"") ) WHERE %ID = :tFactId"
+	s %xxsql("M","%occSqlfuncinc")=$c(1),%xxsql("M","DEBUG")=$c(1),%xxsql("I","%DeepSee")="",%xxsql("I","%occSqlfunc")="",%xxsql("I","%systemInclude")=""
+	s %xxsql("I","EnsUtil")="",%xxsql("NS")="DEMONSTRATION"
+	d BuildQuery^%SYS.SQLSRV(.%xxsql,$lb("Logical","","","User.MessageVolume",0,"",),,"User.MessageVolume.Fact.CLS")
+	q
+%0dsql7	n %xxsql
+	s %xxsql("S",1)="INSERT INTO User_MessageVolume . Fact ( %sourceId , DxIsError , DxSourceConfigName , DxStatus , DxTargetConfigName , DxTimeProcessed , MxStatusN ) VALUES ( :pID , :%var(""DxIsError"") , :%var(""DxSourceConfigName"") , :%var(""DxStatus"") , :%var(""DxTargetConfigName"") , :%var(""DxTimeProcessed"") , :%var(""MxStatusN"") )"
+	s %xxsql("M","%occSqlfuncinc")=$c(1),%xxsql("M","DEBUG")=$c(1),%xxsql("I","%DeepSee")="",%xxsql("I","%occSqlfunc")="",%xxsql("I","%systemInclude")=""
+	s %xxsql("I","EnsUtil")="",%xxsql("NS")="DEMONSTRATION"
+	d BuildQuery^%SYS.SQLSRV(.%xxsql,$lb("Logical","","","User.MessageVolume",0,"",),,"User.MessageVolume.Fact.CLS")
+	q
+%PurgeIndices(idxlist="",lockExtent=0,pIgnoreIndexList="") public {
+	Set locked=0,sc=1
+	Try {
+		if ($listlength(idxlist)=1)&&($listget(idxlist,1)="") { return 1 }
+		Set tPtr=0
+		While $listnext(idxlist,tPtr,tIndex) {
+			continue:tIndex=""
+			If '($d(^oddCOM($classname(),"i",tIndex))) {
+				Set sc=$select(+sc:$$Error^%apiOBJ(5066,$classname()_"::"_tIndex),1:$$AppendStatus^%occSystem(sc,$$Error^%apiOBJ(5066,$classname()_"::"_tIndex)))
+			}
+		}
+		If ('sc) { Return sc }
+		If lockExtent {
+			Set sc=..%LockExtent(0)
+			If ('sc) { Return sc }
+			Set locked=1
+		}
+		If $system.CLS.IsMthd("%OnBeforePurgeIndices") {
+			Set sc=..%OnBeforePurgeIndices(.idxlist)
+			If (('sc))||(($listlength(idxlist)=1)&&($listget(idxlist,1)="")) {
+				If locked {
+					Do ..%SQLReleaseTableLock(0)
+				}
+				Return sc
+			}
+		}
+		if ((idxlist="")||($listfind(idxlist,"$Fact"))),'$listfind(pIgnoreIndexList,"$Fact") {
+			kill ^DeepSee.Index("MESSAGEVOLUME","$Fact")
+		}
+		if ((idxlist="")||($listfind(idxlist,"Dx2624988102"))),'$listfind(pIgnoreIndexList,"Dx2624988102") {
+			kill ^DeepSee.Index("MESSAGEVOLUME",4)
+		}
+		if ((idxlist="")||($listfind(idxlist,"DxIsError"))),'$listfind(pIgnoreIndexList,"DxIsError") {
+			kill ^DeepSee.Index("MESSAGEVOLUME",6)
+		}
+		if ((idxlist="")||($listfind(idxlist,"DxSourceConfigName"))),'$listfind(pIgnoreIndexList,"DxSourceConfigName") {
+			kill ^DeepSee.Index("MESSAGEVOLUME",2)
+		}
+		if ((idxlist="")||($listfind(idxlist,"DxStatus"))),'$listfind(pIgnoreIndexList,"DxStatus") {
+			kill ^DeepSee.Index("MESSAGEVOLUME",7)
+		}
+		if ((idxlist="")||($listfind(idxlist,"DxTargetConfigName"))),'$listfind(pIgnoreIndexList,"DxTargetConfigName") {
+			kill ^DeepSee.Index("MESSAGEVOLUME",3)
+		}
+		if ((idxlist="")||($listfind(idxlist,"DxTimeProcessedFxHourNumber"))),'$listfind(pIgnoreIndexList,"DxTimeProcessedFxHourNumber") {
+			kill ^DeepSee.Index("MESSAGEVOLUME",5)
+		}
+		if ((idxlist="")||($listfind(idxlist,"MxStatusN"))),'$listfind(pIgnoreIndexList,"MxStatusN") {
+			kill ^DeepSee.Index("MESSAGEVOLUME","M1")
+		}
+		Set sc=1
+		If $system.CLS.IsMthd("%OnAfterPurgeIndices") { Set sc=..%OnAfterPurgeIndices(.idxlist) }
+	} Catch tException {
+		Set sc=tException.AsStatus(),$ZE=""
+	}
+	If locked { Do ..%UnlockExtent(0) }
+	Quit sc }
+%SQLAcquireLock(%rowid,s=0,unlockref=0)
+	new %d,gotlock
+	set %d(1)=%rowid set s=$e("E",'unlockref)_$e("S",s)
+	lock +^DeepSee.Fact("USER.MESSAGEVOLUME.FACT",%d(1))#s:$zu(115,4) set gotlock=$t
+	if gotlock,'unlockref { set:$case($SYSTEM.Lock.ReturnCode(),2:1,4:1,:0)&&($tlevel) %0CacheLock("User.MessageVolume.Fact","E")=1 }
+	set:gotlock&&unlockref unlockref=unlockref+1,unlockref(unlockref)=$lb($name(^DeepSee.Fact("USER.MESSAGEVOLUME.FACT",%d(1))),"User.MessageVolume.Fact",s_"D")
+	QUIT gotlock
+%SQLAcquireTableLock(s=0,SQLCODE,to="")
+	set s=$e("S",s) set:to="" to=$zu(115,4) lock +^DeepSee.Fact("USER.MESSAGEVOLUME.FACT")#s:to QUIT:$t 1 set SQLCODE=-110 if s="S" { set %msg=$$FormatMessage^%occMessages(,"%SQL.Filer","SQLFiler35",,"User_MessageVolume"_"."_"Fact") } else { set %msg=$$FormatMessage^%occMessages(,"%SQL.Filer","SQLFiler36",,"User_MessageVolume"_"."_"Fact") } QUIT 0
+	Return
+%SQLBuildIndices(pIndices="",pLockFlag=0,pStartID="",pEndID="",pIgnoreIndexList="")
+	QUIT ..%BuildIndices(pIndices,,pLockFlag,,pStartID,pEndID,pIgnoreIndexList)
+%SQLBuildPurgeIndexForRow(pIndices="",pActions="BP",pLockRow=1,%d,%e,pIgnoreIndexList="")
+	// Purge and build index nodes for a single row using given values, return Status Code
+	new sn,tSC,tLock set tSC=1,pActions=$zcvt(pActions,"U")
+	try {
+		if $g(%d(1))="" { set tSC=$select(+tSC:$$Error^%apiOBJ(5521,-108,"RowID value must be specified in %d(1) when calling %SQLBuildPurgeIndexForRow for table 'User_MessageVolume.Fact'"),1:$$AppendStatus^%occSystem(tSC,$$Error^%apiOBJ(5521,-108,"RowID value must be specified in %d(1) when calling %SQLBuildPurgeIndexForRow for table 'User_MessageVolume.Fact'"))) RETURN tSC }
+		if pLockRow { if '..%SQLAcquireLock(%d(1)) { set tSC=$select(+tSC:$$Error^%apiOBJ(5521,-114,"Unable to lock row in table 'User_MessageVolume.Fact' with %ID = '"_%d(1)_"'"),1:$$AppendStatus^%occSystem(tSC,$$Error^%apiOBJ(5521,-114,"Unable to lock row in table 'User_MessageVolume.Fact' with %ID = '"_%d(1)_"'"))) RETURN tSC  } else { set tLock=1 }}
+		set %i=%d(1)\64000+1,%o=%d(1)#64000+1
+		if ((pIndices="")||($lf(pIndices,"$Fact"))),'$listfind(pIgnoreIndexList,"$Fact") {
+			if pActions["P" {
+				set $bit(^DeepSee.Index("MESSAGEVOLUME","$Fact",%i),%o)=0
+			}
+			if pActions["B" {
+				set $bit(^DeepSee.Index("MESSAGEVOLUME","$Fact",%i),%o)=1
+			}
+		}
+		if ((pIndices="")||($lf(pIndices,"Dx2624988102"))),'$listfind(pIgnoreIndexList,"Dx2624988102") {
+			if pActions["P" {
+				set sn(1)=%e(4) set:sn(1)="" sn(1)=-1E14 set $bit(^DeepSee.Index("MESSAGEVOLUME",4,sn(1),%i),%o)=0
+			}
+			if pActions["B" {
+				set sn(1)=%d(4) set:sn(1)="" sn(1)=-1E14
+				set $bit(^DeepSee.Index("MESSAGEVOLUME",4,sn(1),%i),%o)=1
+			}
+		}
+		if ((pIndices="")||($lf(pIndices,"DxIsError"))),'$listfind(pIgnoreIndexList,"DxIsError") {
+			if pActions["P" {
+				set sn(1)=%e(5) set:sn(1)="" sn(1)=-1E14 set $bit(^DeepSee.Index("MESSAGEVOLUME",6,sn(1),%i),%o)=0
+			}
+			if pActions["B" {
+				set sn(1)=%d(5) set:sn(1)="" sn(1)=-1E14
+				set $bit(^DeepSee.Index("MESSAGEVOLUME",6,sn(1),%i),%o)=1
+			}
+		}
+		if ((pIndices="")||($lf(pIndices,"DxSourceConfigName"))),'$listfind(pIgnoreIndexList,"DxSourceConfigName") {
+			if pActions["P" {
+				set sn(1)=%e(6) set:sn(1)="" sn(1)=-1E14 set $bit(^DeepSee.Index("MESSAGEVOLUME",2,sn(1),%i),%o)=0
+			}
+			if pActions["B" {
+				set sn(1)=%d(6) set:sn(1)="" sn(1)=-1E14
+				set $bit(^DeepSee.Index("MESSAGEVOLUME",2,sn(1),%i),%o)=1
+			}
+		}
+		if ((pIndices="")||($lf(pIndices,"DxStatus"))),'$listfind(pIgnoreIndexList,"DxStatus") {
+			if pActions["P" {
+				set sn(1)=%e(7) set:sn(1)="" sn(1)=-1E14 set $bit(^DeepSee.Index("MESSAGEVOLUME",7,sn(1),%i),%o)=0
+			}
+			if pActions["B" {
+				set sn(1)=%d(7) set:sn(1)="" sn(1)=-1E14
+				set $bit(^DeepSee.Index("MESSAGEVOLUME",7,sn(1),%i),%o)=1
+			}
+		}
+		if ((pIndices="")||($lf(pIndices,"DxTargetConfigName"))),'$listfind(pIgnoreIndexList,"DxTargetConfigName") {
+			if pActions["P" {
+				set sn(1)=%e(8) set:sn(1)="" sn(1)=-1E14 set $bit(^DeepSee.Index("MESSAGEVOLUME",3,sn(1),%i),%o)=0
+			}
+			if pActions["B" {
+				set sn(1)=%d(8) set:sn(1)="" sn(1)=-1E14
+				set $bit(^DeepSee.Index("MESSAGEVOLUME",3,sn(1),%i),%o)=1
+			}
+		}
+		if ((pIndices="")||($lf(pIndices,"DxTimeProcessedFxHourNumber"))),'$listfind(pIgnoreIndexList,"DxTimeProcessedFxHourNumber") {
+			if pActions["P" {
+				set sn(1)=%e(10) set:sn(1)="" sn(1)=-1E14 set $bit(^DeepSee.Index("MESSAGEVOLUME",5,sn(1),%i),%o)=0
+			}
+			if pActions["B" {
+				set sn(1)=%d(10) set:sn(1)="" sn(1)=-1E14
+				set $bit(^DeepSee.Index("MESSAGEVOLUME",5,sn(1),%i),%o)=1
+			}
+		}
+		if ((pIndices="")||($lf(pIndices,"MxStatusN"))),'$listfind(pIgnoreIndexList,"MxStatusN") {
+			if pActions["P" {
+				set sn(0)=%e(11) i sn(0) { s:sn(0)<0 $bit(^DeepSee.Index("MESSAGEVOLUME","M1","-",%i),%o)=0 s sn(2)=$Factor($zabs(sn(0)),2) s sn(1)=0 for { s sn(1)=$BitFind(sn(2),1,sn(1)+1) q:sn(1)=0  s $bit(^DeepSee.Index("MESSAGEVOLUME","M1",sn(1),%i),%o)=0 }} Else { if sn(0)="" { set $bit(^DeepSee.Index("MESSAGEVOLUME","M1","N",%i),%o)=0 } else { set $bit(^DeepSee.Index("MESSAGEVOLUME","M1","Z",%i),%o)=0 } } 
+			}
+			if pActions["B" {
+				set sn(0)=%d(11)
+				if sn(0) {
+					set:sn(0)<0 $bit(^DeepSee.Index("MESSAGEVOLUME","M1","-",%i),%o)=1
+					set sn(2)=$factor($zabs(sn(0)),2)
+					set sn(1)=0 for { set sn(1)=$bitfind(sn(2),1,sn(1)+1) quit:sn(1)=0  set $bit(^DeepSee.Index("MESSAGEVOLUME","M1",sn(1),%i),%o)=1 }
+				}
+				else {
+					if sn(0)="" { set $bit(^DeepSee.Index("MESSAGEVOLUME","M1","N",%i),%o)=1 } else { set $bit(^DeepSee.Index("MESSAGEVOLUME","M1","Z",%i),%o)=1 }
+				}
+			}
+		}
+		if pLockRow { do ..%SQLReleaseLock(%d(1),0,0) set tLock=0 }
+	}
+	catch {
+		if $g(tLock) { do ..%SQLReleaseLock(%d(1),0,0) }
+		set tSC=$select(+tSC:$$Error^%apiOBJ(5594,$ze),1:$$AppendStatus^%occSystem(tSC,$$Error^%apiOBJ(5594,$ze)))
+	}
+	QUIT tSC
+%SQLDefineiDjVars(%d,subs,master)
+	QUIT
+%SQLDelete(%rowid,%check,%tstart=1,%mv=0,%polymorphic=0)
+	// SQL DELETE method for table User_MessageVolume.Fact
+	new bva,ce,%d,dc,%e,%ele,%itm,%key,%l,%nc,omcall,%oper,%pos,%s,sn,sqlcode,subs set %oper="DELETE",sqlcode=0,%ROWID=%rowid,%d(1)=%rowid,%e(1)=%rowid,%l=$c(0)
+	if '$d(%0CacheSQLRA) { new %0CacheSQLRA set omcall=1 }
+	if '$a(%check,2) {
+		new %ls lock +^DeepSee.Fact("USER.MESSAGEVOLUME.FACT",%d(1))#"E":$zu(115,4) set %ls=$s('$t:0,1:$case($SYSTEM.Lock.ReturnCode(),0:1,4:2,2:2,1:3,:""))
+		set:%ls=2 $e(%check,2)=$c(1) set:%ls=2&&($tlevel) %0CacheLock("User.MessageVolume.Fact","E")=1 set:$case(%ls,1:1,2:1,:0) $e(%l)=$c(1)
+		if '%ls||(%ls=3) { set SQLCODE=-110,%msg=$$FormatMessage^%occMessages(,"%SQL.Filer",$s('%ls:"SQLFiler40",1:"SQLFiler55"),,%oper,"User_MessageVolume"_"."_"Fact",$g(%d(1))) RETURN  }
+	}
+	if %tstart { TSTART:($zu(115,1)=1)||('$TLEVEL&&($zu(115,1)=2))  }
+	set $zt="ERRORDelete"
+	do ..%SQLGetOld(%rowid,.%d,.%e,.sqlcode) if sqlcode { set SQLCODE=-106,%msg=$$FormatMessage^%occMessages(,"%SQL.Filer","SQLFiler58",,"User_MessageVolume"_"."_"Fact",%rowid) do ..%SQLEExit() QUIT  }
+	if '$a(%check),'$zu(115,7) do  if sqlcode set SQLCODE=sqlcode do ..%SQLEExit() QUIT  
+	. new %fk,%k,%p,%st,%t,%z set %k="",%p("%1")="%d(1),",%p("IDKEY")="%d(1),"
+	. for  quit:sqlcode<0  set %k=$o(^rINDEXEXT("F","User.MessageVolume.Fact",%k)) quit:%k=""  set %t="" for  set %t=$o(^rINDEXEXT("F","User.MessageVolume.Fact",%k,"f",%t)) quit:%t=""  set %st=(%t="User.MessageVolume.Fact") set %fk="" for  set %fk=$o(^rINDEXEXT("F","User.MessageVolume.Fact",%k,"f",%t,%fk)) quit:%fk=""  x "set %z=$classmethod(%t,%fk_""SQLFKeyRefAction"",%st,%k,$a(%check,2),"_%p(%k)_")" if %z set sqlcode=-124 quit  
+	set ce="" for  { set ce=$order(^oddSQL("User_MessageVolume","Fact","DC",ce)) quit:ce=""   do $classmethod(ce,"%SQLDeleteChildren",%d(1),%check,.sqlcode) quit:sqlcode<0  } if sqlcode<0 { set SQLCODE=sqlcode do ..%SQLEExit() QUIT } // Delete any children
+	if '$a(%check,3) {
+		new %i,%o set %i=%d(1)\64000+1,%o=%d(1)#64000+1
+		set $bit(^DeepSee.Index("MESSAGEVOLUME","$Fact",%i),%o)=0
+		set sn(1)=%e(4) set:sn(1)="" sn(1)=-1E14 set $bit(^DeepSee.Index("MESSAGEVOLUME",4,sn(1),%i),%o)=0
+		set sn(1)=%e(5) set:sn(1)="" sn(1)=-1E14 set $bit(^DeepSee.Index("MESSAGEVOLUME",6,sn(1),%i),%o)=0
+		set sn(1)=%e(6) set:sn(1)="" sn(1)=-1E14 set $bit(^DeepSee.Index("MESSAGEVOLUME",2,sn(1),%i),%o)=0
+		set sn(1)=%e(7) set:sn(1)="" sn(1)=-1E14 set $bit(^DeepSee.Index("MESSAGEVOLUME",7,sn(1),%i),%o)=0
+		set sn(1)=%e(8) set:sn(1)="" sn(1)=-1E14 set $bit(^DeepSee.Index("MESSAGEVOLUME",3,sn(1),%i),%o)=0
+		set sn(1)=%e(10) set:sn(1)="" sn(1)=-1E14 set $bit(^DeepSee.Index("MESSAGEVOLUME",5,sn(1),%i),%o)=0
+		set sn(0)=%e(11) i sn(0) { s:sn(0)<0 $bit(^DeepSee.Index("MESSAGEVOLUME","M1","-",%i),%o)=0 s sn(2)=$Factor($zabs(sn(0)),2) s sn(1)=0 for { s sn(1)=$BitFind(sn(2),1,sn(1)+1) q:sn(1)=0  s $bit(^DeepSee.Index("MESSAGEVOLUME","M1",sn(1),%i),%o)=0 }} Else { if sn(0)="" { set $bit(^DeepSee.Index("MESSAGEVOLUME","M1","N",%i),%o)=0 } else { set $bit(^DeepSee.Index("MESSAGEVOLUME","M1","Z",%i),%o)=0 } } 
+	}
+	k ^DeepSee.Fact("USER.MESSAGEVOLUME.FACT",%d(1))
+	do ..%SQLUnlock() TCOMMIT:%tstart&&($zu(115,1)=1)
+	set SQLCODE=0 kill:$g(omcall) %0CacheSQLRA
+	QUIT
+ERRORDelete	set $zt="",SQLCODE=-415,%msg=$s($g(%msg)'="":%msg_" -- ",1:"")_$$FormatMessage^%occMessages(,"%SQL.Filer","SQLFiler51",,%oper,"User_MessageVolume"_"."_"Fact",$ze) if $ze["<FRAMESTACK>" { set %msg=$$FormatMessage^%occMessages(,"%SQL.Filer","SQLFiler52",,$ze,%oper,"User_MessageVolume"_"."_"Fact") do ##Class(%SYS.System).WriteToConsoleLog(%msg) if ($zu(67,10,$j)=1)||($zu(67,10,$j)=3) { write !,%msg h 3 } HALT  } do ..%SQLEExit() QUIT
+	Return
+%SQLDeleteTempStreams()
+	// Delete all temporary streams
+	QUIT
+%SQLEExit()
+	do ..%SQLUnlock() 
+	do ..%SQLUnlockRef()
+	if %tstart,$zu(115,1)=1,$TLEVEL { set %tstart=0 TROLLBACK 1 } kill:$g(omcall) %0CacheSQLRA QUIT  
+	Return
+%SQLExists(pLockOnly=0,pUnlockRef,%pVal...)
+	// SQL Foreign Key validation entry point for Key %1.  Called by FKeys that reference this Key to see if the row is defined
+	new id set id=%pVal(1)
+	if pLockOnly>=0 { if '..%SQLGetLock(id,1,.pUnlockRef) { set sqlcode=-114,%msg=$$FormatMessage^%occMessages(,"%SQL.Filer","SQLFiler39",,"User_MessageVolume"_"."_"Fact"_":"_"%1") QUIT 0 } }
+	if pLockOnly<1 {
+		new qv set qv=$d(^DeepSee.Fact("USER.MESSAGEVOLUME.FACT",%pVal(1))) QUIT:pLockOnly=-1 qv
+		do:'$g(pUnlockRef) ..%SQLReleaseLock(id,1) quit qv
+	}
+	else { do:'$g(pUnlockRef) ..%SQLReleaseLock(id,1) QUIT 1 }
+	Return
+%SQLGetLock(pRowId,pShared=0,pUnlockRef)
+	QUIT ..%SQLAcquireLock(pRowId,pShared,.pUnlockRef)
+%SQLGetOld(%rowid,%d,%e,sqlcode)
+	// Get old data values
+	new SQLCODE,%ROWCOUNT
+	 ;---&sql(SELECT Dx2624988102,DxTimeProcessed,DxIsError,DxSourceConfigName,DxStatus,DxTargetConfigName,DxTimeProcessedFxHourNumber,MxStatusN INTO :%e() FROM %IGNOREINDEX * User_MessageVolume.Fact WHERE ID=:%rowid)
+ 	 ;--- ** SQL PUBLIC Variables: %e, %rowid, SQLCODE
+	try { d $classmethod("%sqlcq."_$tr($namespace,"%_-$@:/\[]^ ","pudsssssssss")_".xEgjcKxyNst6Byrg7CGx97TKIvzw","%New") } catch { if $ze["<CLASS DOES NOT EXIST>"&&($ze["%sqlcq."_$tr($namespace,"%_-$@:/\[]^ ","pudsssssssss")_".xEgjcKxyNst6Byrg7CGx97TKIvzw")||($ze["<ZSQLU>") { d %0dsql9 } else { throw } }
+	set sqlcode=SQLCODE QUIT:sqlcode'=0
+	QUIT
+ q
+%0dsql9	n %xxsql
+	s %xxsql("S",1)="SELECT Dx2624988102 , DxTimeProcessed , DxIsError , DxSourceConfigName , DxStatus , DxTargetConfigName , DxTimeProcessedFxHourNumber , MxStatusN INTO :%e() FROM %IGNOREINDEX * User_MessageVolume . Fact WHERE ID = :%rowid"
+	s %xxsql("M","%occSqlfuncinc")=$c(1),%xxsql("M","DEBUG")=$c(1),%xxsql("I","%DeepSee")="",%xxsql("I","%occSqlfunc")="",%xxsql("I","%systemInclude")=""
+	s %xxsql("I","EnsUtil")="",%xxsql("NS")="DEMONSTRATION"
+	d BuildQuery^%SYS.SQLSRV(.%xxsql,$lb("Logical","","","User.MessageVolume",0,"",),,"User.MessageVolume.Fact.CLS")
+	q
+%SQLGetOldAll()
+	// Get all old data values
+	new SQLCODE,%ROWCOUNT
+	 ;---&sql(SELECT %dspartition,%sourceId,Dx2624988102,DxIsError,DxSourceConfigName,DxStatus,DxTargetConfigName,DxTimeProcessed,DxTimeProcessedFxHourNumber,MxStatusN INTO :%e() FROM %IGNOREINDEX * User_MessageVolume.Fact WHERE ID=:%rowid)
+ 	 ;--- ** SQL PUBLIC Variables: %e, %rowid, SQLCODE
+	try { d $classmethod("%sqlcq."_$tr($namespace,"%_-$@:/\[]^ ","pudsssssssss")_".xEgp0HpDr106Fdu98gaC6WKfwyXZ","%New") } catch { if $ze["<CLASS DOES NOT EXIST>"&&($ze["%sqlcq."_$tr($namespace,"%_-$@:/\[]^ ","pudsssssssss")_".xEgp0HpDr106Fdu98gaC6WKfwyXZ")||($ze["<ZSQLU>") { d %0dsqlb } else { throw } }
+	set sqlcode=SQLCODE QUIT:sqlcode'=0
+	QUIT
+ q
+%0dsqlb	n %xxsql
+	s %xxsql("S",1)="SELECT %dspartition , %sourceId , Dx2624988102 , DxIsError , DxSourceConfigName , DxStatus , DxTargetConfigName , DxTimeProcessed , DxTimeProcessedFxHourNumber , MxStatusN INTO :%e() FROM %IGNOREINDEX * User_MessageVolume . Fact WHERE ID = :%rowid"
+	s %xxsql("M","%occSqlfuncinc")=$c(1),%xxsql("M","DEBUG")=$c(1),%xxsql("I","%DeepSee")="",%xxsql("I","%occSqlfunc")="",%xxsql("I","%systemInclude")=""
+	s %xxsql("I","EnsUtil")="",%xxsql("NS")="DEMONSTRATION"
+	d BuildQuery^%SYS.SQLSRV(.%xxsql,$lb("Logical","","","User.MessageVolume",0,"",),,"User.MessageVolume.Fact.CLS")
+	q
+%SQLGetOldIndex(%rowid,%d,pF=0,sqlcode)
+	// Get index old data values
+	new SQLCODE,%ROWCOUNT
+	 ;---&sql(SELECT Dx2624988102,DxIsError,DxSourceConfigName,DxStatus,DxTargetConfigName,DxTimeProcessedFxHourNumber,MxStatusN INTO :%d() FROM %IGNOREINDEX * User_MessageVolume.Fact WHERE ID=:%rowid)
+ 	 ;--- ** SQL PUBLIC Variables: %d, %rowid, SQLCODE
+	try { d $classmethod("%sqlcq."_$tr($namespace,"%_-$@:/\[]^ ","pudsssssssss")_".xE9R38xKKrcI61HY8LhBQJWM3N6l","%New") } catch { if $ze["<CLASS DOES NOT EXIST>"&&($ze["%sqlcq."_$tr($namespace,"%_-$@:/\[]^ ","pudsssssssss")_".xE9R38xKKrcI61HY8LhBQJWM3N6l")||($ze["<ZSQLU>") { d %0dsqld } else { throw } }
+	if pF { set:$d(%d(4)) pF("Dx2624988102")=%d(4) set:$d(%d(5)) pF("DxIsError")=%d(5) set:$d(%d(6)) pF("DxSourceConfigName")=%d(6) set:$d(%d(7)) pF("DxStatus")=%d(7) set:$d(%d(8)) pF("DxTargetConfigName")=%d(8) set:$d(%d(10)) pF("DxTimeProcessedFxHourNumber")=%d(10) set:$d(%d(11)) pF("MxStatusN")=%d(11)  }
+	set sqlcode=SQLCODE QUIT:sqlcode'=0
+	QUIT
+ q
+%0dsqld	n %xxsql
+	s %xxsql("S",1)="SELECT Dx2624988102 , DxIsError , DxSourceConfigName , DxStatus , DxTargetConfigName , DxTimeProcessedFxHourNumber , MxStatusN INTO :%d() FROM %IGNOREINDEX * User_MessageVolume . Fact WHERE ID = :%rowid"
+	s %xxsql("M","%occSqlfuncinc")=$c(1),%xxsql("M","DEBUG")=$c(1),%xxsql("I","%DeepSee")="",%xxsql("I","%occSqlfunc")="",%xxsql("I","%systemInclude")=""
+	s %xxsql("I","EnsUtil")="",%xxsql("NS")="DEMONSTRATION"
+	d BuildQuery^%SYS.SQLSRV(.%xxsql,$lb("Logical","","","User.MessageVolume",0,"",),,"User.MessageVolume.Fact.CLS")
+	q
+%SQLInsert(%d,%check,%inssel,%vco,%tstart=1,%mv=0)
+	// SQL INSERT method for table User_MessageVolume.Fact
+	new bva,%ele,%itm,%key,%f,%l,%n,%nc,%oper,%pos,%s,sqlcode,sn,subs,unlockref,icol set %oper="INSERT",sqlcode=0,%l=$c(0,0,0),unlockref=1
+	if $a(%check,7) { new %diu merge %diu=%d }
+	if $d(%d(1)),'$zu(115,11) { if %d(1)'="" { set SQLCODE=-111,%msg=$$FormatMessage^%occMessages(,"%SQL.Filer","SQLFiler6",,"ID","User_MessageVolume"_"."_"Fact") RETURN ""  } kill %d(1) } 
+	if '$a(%check),'..%SQLValidateFields(.sqlcode) { set SQLCODE=sqlcode RETURN "" }
+	do:'$a(%check,8) ..%SQLNormalizeFields()
+	if %tstart { TSTART:($zu(115,1)=1)||('$TLEVEL&&($zu(115,1)=2))  } set $zt="ERRORInsert"
+	if '$d(%d(1)) { set %d(1)=$i(^DeepSee.Fact("USER.MESSAGEVOLUME.FACT")) } elseif %d(1)>$g(^DeepSee.Fact("USER.MESSAGEVOLUME.FACT")) { if $i(^DeepSee.Fact("USER.MESSAGEVOLUME.FACT"),$zabs(%d(1)-$g(^DeepSee.Fact("USER.MESSAGEVOLUME.FACT")))) {}} elseif $d(^DeepSee.Fact("USER.MESSAGEVOLUME.FACT",%d(1))) { set SQLCODE=-119,%msg=$$FormatMessage^%occMessages(,"%SQL.Filer","SQLFiler33",,"ID",%d(1),"User_MessageVolume"_"."_"Fact"_"."_"ID") do ..%SQLEExit() RETURN "" }
+	do ..%SQLInsertComputes()
+	if '$a(%check) {
+		do {
+			if $g(%vco)'="" { do ..%SQLInsertComputes(1) d @%vco quit:sqlcode<0  }
+		} while 0
+		if sqlcode<0 { set SQLCODE=sqlcode do ..%SQLEExit() RETURN "" }		// A constraint failed
+	}
+	for icol=4,9,5,6,7,8,10,11 { set:'($d(%d(icol))#2) %d(icol)="" }
+	if '$a(%check,2) {
+		new %ls lock +^DeepSee.Fact("USER.MESSAGEVOLUME.FACT",%d(1))#"E":$zu(115,4) set %ls=$s('$t:0,1:$case($SYSTEM.Lock.ReturnCode(),0:1,4:2,2:2,1:3,:""))
+		set:%ls=2 $e(%check,2)=$c(1) set:%ls=2&&($tlevel) %0CacheLock("User.MessageVolume.Fact","E")=1 set:$case(%ls,1:1,2:1,:0) $e(%l)=$c(1)
+		if '%ls||(%ls=3) { set SQLCODE=-110,%msg=$$FormatMessage^%occMessages(,"%SQL.Filer",$s('%ls:"SQLFiler40",1:"SQLFiler55"),,%oper,"User_MessageVolume"_"."_"Fact",$g(%d(1))) do ..%SQLEExit() RETURN ""  }
+	}
+	set ^DeepSee.Fact("USER.MESSAGEVOLUME.FACT",%d(1))=$lb(%d(3),%d(9),%d(6),%d(8),%d(5),%d(7),%d(11))
+	if '$a(%check,3) {
+		new %i,%o set %i=%d(1)\64000+1,%o=%d(1)#64000+1
+		set $bit(^DeepSee.Index("MESSAGEVOLUME","$Fact",%i),%o)=1
+		set sn(1)=%d(4) set:sn(1)="" sn(1)=-1E14
+		set $bit(^DeepSee.Index("MESSAGEVOLUME",4,sn(1),%i),%o)=1
+		set sn(1)=%d(5) set:sn(1)="" sn(1)=-1E14
+		set $bit(^DeepSee.Index("MESSAGEVOLUME",6,sn(1),%i),%o)=1
+		set sn(1)=%d(6) set:sn(1)="" sn(1)=-1E14
+		set $bit(^DeepSee.Index("MESSAGEVOLUME",2,sn(1),%i),%o)=1
+		set sn(1)=%d(7) set:sn(1)="" sn(1)=-1E14
+		set $bit(^DeepSee.Index("MESSAGEVOLUME",7,sn(1),%i),%o)=1
+		set sn(1)=%d(8) set:sn(1)="" sn(1)=-1E14
+		set $bit(^DeepSee.Index("MESSAGEVOLUME",3,sn(1),%i),%o)=1
+		set sn(1)=%d(10) set:sn(1)="" sn(1)=-1E14
+		set $bit(^DeepSee.Index("MESSAGEVOLUME",5,sn(1),%i),%o)=1
+		set sn(0)=%d(11)
+		if sn(0) {
+			set:sn(0)<0 $bit(^DeepSee.Index("MESSAGEVOLUME","M1","-",%i),%o)=1
+			set sn(2)=$factor($zabs(sn(0)),2)
+			set sn(1)=0 for { set sn(1)=$bitfind(sn(2),1,sn(1)+1) quit:sn(1)=0  set $bit(^DeepSee.Index("MESSAGEVOLUME","M1",sn(1),%i),%o)=1 }
+		}
+		else {
+			if sn(0)="" { set $bit(^DeepSee.Index("MESSAGEVOLUME","M1","N",%i),%o)=1 } else { set $bit(^DeepSee.Index("MESSAGEVOLUME","M1","Z",%i),%o)=1 }
+		}
+	}
+	lock:$a(%l) -^DeepSee.Fact("USER.MESSAGEVOLUME.FACT",%d(1))#"E"
+	TCOMMIT:%tstart&&($zu(115,1)=1)
+	do ..%SQLUnlockRef()
+	set SQLCODE=0
+	QUIT %d(1) 			// %SQLInsert
+ERRORInsert	set $zt="",SQLCODE=-415,%msg=$s($g(%msg)'="":%msg_" -- ",1:"")_$$FormatMessage^%occMessages(,"%SQL.Filer","SQLFiler51",,%oper,"User_MessageVolume"_"."_"Fact",$ze)
+	if $ze["<FRAMESTACK>" { set %msg=$$FormatMessage^%occMessages(,"%SQL.Filer","SQLFiler52",,$ze,%oper,"User_MessageVolume"_"."_"Fact") do ##Class(%SYS.System).WriteToConsoleLog(%msg) if ($zu(67,10,$j)=1)||($zu(67,10,$j)=3) { write !,%msg h 3 } HALT  }
+	do ..%SQLEExit()
+	RETURN ""
+%SQLInsertComputes(view=0)
+	if 'view {
+	set %d(4)="" do ..Dx2624988102SQLCompute()
+	set %d(10)="" do ..DxTimeProcessedFxHourNumberSQLCompute()
+	}
+	else {
+	set %d(2)="" do ..%dspartitionSQLCompute()
+	set %d(4)="" do ..Dx2624988102SQLCompute()
+	set %d(10)="" do ..DxTimeProcessedFxHourNumberSQLCompute()
+	}
+	QUIT
+%SQLInvalid(pIcol,pVal) public {
+	set:$l($g(pVal))>40 pVal=$e(pVal,1,40)_"..." do:'$d(%n) ..%SQLnBuild() set %msg=$s($g(%msg)'="":%msg_$c(13,10),1:"")_$$FormatMessage^%occMessages(,"%SQL.Filer","SQLFiler37",,"User_MessageVolume"_"."_"Fact"_"."_$lg(%n,pIcol),$s($g(pVal)'="":$s(pVal="":"<NULL>",pVal=$c(0):"<EMPTY STRING>",1:"'"_pVal_"'"),1:"")),sqlcode=$s(%oper="INSERT":-104,1:-105)
+	QUIT sqlcode }
+%SQLMissing(fname)
+	set sqlcode=-108,%msg=$$FormatMessage^%occMessages(,"%SQL.Filer","SQLFiler47",,fname,"User_MessageVolume"_"."_"Fact") quit
+%SQLNormalizeFields()
+	set:$g(%d(11))'="" %d(11)=$select(%d(11)="":"",$zu(115,13)&&(%d(11)=$c(0)):"",1:$double(%d(11)))
+	new %f for %f=2,3,5,6,7,8 { set:$g(%d(%f))'="" %d(%f)=$select(%d(%f)=$c(0)&&$zu(115,13):"",1:%d(%f)\1) }
+	QUIT
+%SQLPurgeIndices(pIndices="",pLockExtent=0,pIgnoreIndexList="")
+	QUIT ..%PurgeIndices(pIndices,pLockExtent,pIgnoreIndexList)
+%SQLQuickLoad(%rowid,%nolock=0,pkey=0,qq=0)
+	// Get fields from row where SQLRowID=%rowid
+	new d,i,il,subs set:%nolock=2 %nolock=1
+	if %nolock=0 { if '..%SQLAcquireLock(%rowid) { set %qrc=114,%msg=$$FormatMessage^%occMessages(,"%SQL.Filer","SQLFiler45",,"User_MessageVolume"_"."_"Fact",%rowid),%ROWCOUNT=0 QUIT  } set:$zu(115,2) il=$zu(115,2,0) }
+	 ;---&sql(SELECT %INTERNAL(ID),%dspartition,%INTERNAL(%sourceId),Dx2624988102,%INTERNAL(DxIsError),%INTERNAL(DxSourceConfigName),%INTERNAL(DxStatus),%INTERNAL(DxTargetConfigName),DxTimeProcessed,DxTimeProcessedFxHourNumber,MxStatusN INTO :d(1),:d(2),:d(3),:d(4),:d(5),:d(6),:d(7),:d(8),:d(9),:d(10),:d(11) FROM User_MessageVolume.Fact WHERE %ID = :%rowid)
+ 	 ;--- ** SQL PUBLIC Variables: %rowid, SQLCODE, d
+	try { d $classmethod("%sqlcq."_$tr($namespace,"%_-$@:/\[]^ ","pudsssssssss")_".xE2EaIlbnguA7GNBWICHOIZo6gK6","%New") } catch { if $ze["<CLASS DOES NOT EXIST>"&&($ze["%sqlcq."_$tr($namespace,"%_-$@:/\[]^ ","pudsssssssss")_".xE2EaIlbnguA7GNBWICHOIZo6gK6")||($ze["<ZSQLU>") { d %0dsqlf } else { throw } }
+	if SQLCODE { if %nolock=0 { do ..%SQLReleaseLock(%rowid,0,1) do:$g(il) $zu(115,2,il) } set %ROWCOUNT=0 set:SQLCODE<0 SQLCODE=-SQLCODE set %qrc=SQLCODE QUIT  }
+	if %nolock=0 { if $zu(115,1)=1 { TSTART  } elseIf '$TLEVEL,$zu(115,1)=2 { TSTART  }}
+	set:qq d=$zobjexport("User.MessageVolume.Fact",18),d=$zobjexport(11,18) set i=-1 for  { set i=$o(d(i)) quit:i=""  set d=$zobjexport(d(i),18) } set %qrc=0,%ROWCOUNT=1 if %nolock=0 { d ..%SQLReleaseLock(%rowid,0,0) do:$g(il) $zu(115,2,il) } quit
+	Return
+ q
+%0dsqlf	n %xxsql
+	s %xxsql("S",1)="SELECT %INTERNAL ( ID ) , %dspartition , %INTERNAL ( %sourceId ) , Dx2624988102 , %INTERNAL ( DxIsError ) , %INTERNAL ( DxSourceConfigName ) , %INTERNAL ( DxStatus ) , %INTERNAL ( DxTargetConfigName ) , DxTimeProcessed , DxTimeProcessedFxHourNumber , MxStatusN INTO :d(1) , :d(2) , :d(3) , :d(4) , :d(5) , :d(6) , :d(7) , :d(8) , :d(9) , :d(10) , :d(11) FROM User_MessageVolume . Fact WHERE %ID = :%rowid"
+	s %xxsql("M","%occSqlfuncinc")=$c(1),%xxsql("M","DEBUG")=$c(1),%xxsql("I","%DeepSee")="",%xxsql("I","%occSqlfunc")="",%xxsql("I","%systemInclude")=""
+	s %xxsql("I","EnsUtil")="",%xxsql("NS")="DEMONSTRATION"
+	d BuildQuery^%SYS.SQLSRV(.%xxsql,$lb("ODBC","","","User.MessageVolume",0,"",),,"User.MessageVolume.Fact.CLS")
+	q
+%SQLReleaseLock(%rowid,s=0,i=0,e="")
+	new %d
+	set:e="" e=1 set %d(1)=%rowid set s=$e("E",e)_$e("S",s)_$e("D",i)
+	lock -^DeepSee.Fact("USER.MESSAGEVOLUME.FACT",%d(1))#s
+	QUIT
+%SQLReleaseTableLock(s=0,i=0)
+	set s=$e("S",s)_$e("D",i) lock -^DeepSee.Fact("USER.MESSAGEVOLUME.FACT")#s QUIT 1
+	Return
+%SQLUnlock()
+	lock:$a(%l) -^DeepSee.Fact("USER.MESSAGEVOLUME.FACT",%d(1))#"E"
+	QUIT
+%SQLUnlockError(cname)
+	set sqlcode=-110 if %oper="DELETE" { set %msg=$$FormatMessage^%occMessages(,"%SQL.Filer","SQLFiler48",,"User_MessageVolume"_"."_"Fact",cname) } else { set %msg=$$FormatMessage^%occMessages(,"%SQL.Filer","SQLFiler49",,"User_MessageVolume"_"."_"Fact",cname) } quit
+	Return
+%SQLUnlockRef()
+	for %itm=2:1:$g(unlockref) {
+		if $lg(unlockref(%itm))'="%UnlockId" { lock -@$lg(unlockref(%itm))#$lg(unlockref(%itm),3) }
+		else { do $classmethod($lg(unlockref(%itm),2),$lg(unlockref(%itm)),$lg(unlockref(%itm),3),1,1) }
+	}
+	QUIT
+%SQLUpdate(%rowid,%check,%d,%vco,%tstart=1,%mv=0,%polymorphic=0,%soid)
+	// SQL UPDATE method for table User_MessageVolume.Fact
+	new %e,bva,%ele,%itm,%key,%f,%l,%n,%nc,%oper,%pos,%s,icol,omcall,s,sn,sqlcode,subs,t,unlockref set %oper="UPDATE",sqlcode=0,%ROWID=%rowid,$e(%e,1)=$c(0),%l=$c(0,0,0),unlockref=1
+	if '$d(%0CacheSQLRA) { new %0CacheSQLRA set omcall=1 }
+	if '$a(%check,7) {
+		if '$a(%check),'..%SQLValidateFields(.sqlcode) { set SQLCODE=sqlcode QUIT  }
+		do:'$a(%check,8) ..%SQLNormalizeFields()
+	}
+	if $d(%d(1)),%d(1)'=%rowid { set SQLCODE=-107,%msg=$$FormatMessage^%occMessages(,"%SQL.Filer","SQLFiler16",,"ID","User_MessageVolume"_"."_"Fact") QUIT  }
+	for icol=2:1:11 { set $e(%e,icol)=$c($d(%d(icol))) }
+	set %d(1)=%rowid,%e(1)=%rowid
+	if '$a(%check,2) {
+		new %ls lock +^DeepSee.Fact("USER.MESSAGEVOLUME.FACT",%d(1))#"E":$zu(115,4) set %ls=$s('$t:0,1:$case($SYSTEM.Lock.ReturnCode(),0:1,4:2,2:2,1:3,:""))
+		set:%ls=2 $e(%check,2)=$c(1) set:%ls=2&&($tlevel) %0CacheLock("User.MessageVolume.Fact","E")=1 set:$case(%ls,1:1,2:1,:0) $e(%l)=$c(1)
+		if '%ls||(%ls=3) { set SQLCODE=-110,%msg=$$FormatMessage^%occMessages(,"%SQL.Filer",$s('%ls:"SQLFiler40",1:"SQLFiler55"),,%oper,"User_MessageVolume"_"."_"Fact",$g(%d(1))) RETURN  }
+	}
+	if %tstart { TSTART:($zu(115,1)=1)||('$TLEVEL&&($zu(115,1)=2))  }
+	set $zt="ERRORUpdate"
+	if $g(%vco)="" { do ..%SQLGetOld(%rowid,.%d,.%e,.sqlcode) i sqlcode { s SQLCODE=-109,%msg=$$FormatMessage^%occMessages(,"%SQL.Filer","SQLFiler59",,"User_MessageVolume"_"."_"Fact",%rowid) do ..%SQLEExit() QUIT  } for icol=4,9,5,6,7,8,10,11 { set:'$d(%d(icol)) %d(icol)=%e(icol) set:%d(icol)=%e(icol) $e(%e,icol)=$c(0) }} else { do ..%SQLGetOldAll() if sqlcode { set SQLCODE=-109,%msg=$$FormatMessage^%occMessages(,"%SQL.Filer","SQLFiler59",,"User_MessageVolume"_"."_"Fact",%rowid) do ..%SQLEExit() QUIT  } for icol=2,3,4,5,6,7,8,9,10,11 { set:'$d(%d(icol)) %d(icol)=%e(icol) set:%d(icol)=%e(icol) $e(%e,icol)=$c(0) }}
+	do ..%SQLUpdateComputes()
+	if '$a(%check) {
+		do {
+			if $g(%vco)'="" { do ..%SQLInsertComputes(1) d @%vco quit:sqlcode<0  }
+		} while 0
+		if sqlcode { set SQLCODE=sqlcode do ..%SQLEExit() QUIT  }
+	}
+	if '$a(%check,3) { 
+		new %i,%o s %i=%d(1)\64000+1,%o=%d(1)#64000+1
+	}
+	if $s($a(%e,3):1,$a(%e,5):1,$a(%e,6):1,$a(%e,7):1,$a(%e,8):1,$a(%e,9):1,1:$a(%e,11)) {
+		set ^DeepSee.Fact("USER.MESSAGEVOLUME.FACT",%d(1))=$listupdate($g(^DeepSee.Fact("USER.MESSAGEVOLUME.FACT",%d(1))),1,$a(%e,3):%d(3),$a(%e,9):%d(9),$a(%e,6):%d(6),$a(%e,8):%d(8),$a(%e,5):%d(5),$a(%e,7):%d(7),$a(%e,11):%d(11))
+	}
+	if '$a(%check,3) { new %i,%o s %i=%d(1)\64000+1,%o=%d(1)#64000+1 
+		if $a(%e,4) { 	// Dx2624988102 index map
+			set sn(1)=%e(4) set:sn(1)="" sn(1)=-1E14 set $bit(^DeepSee.Index("MESSAGEVOLUME",4,sn(1),%i),%o)=0
+			set sn(1)=%d(4) set:sn(1)="" sn(1)=-1E14
+			set $bit(^DeepSee.Index("MESSAGEVOLUME",4,sn(1),%i),%o)=1
+		}
+		if $a(%e,5) { 	// DxIsError index map
+			set sn(1)=%e(5) set:sn(1)="" sn(1)=-1E14 set $bit(^DeepSee.Index("MESSAGEVOLUME",6,sn(1),%i),%o)=0
+			set sn(1)=%d(5) set:sn(1)="" sn(1)=-1E14
+			set $bit(^DeepSee.Index("MESSAGEVOLUME",6,sn(1),%i),%o)=1
+		}
+		if $a(%e,6) { 	// DxSourceConfigName index map
+			set sn(1)=%e(6) set:sn(1)="" sn(1)=-1E14 set $bit(^DeepSee.Index("MESSAGEVOLUME",2,sn(1),%i),%o)=0
+			set sn(1)=%d(6) set:sn(1)="" sn(1)=-1E14
+			set $bit(^DeepSee.Index("MESSAGEVOLUME",2,sn(1),%i),%o)=1
+		}
+		if $a(%e,7) { 	// DxStatus index map
+			set sn(1)=%e(7) set:sn(1)="" sn(1)=-1E14 set $bit(^DeepSee.Index("MESSAGEVOLUME",7,sn(1),%i),%o)=0
+			set sn(1)=%d(7) set:sn(1)="" sn(1)=-1E14
+			set $bit(^DeepSee.Index("MESSAGEVOLUME",7,sn(1),%i),%o)=1
+		}
+		if $a(%e,8) { 	// DxTargetConfigName index map
+			set sn(1)=%e(8) set:sn(1)="" sn(1)=-1E14 set $bit(^DeepSee.Index("MESSAGEVOLUME",3,sn(1),%i),%o)=0
+			set sn(1)=%d(8) set:sn(1)="" sn(1)=-1E14
+			set $bit(^DeepSee.Index("MESSAGEVOLUME",3,sn(1),%i),%o)=1
+		}
+		if $a(%e,10) { 	// DxTimeProcessedFxHourNumber index map
+			set sn(1)=%e(10) set:sn(1)="" sn(1)=-1E14 set $bit(^DeepSee.Index("MESSAGEVOLUME",5,sn(1),%i),%o)=0
+			set sn(1)=%d(10) set:sn(1)="" sn(1)=-1E14
+			set $bit(^DeepSee.Index("MESSAGEVOLUME",5,sn(1),%i),%o)=1
+		}
+		if $a(%e,11) { 	// MxStatusN index map
+			set sn(0)=%e(11),sn(1)=%d(11)
+			if 'sn(0) { if sn(0)="" { set $bit(^DeepSee.Index("MESSAGEVOLUME","M1","N",%i),%o)=0 } else { set $bit(^DeepSee.Index("MESSAGEVOLUME","M1","Z",%i),%o)=0 }}
+			set:sn(0)<0 $bit(^DeepSee.Index("MESSAGEVOLUME","M1","-",%i),%o)=0
+			set:sn(1)<0 $bit(^DeepSee.Index("MESSAGEVOLUME","M1","-",%i),%o)=1
+			set sn(2)=$Factor($zabs(sn(1)),2),sn(3)=$Factor($zabs(sn(0)),2),sn(4)=$BitLogic(sn(2)^sn(3)),sn(5)=0
+			for { set sn(5)=$BitFind(sn(4),1,sn(5)+1) quit:sn(5)=0  set $bit(^DeepSee.Index("MESSAGEVOLUME","M1",sn(5),%i),%o)=$Bit(sn(2),sn(5)) }
+			if 'sn(1) { if sn(1)="" { set $bit(^DeepSee.Index("MESSAGEVOLUME","M1","N",%i),%o)=1 } else { set $bit(^DeepSee.Index("MESSAGEVOLUME","M1","Z",%i),%o)=1 }} }
+	}
+	do ..%SQLUnlock() TCOMMIT:%tstart&&($zu(115,1)=1)
+	do ..%SQLUnlockRef()
+	set SQLCODE=0 kill:$g(omcall) %0CacheSQLRA
+	QUIT
+ERRORUpdate	set $zt="",SQLCODE=-415,%msg=$s($g(%msg)'="":%msg_" -- ",1:"")_$$FormatMessage^%occMessages(,"%SQL.Filer","SQLFiler51",,%oper,"User_MessageVolume"_"."_"Fact",$ze) if $ze["<FRAMESTACK>" { set %msg=$$FormatMessage^%occMessages(,"%SQL.Filer","SQLFiler52",,$ze,%oper,"User_MessageVolume"_"."_"Fact") do ##Class(%SYS.System).WriteToConsoleLog(%msg) if ($zu(67,10,$j)=1)||($zu(67,10,$j)=3) { write !,%msg h 3 } HALT  } do ..%SQLEExit() QUIT  
+	Return
+%SQLUpdateComputes(view=0)
+	if $a(%e,4)||$a(%e,9) do ..Dx2624988102SQLCompute() set:%d(4)'=%e(4) $e(%e,4)=$c(1)
+	if $a(%e,10)||$a(%e,9) do ..DxTimeProcessedFxHourNumberSQLCompute() set:%d(10)'=%e(10) $e(%e,10)=$c(1)
+	QUIT
+%SQLValidateFields(sqlcode)
+	if $g(%d(9))'="",'($$ValidateField9(%d(9))) { set sqlcode=..%SQLInvalid(9+1,%d(9)) } 
+	if $g(%d(11))'="",'($select($zu(115,13)&&(%d(11)=$c(0)):1,$isvaliddouble(%d(11),,,):1,1:$$Error^%apiOBJ(5794,"%Double",%d(11)))) { set sqlcode=..%SQLInvalid(11+1,%d(11)) } 
+	if $g(%d(2))'="",'($select(%d(2)=$c(0)&&$zu(115,13):1,$isvalidnum(%d(2),0):1,1:$$Error^%apiOBJ(7207,%d(2)))) { set sqlcode=..%SQLInvalid(2+1,%d(2)) } 
+	new %f for %f=4,10 { if $g(%d(%f))'="",'(($l(%d(%f))'>50)) set sqlcode=..%SQLInvalid(%f+1,$g(%d(%f))) quit  } 
+	QUIT 'sqlcode
+ValidateField9(%val) {	// $ZDT will accept bogus dates, such as "ABC"; test for this
+	Set tDay = $P(%val,",",1)
+	Set tSec = $P(%val,",",2)
+	If ((tDay'="")&&('$IsValidNum(tDay)||(tDay<=0))) {	// DTB311 - Reject negative and 0
+		Quit $$Error^%apiOBJ(7207,%val)
+	}
+	If ((tSec'="")&&'$IsValidNum(tSec)) {
+		Quit $$Error^%apiOBJ(7207,%val)
+	}
+	Quit $ZDT(%val,3,,,,,,,,,"X")'="X"
+}
+	Return
+%SQLnBuild() public {
+	set %n=$lb(,"ID","%dspartition","%sourceId","Dx2624988102","DxIsError","DxSourceConfigName","DxStatus","DxTargetConfigName","DxTimeProcessed","DxTimeProcessedFxHourNumber","MxStatusN")
+	QUIT }
+%Save(related=1) public {
+	Set $ZTrap="%SaveERR"
+	New %objTX Set sc=1,traninit=0 If '$data(%objTX2) New %objTX2 Set %objTX2=1
+	If +$g(%objtxSTATUS)=0 { Set traninit=1 k %objtxSTATUS,%objtxLIST,%objtxOIDASSIGNED,%objtxOIDUNASSIGNED,%objtxMODIFIED,%objtxVERSION k:'$TLevel %objtxTID,%objtxID i '$zu(115,9) { s %objtxSTATUS=1 } else { TStart  s %objtxSTATUS=2 } }
+	If $get(%objTX2(+$this)) Set sc=..%BuildObjectGraph(1) Quit:('sc) sc Set intRef=+$this,objValue=$get(%objTX(1,+$g(%objTX(0,intRef)),1)),sc=..%SerializeObject(.objValue,1) Set:(''sc) %objTX(1,%objTX(0,intRef),1)=objValue Quit sc
+	Set sc=..%BuildObjectGraph(related+2) If ('sc) ZTrap "SG"
+	If '$data(%objTX(2)) s sc=1 GoTo %SaveCOMMIT
+	Set %objTX(3)=0,i="" For  Set i=$order(%objTX(2,i),1,data) Quit:i=""  Set intRef=$li(data) If '$data(%objTX(1,+$g(%objTX(0,intRef)),2)) Set %objTX(3,$increment(%objTX(3)))=%objTX(1,%objTX(0,intRef)) Kill %objTX(2,i),%objTX(11,intRef)
+	For ptr=1:1 Quit:ptr>%objTX(3)  Set objRef=%objTX(3,ptr),objValue=$get(%objTX(1,+$g(%objTX(0,+objRef)),1)),sc=objRef.%SerializeObject(.objValue) Do  Set %objTX(1,%objTX(0,+objRef),1)=objValue Kill %objTX(1,%objTX(0,+objRef),3) Do $system.CLS.SetModified(objRef,0)
+	. If ('sc) ZTrap "SG"
+	. i $g(%objtxSTATUS)=2 { Set %objtxMODIFIED(+objRef)=$system.CLS.GetModifiedBits(objRef) }
+	. Set intSucc="" For  Set intSucc=$order(%objTX(1,%objTX(0,+objRef),3,intSucc)) Quit:intSucc=""  Kill %objTX(1,%objTX(0,+objRef),3,intSucc),%objTX(1,intSucc,2,%objTX(0,+objRef)) If '$data(%objTX(1,intSucc,2)) Set %objTX(3,$increment(%objTX(3)))=%objTX(1,intSucc) Kill:$d(%objTX(11,+%objTX(1,intSucc))) %objTX(2,%objTX(11,+%objTX(1,intSucc))),%objTX(11,+%objTX(1,intSucc))
+	Kill %objTX(3) Set %objTX(3)=0 For  Set pserial=0 Do  Quit:'pserial
+	. Set i="" For  Set i=$order(%objTX(2,i),1,data) Quit:i=""  Set intPred="",intRef=$li(data) For  Set intPred=$order(%objTX(1,%objTX(0,intRef),2,intPred)) Quit:intPred=""  If $get(%objTX(1,intPred,6))=1 Set objValue=$get(%objTX(1,intPred,1)),sc=(%objTX(1,intPred)).%SerializeObject(.objValue,1) If ('sc) { If $d(%objTX(11,+%objTX(1,intPred))) { Set %objTX(2,%objTX(11,+%objTX(1,intPred)),1)=sc } Else { Set %objTX(2,$i(%objTX(2)),1)=sc,%objTX(11,+%objTX(1,intPred))=%objTX(2) } } If (''sc) Set pserial=1,%objTX(1,intPred,1)=objValue Do
+	. . Set intSucc="" For  Set intSucc=$order(%objTX(1,intPred,3,intSucc)) Quit:intSucc=""  Kill %objTX(1,intPred,3,intSucc),%objTX(1,intSucc,2,intPred) If '$data(%objTX(1,intSucc,2)) Set %objTX(3,$i(%objTX(3)))=%objTX(1,intSucc) Kill:$d(%objTX(11,+%objTX(1,intSucc))) %objTX(2,%objTX(11,+%objTX(1,intSucc))),%objTX(11,+%objTX(1,intSucc))
+	. . For ptr=1:1 Quit:ptr>%objTX(3)  Set objSerialize=%objTX(3,ptr),objValue=$get(%objTX(1,+$g(%objTX(0,+objSerialize)),1)),sc=objSerialize.%SerializeObject(.objValue) Do  Set %objTX(1,%objTX(0,+objSerialize),1)=objValue Kill %objTX(1,%objTX(0,+objSerialize),3) Do $system.CLS.SetModified(objSerialize,0)
+	. . . If ('sc) ZTrap "SG"
+	. . . i $g(%objtxSTATUS)=2 { Set %objtxMODIFIED(+objSerialize)=$system.CLS.GetModifiedBits(objSerialize) }
+	. . . Set intSucc="" For  Set intSucc=$order(%objTX(1,%objTX(0,+objSerialize),3,intSucc)) Quit:intSucc=""  Kill %objTX(1,%objTX(0,+objSerialize),3,intSucc),%objTX(1,intSucc,2,%objTX(0,+objSerialize)) If '$data(%objTX(1,intSucc,2)) Set %objTX(3,$i(%objTX(3)))=%objTX(1,intSucc) Kill:$d(%objTX(11,+%objTX(1,intSucc))) %objTX(2,%objTX(11,+%objTX(1,intSucc))),%objTX(11,+%objTX(1,intSucc))
+	. . Kill %objTX(3) Set %objTX(3)=0
+	If $data(%objTX(2))>2 {
+		Set sc=$$Error^%apiOBJ(5827,$classname())
+		set i="" for  set i=$order(%objTX(2,i)) quit:i=""  if ('$Get(%objTX(2,i,1),1)) set sc=$$EmbedStatus^%apiOBJ(sc,%objTX(2,i,1))
+	 	ZTrap "SG"
+	}
+	Set cmd="" For  Set cmd=$order(%objTX(9,cmd)) Quit:cmd=""  Xecute cmd
+%SaveCOMMIT	If traninit { i $g(%objtxSTATUS)=1 { k %objtxSTATUS } else { If $Tlevel { TCommit  } k %objtxSTATUS,%objtxLIST,%objtxOIDASSIGNED,%objtxOIDUNASSIGNED,%objtxMODIFIED,%objtxVERSION k:'$TLevel %objtxTID,%objtxID } }
+	Do $system.CLS.SetModified(0) Quit sc
+%SaveERR	Set $ZTrap="" If $extract($zerror,1,5)'="<ZSG>" Set sc=$$Error^%apiOBJ(5002,$ZE)
+	If $get(traninit) { i $g(%objtxSTATUS)=2 { s sc=$select(+sc:$$%TRollBack^%occTransaction(),1:$$AppendStatus^%occSystem(sc,$$%TRollBack^%occTransaction())) k %objtxTID,%objtxID } else { k %objtxSTATUS } }
+	Quit sc }
+%SaveData(id) public {
+	try {
+		set id=$listget(i%"%%OID") if id'="" { set insert=0,idassigned=1 } else { set insert=1,idassigned=0 }
+		set lock=0,lockok=0,tSharedLock=0
+		if 'idassigned { set id=$i(^DeepSee.Fact("USER.MESSAGEVOLUME.FACT")) do ..%IdSet(id) set:$g(%objtxSTATUS)=2 %objtxOIDASSIGNED(+$this)="" }
+		set pidchunk=id\64000+1,pidoffset=id#64000+1
+		set zzc8v1=..DxTimeProcessedFxHourNumberCompute(id,i%DxTimeProcessed)
+		set zzc8v2=..Dx2624988102Compute(id,i%DxTimeProcessed)
+		set zzc10v1=$s(zzc8v1'="":zzc8v1,1:-1E14)
+		set zzc10v2=$s(i%DxTargetConfigName'="":i%DxTargetConfigName,1:-1E14)
+		set zzc10v3=$s(i%DxStatus'="":i%DxStatus,1:-1E14)
+		set zzc10v4=$s(i%DxSourceConfigName'="":i%DxSourceConfigName,1:-1E14)
+		set zzc10v5=$s(i%DxIsError'="":i%DxIsError,1:-1E14)
+		set zzc10v6=$s(zzc8v2'="":zzc8v2,1:-1E14)
+		try {
+			set tInnerException = ""
+			;
+			if 'insert {
+				if (i%%Concurrency<4)&&(i%%Concurrency) { lock +(^DeepSee.Fact("USER.MESSAGEVOLUME.FACT",id)#"E"):$zu(115,4) set lockok=$s('$t:0,1:$case($SYSTEM.Lock.ReturnCode(),0:1,2:2,4:2,:0)) set:lockok=2&&($tlevel) %0CacheLock($classname(),"E")=1 if lockok { set lock=1 } else { Throw ##class(%Exception.StatusException).ThrowIfInterrupt($$Error^%apiOBJ(5803,$classname())) } }
+				if ('$Data(^DeepSee.Fact("USER.MESSAGEVOLUME.FACT",id))) {
+					set insert=1
+					if lock { lock -(^DeepSee.Fact("USER.MESSAGEVOLUME.FACT",id)#"E") set (lock,lockok) = 0 }
+				}
+			}
+			if insert {
+				if ('lockok&&..%Concurrency&&$tlevel)||(i%%Concurrency=4) {  lock +(^DeepSee.Fact("USER.MESSAGEVOLUME.FACT",id)#"E"):$zu(115,4) set lockok=$s('$t:0,1:$case($SYSTEM.Lock.ReturnCode(),0:1,2:2,4:2,:0)) set:(lockok=2&&(i%%Concurrency'=4)) %0CacheLock($classname(),"E")=1 set:lockok lock=1 if 'lockok { Throw ##class(%Exception.StatusException).ThrowIfInterrupt($$Error^%apiOBJ(5803,$classname())) } }
+				if i%%Concurrency=3 { lock +(^DeepSee.Fact("USER.MESSAGEVOLUME.FACT",id)#"ES") set tSharedLock=1 }
+				set ^DeepSee.Fact("USER.MESSAGEVOLUME.FACT",id)=$lb(i%%sourceId,i%DxTimeProcessed,i%DxSourceConfigName,i%DxTargetConfigName,i%DxIsError,i%DxStatus,i%MxStatusN)
+				set $bit(^DeepSee.Index("MESSAGEVOLUME","$Fact",pidchunk),pidoffset)=1
+				set $bit(^DeepSee.Index("MESSAGEVOLUME",4,zzc10v6,pidchunk),pidoffset)=1
+				set $bit(^DeepSee.Index("MESSAGEVOLUME",6,zzc10v5,pidchunk),pidoffset)=1
+				set $bit(^DeepSee.Index("MESSAGEVOLUME",2,zzc10v4,pidchunk),pidoffset)=1
+				set $bit(^DeepSee.Index("MESSAGEVOLUME",7,zzc10v3,pidchunk),pidoffset)=1
+				set $bit(^DeepSee.Index("MESSAGEVOLUME",3,zzc10v2,pidchunk),pidoffset)=1
+				set $bit(^DeepSee.Index("MESSAGEVOLUME",5,zzc10v1,pidchunk),pidoffset)=1
+				if i%MxStatusN { if i%MxStatusN < 0 { Set zzc93v1 = "-",$Bit(^DeepSee.Index("MESSAGEVOLUME","M1",zzc93v1,pidchunk),pidoffset)=1 } Set zzc95v1=$Factor($zabs(i%MxStatusN),2) Set zzc93v1=0 For { Set zzc93v1=$BitFind(zzc95v1,1,zzc93v1+1) Quit:zzc93v1=0  Set $Bit(^DeepSee.Index("MESSAGEVOLUME","M1",zzc93v1,pidchunk),pidoffset)=1 } }
+				else { Set zzc93v1 = $Case(i%MxStatusN,"":"N",:"Z"),$Bit(^DeepSee.Index("MESSAGEVOLUME","M1",zzc93v1,pidchunk),pidoffset)=1 }
+			}
+			else {
+				set zzc31v1=^DeepSee.Fact("USER.MESSAGEVOLUME.FACT",id)
+				set zzc31v2=$listget(zzc31v1,7)
+				set zzc31v3=$listget(zzc31v1,2)
+				set zzc31v4=$listget(zzc31v1,4)
+				set zzc31v5=$listget(zzc31v1,6)
+				set zzc31v6=$listget(zzc31v1,3)
+				set zzc31v7=$listget(zzc31v1,5)
+				if (zzc8v2'=..Dx2624988102Compute(id,zzc31v3))||(i%DxTimeProcessed'=zzc31v3) {
+					set $bit(^DeepSee.Index("MESSAGEVOLUME",4,$s(..Dx2624988102Compute(id,zzc31v3)'="":..Dx2624988102Compute(id,zzc31v3),1:-1E14),pidchunk),pidoffset)=0
+					set $bit(^DeepSee.Index("MESSAGEVOLUME",4,zzc10v6,pidchunk),pidoffset)=1
+				}
+				if (i%DxIsError'=zzc31v7) {
+					set $bit(^DeepSee.Index("MESSAGEVOLUME",6,$s(zzc31v7'="":zzc31v7,1:-1E14),pidchunk),pidoffset)=0
+					set $bit(^DeepSee.Index("MESSAGEVOLUME",6,zzc10v5,pidchunk),pidoffset)=1
+				}
+				if (i%DxSourceConfigName'=zzc31v6) {
+					set $bit(^DeepSee.Index("MESSAGEVOLUME",2,$s(zzc31v6'="":zzc31v6,1:-1E14),pidchunk),pidoffset)=0
+					set $bit(^DeepSee.Index("MESSAGEVOLUME",2,zzc10v4,pidchunk),pidoffset)=1
+				}
+				if (i%DxStatus'=zzc31v5) {
+					set $bit(^DeepSee.Index("MESSAGEVOLUME",7,$s(zzc31v5'="":zzc31v5,1:-1E14),pidchunk),pidoffset)=0
+					set $bit(^DeepSee.Index("MESSAGEVOLUME",7,zzc10v3,pidchunk),pidoffset)=1
+				}
+				if (i%DxTargetConfigName'=zzc31v4) {
+					set $bit(^DeepSee.Index("MESSAGEVOLUME",3,$s(zzc31v4'="":zzc31v4,1:-1E14),pidchunk),pidoffset)=0
+					set $bit(^DeepSee.Index("MESSAGEVOLUME",3,zzc10v2,pidchunk),pidoffset)=1
+				}
+				if (i%DxTimeProcessed'=zzc31v3)||(zzc8v1'=..DxTimeProcessedFxHourNumberCompute(id,zzc31v3)) {
+					set $bit(^DeepSee.Index("MESSAGEVOLUME",5,$s(..DxTimeProcessedFxHourNumberCompute(id,zzc31v3)'="":..DxTimeProcessedFxHourNumberCompute(id,zzc31v3),1:-1E14),pidchunk),pidoffset)=0
+					set $bit(^DeepSee.Index("MESSAGEVOLUME",5,zzc10v1,pidchunk),pidoffset)=1
+				}
+				if (i%MxStatusN'=zzc31v2) {
+					if '(zzc31v2) { set zzc94v2 = $Case(zzc31v2,"":"N",:"Z"),$Bit(^DeepSee.Index("MESSAGEVOLUME","M1",zzc94v2,pidchunk),pidoffset)=0 }
+					if zzc31v2 < 0 { set zzc94v2 = "-",$Bit(^DeepSee.Index("MESSAGEVOLUME","M1",zzc94v2,pidchunk),pidoffset)=0 } if i%MxStatusN < 0 { set zzc94v1 = "-",$Bit(^DeepSee.Index("MESSAGEVOLUME","M1",zzc94v1,pidchunk),pidoffset)=1 }
+					set zzc95v1=$Factor($zabs(i%MxStatusN),2),zzc97v1=$Factor($zabs(zzc31v2),2),zzc97v2=$BitLogic(zzc95v1^zzc97v1) Set zzc94v1=0 For { Set zzc94v1=$BitFind(zzc97v2,1,zzc94v1+1) Quit:zzc94v1=0  Set $Bit(^DeepSee.Index("MESSAGEVOLUME","M1",zzc94v1,pidchunk),pidoffset)=$Bit(zzc95v1,zzc94v1) }
+					if '(i%MxStatusN) { set zzc94v1 = $Case(i%MxStatusN,"":"N",:"Z"),$Bit(^DeepSee.Index("MESSAGEVOLUME","M1",zzc94v1,pidchunk),pidoffset)=1 }
+				}
+				set ^DeepSee.Fact("USER.MESSAGEVOLUME.FACT",id)=$lb(i%%sourceId,i%DxTimeProcessed,i%DxSourceConfigName,i%DxTargetConfigName,i%DxIsError,i%DxStatus,i%MxStatusN)
+			}
+			set tStatus = 1
+		}
+		catch tInnerException {
+			if ('idassigned) { Set $zobjoid("",$listget(i%"%%OID"))="",i%"%%OID"="" kill:$g(%objtxSTATUS)=2 %objtxOIDASSIGNED(+$this) }
+			if (tSharedLock) {  lock -(^DeepSee.Fact("USER.MESSAGEVOLUME.FACT",id)#"ES") } elseif (lockok=1)&&(insert)&&(i%%Concurrency=4) {  lock -(^DeepSee.Fact("USER.MESSAGEVOLUME.FACT",id)) }
+		}
+		if lock lock -(^DeepSee.Fact("USER.MESSAGEVOLUME.FACT",id)#"E")
+		if $Isobject(tInnerException) { throw tInnerException }
+	}
+	catch tException {
+		set tStatus = tException.AsStatus()
+	}
+	quit tStatus }
+%SaveDirect(id="",idList="",data,concurrency=-1) public {
+	QUIT $$Error^%apiOBJ(5758,$classname()_"::%SaveDirect") }
+%SaveIndices(pStartId="",pEndId="",lockExtent=0) public {
+	If lockExtent {
+		Set sc=..%LockExtent(0)
+		Quit:('sc) sc
+	}
+	s id=$order(^DeepSee.Fact(pStartId),-1),tEndId=$S(pEndId'="":pEndId,1:pStartId)
+BSLoop	s id=$O(^DeepSee.Fact("USER.MESSAGEVOLUME.FACT",id)) g:(id="")||(id]]tEndId) BSLoopDun
+	Set bsv0N1=$Get(^DeepSee.Fact("USER.MESSAGEVOLUME.FACT",id))
+	Set bsv0N2=$listget(bsv0N1,2)
+	set pidchunk=id\64000+1,pidoffset=id#64000+1
+	Set $bit(^DeepSee.Index("MESSAGEVOLUME","$Fact",pidchunk),pidoffset)=1
+	Set bsv0N3=..Dx2624988102Compute(id,bsv0N2)
+	Set $bit(^DeepSee.Index("MESSAGEVOLUME",4,$s(bsv0N3'="":bsv0N3,1:-1E14),pidchunk),pidoffset)=1
+	Set bsv0N4=$listget(bsv0N1,5)
+	Set $bit(^DeepSee.Index("MESSAGEVOLUME",6,$s(bsv0N4'="":bsv0N4,1:-1E14),pidchunk),pidoffset)=1
+	Set bsv0N5=$listget(bsv0N1,3)
+	Set $bit(^DeepSee.Index("MESSAGEVOLUME",2,$s(bsv0N5'="":bsv0N5,1:-1E14),pidchunk),pidoffset)=1
+	Set bsv0N6=$listget(bsv0N1,6)
+	Set $bit(^DeepSee.Index("MESSAGEVOLUME",7,$s(bsv0N6'="":bsv0N6,1:-1E14),pidchunk),pidoffset)=1
+	Set bsv0N7=$listget(bsv0N1,4)
+	Set $bit(^DeepSee.Index("MESSAGEVOLUME",3,$s(bsv0N7'="":bsv0N7,1:-1E14),pidchunk),pidoffset)=1
+	Set bsv0N8=..DxTimeProcessedFxHourNumberCompute(id,bsv0N2)
+	Set $bit(^DeepSee.Index("MESSAGEVOLUME",5,$s(bsv0N8'="":bsv0N8,1:-1E14),pidchunk),pidoffset)=1
+	If $listget(bsv0N1,7) {
+		If $listget(bsv0N1,7) < 0 {
+			Set bsv39N1 = "-",$Bit(^DeepSee.Index("MESSAGEVOLUME","M1",bsv39N1,pidchunk),pidoffset)=1
+		}
+		Set bsv40N1=$Factor($zabs($listget(bsv0N1,7)),2),bsv39N1=0
+		For {
+			Set bsv39N1=$BitFind(bsv40N1,1,bsv39N1+1) Quit:bsv39N1=0  Set $Bit(^DeepSee.Index("MESSAGEVOLUME","M1",bsv39N1,pidchunk),pidoffset)=1
+		}
+	} Else {
+		Set bsv39N1 = $Case($listget(bsv0N1,7),"":"N",:"Z"),$Bit(^DeepSee.Index("MESSAGEVOLUME","M1",bsv39N1,pidchunk),pidoffset)=1
+	}
+	g BSLoop
+BSLoopDun
+	If lockExtent { Do ..%UnlockExtent(0) }
+	Quit 1
+CatchError	Set $ZTrap=""
+	If $ZE'="" {
+		Set sc = $$Error^%apiOBJ(5002,$ZE)
+	}
+	If lockExtent { Do ..%UnlockExtent(0) }
+	Quit sc }
+%SerializeObject(serial,partial=0) public {
+	try {
+		If $get(%objTX2(+$this)) { Set partial = 1 } ElseIf ('partial) { Set %objTX2(+$this) = 1 }
+		Set sc=..%ValidateObject(,0) Throw:('sc) ##class(%Exception.StatusException).ThrowIfInterrupt(sc)
+		Set sc=..%NormalizeObject() Throw:('sc) ##class(%Exception.StatusException).ThrowIfInterrupt(sc)
+		If r%%sourceId'="" { Set:'$data(%objTX(0,+r%%sourceId)) %objTX(0,+r%%sourceId)=$i(%objTX(1)),%objTX(1,%objTX(0,+r%%sourceId))=r%%sourceId,%objTX(1,%objTX(0,+r%%sourceId),1)=..%sourceIdGetObject(1),%objTX(1,%objTX(0,+r%%sourceId),6)=1 Set M%%sourceId=1,i%%sourceId=$listget(%objTX(1,%objTX(0,+r%%sourceId),1)) }
+		If r%DxIsError'="" { Set:'$data(%objTX(0,+r%DxIsError)) %objTX(0,+r%DxIsError)=$i(%objTX(1)),%objTX(1,%objTX(0,+r%DxIsError))=r%DxIsError,%objTX(1,%objTX(0,+r%DxIsError),1)=..DxIsErrorGetObject(1),%objTX(1,%objTX(0,+r%DxIsError),6)=1 Set M%DxIsError=1,i%DxIsError=$listget(%objTX(1,%objTX(0,+r%DxIsError),1)) }
+		If r%DxSourceConfigName'="" { Set:'$data(%objTX(0,+r%DxSourceConfigName)) %objTX(0,+r%DxSourceConfigName)=$i(%objTX(1)),%objTX(1,%objTX(0,+r%DxSourceConfigName))=r%DxSourceConfigName,%objTX(1,%objTX(0,+r%DxSourceConfigName),1)=..DxSourceConfigNameGetObject(1),%objTX(1,%objTX(0,+r%DxSourceConfigName),6)=1 Set M%DxSourceConfigName=1,i%DxSourceConfigName=$listget(%objTX(1,%objTX(0,+r%DxSourceConfigName),1)) }
+		If r%DxStatus'="" { Set:'$data(%objTX(0,+r%DxStatus)) %objTX(0,+r%DxStatus)=$i(%objTX(1)),%objTX(1,%objTX(0,+r%DxStatus))=r%DxStatus,%objTX(1,%objTX(0,+r%DxStatus),1)=..DxStatusGetObject(1),%objTX(1,%objTX(0,+r%DxStatus),6)=1 Set M%DxStatus=1,i%DxStatus=$listget(%objTX(1,%objTX(0,+r%DxStatus),1)) }
+		If r%DxTargetConfigName'="" { Set:'$data(%objTX(0,+r%DxTargetConfigName)) %objTX(0,+r%DxTargetConfigName)=$i(%objTX(1)),%objTX(1,%objTX(0,+r%DxTargetConfigName))=r%DxTargetConfigName,%objTX(1,%objTX(0,+r%DxTargetConfigName),1)=..DxTargetConfigNameGetObject(1),%objTX(1,%objTX(0,+r%DxTargetConfigName),6)=1 Set M%DxTargetConfigName=1,i%DxTargetConfigName=$listget(%objTX(1,%objTX(0,+r%DxTargetConfigName),1)) }
+		s:$g(%objtxSTATUS)=2 %objtxLIST(+$this)=$this
+		Set id=$listget(serial),sc=..%SaveData(.id) If ('sc) { Throw ##class(%Exception.StatusException).ThrowIfInterrupt(sc) }
+		Set serial=(..%Oid())
+		if 'partial {
+			Set %objTX2(+$this) = 0
+		}
+		set sc=1
+	}
+	catch tException {
+		If 'partial { Set %objTX2(+$this) = 0 }
+		set sc = tException.AsStatus()
+	}
+	Quit sc }
+%AddToSaveSet(depth=3,refresh=0) public {
+	If $data(%objTX(0,+$this)) && ('refresh) Quit 1
+	Set sc=1,intOref=+$this
+	If refresh,$data(%objTX(0,intOref),index) Set intPoref="" For  Set intPoref=$order(%objTX(1,index,2,intPoref)) Quit:intPoref=""  Kill %objTX(1,%objTX(0,intPoref),3,index),%objTX(1,index,2,%objTX(0,intPoref))
+	Set serial=i%"%%OID",%objTX(0,intOref)=$i(%objTX(1)),%objTX(1,%objTX(1))=$this,%objTX(1,%objTX(1),1)=serial,%objTX(1,%objTX(1),6)=1 If (serial '= "") && (depth<2) { Quit 1 } Else { Set %objTX(7,%objTX(1))=$lb(intOref,1) }
+	Set Poref=r%%sourceId If Poref'="" Set:'$data(%objTX(0,+Poref)) %objTX(6,$i(%objTX(6)))=Poref Set %objTX(8,$i(%objTX(8)))=$lb(+Poref,intOref,2)
+	Set Poref=r%DxIsError If Poref'="" Set:'$data(%objTX(0,+Poref)) %objTX(6,$i(%objTX(6)))=Poref Set %objTX(8,$i(%objTX(8)))=$lb(+Poref,intOref,2)
+	Set Poref=r%DxSourceConfigName If Poref'="" Set:'$data(%objTX(0,+Poref)) %objTX(6,$i(%objTX(6)))=Poref Set %objTX(8,$i(%objTX(8)))=$lb(+Poref,intOref,2)
+	Set Poref=r%DxStatus If Poref'="" Set:'$data(%objTX(0,+Poref)) %objTX(6,$i(%objTX(6)))=Poref Set %objTX(8,$i(%objTX(8)))=$lb(+Poref,intOref,2)
+	Set Poref=r%DxTargetConfigName If Poref'="" Set:'$data(%objTX(0,+Poref)) %objTX(6,$i(%objTX(6)))=Poref Set %objTX(8,$i(%objTX(8)))=$lb(+Poref,intOref,2)
+exit	Quit sc }
+%SortBegin(idxlist="",excludeunique=0)
+	Quit 1
+%SortEnd(idxlist="",commit=1,excludeunique=0) public {
+	Quit 1 }
+%UnlockExtent(shared=0,immediate=0) public {
+	If 'shared {
+		If 'immediate {
+			Lock -^DeepSee.Fact("USER.MESSAGEVOLUME.FACT")
+			 Quit 1
+		}
+		Lock -^DeepSee.Fact("USER.MESSAGEVOLUME.FACT")#"I"
+		Quit 1
+	}
+	If 'immediate {
+		Lock -^DeepSee.Fact("USER.MESSAGEVOLUME.FACT")#"S"
+		Quit 1
+	}
+	Lock -^DeepSee.Fact("USER.MESSAGEVOLUME.FACT")#"SI"
+	Quit 1 }
+%UnlockId(id,shared=0,immediate=0) public {
+	If 'shared {
+		If 'immediate {
+			Lock -(^DeepSee.Fact("USER.MESSAGEVOLUME.FACT",id)#"E")
+			Quit 1
+		}
+		Lock -(^DeepSee.Fact("USER.MESSAGEVOLUME.FACT",id)#"IE")
+		Quit 1
+	}
+	If 'immediate {
+		Lock -(^DeepSee.Fact("USER.MESSAGEVOLUME.FACT",id)#"SE")
+		Quit 1
+	}
+	Lock -(^DeepSee.Fact("USER.MESSAGEVOLUME.FACT",id)#"SIE")
+	Quit 1 }
+%UpdateFacts(pStartId,pEndId,pBatchMode=0,pChunks,pVerbose=0,pTaskGroup="",pUpdates,pRefProp="",pRefID="",pDimTables,pFactList="") [ SQLCODE,pEndId,pStartId ] public { New %ROWCOUNT,%ROWID,%msg,SQLCODE 
+ Set tSC = 1
+ Set tRS = ""
+ New %var,%source,%ROWID,%msg,%dsSourceId,%dsSourceObj
+ Try {
+ Set tUseFactList = ($G(pFactList)'="")
+ Set (SQLCODE,tStarId) = ""
+ Set pUpdates = 0
+ Set tLastCount = 0
+ Set tUseFactList = ($G(pFactList)'="")
+ Set tID = ""
+ Set tRows = 0
+ If (pEndId="") {
+  Set:+$G(%dsReadCommitted,1) oldzu=$ZU(115,2,1)
+  Set pEndId=pStartId
+ }
+ If (pRefProp'="") {
+  Set tRS = ##class(%Library.ResultSet).%New()
+  Set tSC = tRS.Prepare("SELECT %ID,%EXTERNAL(IsError) ""DxIsError"",%EXTERNAL(SourceConfigName) ""DxSourceConfigName"",Status ""MxStatusN"",%EXTERNAL(Status) ""DxStatus"",%EXTERNAL(TargetConfigName) ""DxTargetConfigName"",TimeProcessed ""DxTimeProcessed"",%EXTERNAL(TimeProcessed) ""Dx2624988102"" FROM Ens.MessageHeader"_" WHERE "_pRefProp_"=?")
+  If ('tSC) Quit
+  Set tSC = tRS.Execute(pRefID)
+  If ('tSC) Quit
+ }
+ ElseIf (pStartId=pEndId) {
+   ;---&sql(DECLARE sqeq756875581 CURSOR FOR
+    ;---  SELECT %ID,%EXTERNAL(IsError) "DxIsError",%EXTERNAL(SourceConfigName) "DxSourceConfigName",Status "MxStatusN",%EXTERNAL(Status) "DxStatus",%EXTERNAL(TargetConfigName) "DxTargetConfigName",TimeProcessed "DxTimeProcessed",%EXTERNAL(TimeProcessed) "Dx2624988102" FROM Ens.MessageHeader
+    ;---  WHERE %ID = :pStartId
+    ;---  )
+    ;--- ** SQL PUBLIC Variables: SQLCODE, pStartId
+   
+   ;---&sql(OPEN sqeq756875581)
+  try { if $g(%sqeq7568755810271)'="" { s SQLCODE=-101 } else { s %sqeq7568755810271=$classmethod("%sqlcq."_$tr($namespace,"%_-$@:/\[]^ ","pudsssssssss")_".xEv1KcFfH2JdVkB0RWRt3gFdfbQm","%New") if '$isobject(%sqeq7568755810271) s %sqeq7568755810271=$$%0dsqlh() } } catch { if $ze["<CLASS DOES NOT EXIST>"&&($ze["%sqlcq."_$tr($namespace,"%_-$@:/\[]^ ","pudsssssssss")_".xEv1KcFfH2JdVkB0RWRt3gFdfbQm")||($ze["<ZSQLU>") { s %sqeq7568755810271=$$%0dsqlh() } else { throw } }
+  If (SQLCODE'=0) {
+   Set tSC = $$Error^%apiOBJ(5001,"Error opening SQL cursor: ("_$G(SQLCODE)_") "_$G(%msg))
+   Quit
+  }
+   ;---&sql(FETCH sqeq756875581 INTO :tID,:%var("DxIsError"),:%var("DxSourceConfigName"),:%var("MxStatusN"),:%var("DxStatus"),:%var("DxTargetConfigName"),:%var("DxTimeProcessed"),:%var("Dx2624988102"))
+    ;--- ** SQL PUBLIC Variables: %ROWCOUNT, %ROWID, %msg, SQLCODE
+  if $isobject($g(%sqeq7568755810271))'=1 { s SQLCODE=-102 } else { do %sqeq7568755810271.FET() if SQLCODE=0 { s tID=%sqeq7568755810271.sqlcol1,%var("DxIsError")=%sqeq7568755810271.sqlcol2,%var("DxSourceConfigName")=%sqeq7568755810271.sqlcol3,%var("MxStatusN")=%sqeq7568755810271.sqlcol4,%var("DxStatus")=%sqeq7568755810271.sqlcol5,%var("DxTargetConfigName")=%sqeq7568755810271.sqlcol6,%var("DxTimeProcessed")=%sqeq7568755810271.sqlcol7,%var("Dx2624988102")=%sqeq7568755810271.sqlcol8 } }
+  If (SQLCODE'=0) {
+    Set tSC = $$Error^%apiOBJ(5001,"Error fetching row: ("_$G(SQLCODE)_") "_$G(%msg))
+     ;---&sql(CLOSE sqeq756875581)
+    if '$isobject($get(%sqeq7568755810271)) { set SQLCODE=-102 } else { set SQLCODE=0 kill %sqeq7568755810271 }
+      Do ##class(%DeepSee.Utils).%LogBuildError("MESSAGEVOLUME",pStartId,tSC)
+    Quit
+  }
+ }
+ Else {
+   ;---&sql(DECLARE sq756875581 CURSOR FOR
+    ;---  SELECT %ID,%EXTERNAL(IsError) "DxIsError",%EXTERNAL(SourceConfigName) "DxSourceConfigName",Status "MxStatusN",%EXTERNAL(Status) "DxStatus",%EXTERNAL(TargetConfigName) "DxTargetConfigName",TimeProcessed "DxTimeProcessed",%EXTERNAL(TimeProcessed) "Dx2624988102" FROM Ens.MessageHeader
+    ;---  WHERE %ID BETWEEN :pStartId  AND :pEndId
+    ;---  )
+    ;--- ** SQL PUBLIC Variables: SQLCODE, pEndId, pStartId
+   
+   ;---&sql(OPEN sq756875581)
+  try { if $g(%sq7568755810272)'="" { s SQLCODE=-101 } else { s %sq7568755810272=$classmethod("%sqlcq."_$tr($namespace,"%_-$@:/\[]^ ","pudsssssssss")_".xEuz6uAGHOmIFXseN7VcGAqrTv3N","%New") if '$isobject(%sq7568755810272) s %sq7568755810272=$$%0dsqlk() } } catch { if $ze["<CLASS DOES NOT EXIST>"&&($ze["%sqlcq."_$tr($namespace,"%_-$@:/\[]^ ","pudsssssssss")_".xEuz6uAGHOmIFXseN7VcGAqrTv3N")||($ze["<ZSQLU>") { s %sq7568755810272=$$%0dsqlk() } else { throw } }
+  If (SQLCODE'=0) {
+   Set tSC = $$Error^%apiOBJ(5001,"Error opening SQL cursor: ("_$G(SQLCODE)_") "_$G(%msg))
+   Quit
+  }
+   ;---&sql(FETCH sq756875581 INTO :tID,:%var("DxIsError"),:%var("DxSourceConfigName"),:%var("MxStatusN"),:%var("DxStatus"),:%var("DxTargetConfigName"),:%var("DxTimeProcessed"),:%var("Dx2624988102"))
+    ;--- ** SQL PUBLIC Variables: %ROWCOUNT, %ROWID, %msg, SQLCODE
+  if $isobject($g(%sq7568755810272))'=1 { s SQLCODE=-102 } else { do %sq7568755810272.FET() if SQLCODE=0 { s tID=%sq7568755810272.sqlcol1,%var("DxIsError")=%sq7568755810272.sqlcol2,%var("DxSourceConfigName")=%sq7568755810272.sqlcol3,%var("MxStatusN")=%sq7568755810272.sqlcol4,%var("DxStatus")=%sq7568755810272.sqlcol5,%var("DxTargetConfigName")=%sq7568755810272.sqlcol6,%var("DxTimeProcessed")=%sq7568755810272.sqlcol7,%var("Dx2624988102")=%sq7568755810272.sqlcol8 } }
+  If (SQLCODE'=0) {
+    Set tSC = $$Error^%apiOBJ(5001,"Error fetching row: ("_$G(SQLCODE)_") "_$G(%msg))
+     ;---&sql(CLOSE sq756875581)
+    if '$isobject($get(%sq7568755810272)) { set SQLCODE=-102 } else { set SQLCODE=0 kill %sq7568755810272 }
+    If ($G(tID)'="") {
+       Do ##class(%DeepSee.Utils).%LogBuildError("MESSAGEVOLUME",tID,tSC)
+    }
+    Quit
+  }
+ }
+ While ($S($IsObject(tRS):tRS.Next(.tSC),1:SQLCODE=0)) {
+ Try {
+ If ($IsObject(tRS)) {
+  If ('tSC) Quit
+  Set tID = $G(tRS.Data("%ID"))
+  Set %var("DxIsError") = $G(tRS.Data("DxIsError"))
+  Set %var("DxSourceConfigName") = $G(tRS.Data("DxSourceConfigName"))
+  Set %var("MxStatusN") = $G(tRS.Data("MxStatusN"))
+  Set %var("DxStatus") = $G(tRS.Data("DxStatus"))
+  Set %var("DxTargetConfigName") = $G(tRS.Data("DxTargetConfigName"))
+  Set %var("DxTimeProcessed") = $G(tRS.Data("DxTimeProcessed"))
+  Set %var("Dx2624988102") = $G(tRS.Data("Dx2624988102"))
+ }
+ Set %var("DxTimeProcessed") = ##class(%DeepSee.Utils).%ConvertDate(%var("DxTimeProcessed"),"TIMESTAMP")
+ Set %dsSourceId = $G(tID)
+ Set tExStartTime = $ZH
+ Set x = $I(^IRIS.Temp.DeepSeeBuildStats($namespace,"MESSAGEVOLUME","expr"),$ZH-tExStartTime)
+ Set tFactId = ""
+ Set tSC = ##class(User.MessageVolume.Fact).%ProcessFact(tID,pBatchMode,.%var,.tFactId,.tErrorMsg,.pDimTables,,pFactList,.tUpdater)
+ If (tFactId'="") {
+ If (''tSC) {
+  Set pUpdates = pUpdates+1
+  Set pChunks(tFactId\64000+1) = ""
+ }
+ ElseIf (pVerbose) {
+  Write "Error filing row: ",tID,!
+  Write:tErrorMsg'="" tErrorMsg,!
+  Write $System.Status.GetOneStatusText(tSC),!!
+  Set tSC = 1
+ }
+ Kill pDimTables
+ Set tRows = tRows + 1
+ If (pVerbose&&'(tRows#1000)) Write $C(13,27)_"[0J"_"Building fact table: ",?25,$J($FN(tRows,",",0),10)," fact(s) updated."
+ If (pVerbose&&'(tRows#1000)&&(+$G(%dserrcount))) Write " ",$J($FN(%dserrcount,",",0),10)," error(s)"
+ If ((pTaskGroup'="")&&'(tRows#1000)) {
+  Set tDelta = tRows - tLastCount
+  Set inc=$I(^IRIS.Temp.DeepSeeUpdate($namespace,pTaskGroup,"facts"),tDelta)
+  Set tLastCount = tRows
+ }
+ } ;factId
+  }
+  Catch (ex) {
+    Set tSC = ex.AsStatus()
+    If ($G(tID)'="") {
+      Do ##class(%DeepSee.Utils).%LogBuildError("MESSAGEVOLUME",tID,tSC)
+    }
+  }
+  If '$IsObject(tRS) {
+   If (pStartId=pEndId) {
+     ;---&sql(FETCH sqeq756875581 INTO :tID,:%var("DxIsError"),:%var("DxSourceConfigName"),:%var("MxStatusN"),:%var("DxStatus"),:%var("DxTargetConfigName"),:%var("DxTimeProcessed"),:%var("Dx2624988102"))
+      ;--- ** SQL PUBLIC Variables: %ROWCOUNT, %ROWID, %msg, SQLCODE
+    if $isobject($g(%sqeq7568755810271))'=1 { s SQLCODE=-102 } else { do %sqeq7568755810271.FET() if SQLCODE=0 { s tID=%sqeq7568755810271.sqlcol1,%var("DxIsError")=%sqeq7568755810271.sqlcol2,%var("DxSourceConfigName")=%sqeq7568755810271.sqlcol3,%var("MxStatusN")=%sqeq7568755810271.sqlcol4,%var("DxStatus")=%sqeq7568755810271.sqlcol5,%var("DxTargetConfigName")=%sqeq7568755810271.sqlcol6,%var("DxTimeProcessed")=%sqeq7568755810271.sqlcol7,%var("Dx2624988102")=%sqeq7568755810271.sqlcol8 } }
+   }
+   Else {
+     ;---&sql(FETCH sq756875581 INTO :tID,:%var("DxIsError"),:%var("DxSourceConfigName"),:%var("MxStatusN"),:%var("DxStatus"),:%var("DxTargetConfigName"),:%var("DxTimeProcessed"),:%var("Dx2624988102"))
+      ;--- ** SQL PUBLIC Variables: %ROWCOUNT, %ROWID, %msg, SQLCODE
+    if $isobject($g(%sq7568755810272))'=1 { s SQLCODE=-102 } else { do %sq7568755810272.FET() if SQLCODE=0 { s tID=%sq7568755810272.sqlcol1,%var("DxIsError")=%sq7568755810272.sqlcol2,%var("DxSourceConfigName")=%sq7568755810272.sqlcol3,%var("MxStatusN")=%sq7568755810272.sqlcol4,%var("DxStatus")=%sq7568755810272.sqlcol5,%var("DxTargetConfigName")=%sq7568755810272.sqlcol6,%var("DxTimeProcessed")=%sq7568755810272.sqlcol7,%var("Dx2624988102")=%sq7568755810272.sqlcol8 } }
+   }
+  }
+ } ;while
+  If '$IsObject(tRS) {
+   If (pStartId=pEndId) {
+     ;---&sql(CLOSE sqeq756875581)
+    if '$isobject($get(%sqeq7568755810271)) { set SQLCODE=-102 } else { set SQLCODE=0 kill %sqeq7568755810271 }
+   }
+   Else {
+     ;---&sql(CLOSE sq756875581)
+    if '$isobject($get(%sq7568755810272)) { set SQLCODE=-102 } else { set SQLCODE=0 kill %sq7568755810272 }
+   }
+  }
+ If (pVerbose) Write $C(13,27)_"[0J"_"Building fact table: "_$FN(+$G(tRows),",",0)_" fact(s) updated"
+ If (pTaskGroup'="") {
+  Set tDelta = tRows - tLastCount
+  Set inc=$I(^IRIS.Temp.DeepSeeUpdate($namespace,pTaskGroup,"facts"),tDelta)
+ }
+ }
+ Catch(ex) {
+  Set tSC = ex.AsStatus()
+   ;---&sql(CLOSE sqeq756875581)
+  if '$isobject($get(%sqeq7568755810271)) { set SQLCODE=-102 } else { set SQLCODE=0 kill %sqeq7568755810271 }
+   ;---&sql(CLOSE sq756875581)
+  if '$isobject($get(%sq7568755810272)) { set SQLCODE=-102 } else { set SQLCODE=0 kill %sq7568755810272 }
+ }
+  Set:$D(oldzu) zu=$ZU(115,2,oldzu)
+ If (('tSC)) {
+  Do ..%LogError(tSC)
+  If (pVerbose) {
+   Do $System.Status.DisplayError(tSC)
+  }
+  If ($G(tID)'="") {
+   Do ##class(%DeepSee.Utils).%LogBuildError("MESSAGEVOLUME",tID,tSC)
+  }
+ }
+ Quit tSC }
+%0dsqlh()	n %xxsql
+	s %xxsql("S",1)="DECLARE sqeq756875581 CURSOR FOR SELECT %ID , %EXTERNAL ( IsError ) ""DxIsError"" , %EXTERNAL ( SourceConfigName ) ""DxSourceConfigName"" , Status ""MxStatusN"" , %EXTERNAL ( Status ) ""DxStatus"" , %EXTERNAL ( TargetConfigName ) ""DxTargetConfigName"" , TimeProcessed ""DxTimeProcessed"" , %EXTERNAL ( TimeProcessed ) ""Dx2624988102"" "
+	s %xxsql("S",2)="INTO  :i%sqlcol1, :i%sqlcol2, :i%sqlcol3, :i%sqlcol4, :i%sqlcol5, :i%sqlcol6, :i%sqlcol7, :i%sqlcol8"
+	s %xxsql("S",3)="FROM Ens . MessageHeader WHERE %ID = :pStartId"
+	s %xxsql("M","%occSqlfuncinc")=$c(1),%xxsql("M","DEBUG")=$c(1),%xxsql("I","%DeepSee")="",%xxsql("I","%occSqlfunc")="",%xxsql("I","%systemInclude")=""
+	s %xxsql("I","EnsUtil")="",%xxsql("NS")="DEMONSTRATION"
+	return $$BuildQuery^%SYS.SQLSRV(.%xxsql,$lb("Logical","","","User.MessageVolume",0,"",),",8,sqeq756875581,","User.MessageVolume.Fact.CLS",1)
+%0dsqlk()	n %xxsql
+	s %xxsql("S",1)="DECLARE sq756875581 CURSOR FOR SELECT %ID , %EXTERNAL ( IsError ) ""DxIsError"" , %EXTERNAL ( SourceConfigName ) ""DxSourceConfigName"" , Status ""MxStatusN"" , %EXTERNAL ( Status ) ""DxStatus"" , %EXTERNAL ( TargetConfigName ) ""DxTargetConfigName"" , TimeProcessed ""DxTimeProcessed"" , %EXTERNAL ( TimeProcessed ) ""Dx2624988102"" "
+	s %xxsql("S",2)="INTO  :i%sqlcol1, :i%sqlcol2, :i%sqlcol3, :i%sqlcol4, :i%sqlcol5, :i%sqlcol6, :i%sqlcol7, :i%sqlcol8"
+	s %xxsql("S",3)="FROM Ens . MessageHeader WHERE %ID BETWEEN :pStartId AND :pEndId"
+	s %xxsql("M","%occSqlfuncinc")=$c(1),%xxsql("M","DEBUG")=$c(1),%xxsql("I","%DeepSee")="",%xxsql("I","%occSqlfunc")="",%xxsql("I","%systemInclude")=""
+	s %xxsql("I","EnsUtil")="",%xxsql("NS")="DEMONSTRATION"
+	return $$BuildQuery^%SYS.SQLSRV(.%xxsql,$lb("Logical","","","User.MessageVolume",0,"",),",8,sq756875581,","User.MessageVolume.Fact.CLS",1)
+%ValidateIndices(idxList="",autoCorrect=0,lockOption=1,multiProcess=1,mapList,verbose=1,errors)
+	if '$listvalid(idxList) { QUIT $$Error^%apiOBJ(5591,"##class(User.MessageVolume.Fact).%ValidateIndices()","idxList",""""" or a $list of index names") }
+	if $case(autoCorrect,1:0,0:0,:1) { QUIT $$Error^%apiOBJ(5591,"##class(User.MessageVolume.Fact).%ValidateIndices()","autoCorrect","'0' or '1'") }
+	if $case(lockOption,2:0,1:0,0:0,:1) { QUIT $$Error^%apiOBJ(5591,"##class(User.MessageVolume.Fact).%ValidateIndices()","lockOption","'0', '1' or '2'") }
+	if $case(multiProcess,1:0,0:0,:1) { QUIT $$Error^%apiOBJ(5591,"##class(User.MessageVolume.Fact).%ValidateIndices()","multiProcess","'0' or '1'") }
+	if $case(verbose,1:0,0:0,:1) { QUIT $$Error^%apiOBJ(5591,"##class(User.MessageVolume.Fact).%ValidateIndices()","verbose","'0' or '1'") }
+	new mapList QUIT $$ValidateIndices^%SYS.SECURITY("User.MessageVolume.Fact",idxList,autoCorrect,lockOption,multiProcess,,verbose,.errors)
+%ValidateObject(unused=0,checkserial=1) public {
+	set sc=1
+	If '$system.CLS.GetModified() Quit sc
+	If m%DxTimeProcessed Set iv=..DxTimeProcessed If iv'="" Set rc=(..DxTimeProcessedIsValid(iv)) If ('rc) Set sc=$$EmbedErr^%occSystem(sc,rc,5802,"DxTimeProcessed",iv)
+	If m%MxStatusN Set iv=..MxStatusN If iv'="" Set rc=(..MxStatusNIsValid(iv)) If ('rc) Set sc=$$EmbedErr^%occSystem(sc,rc,5802,"MxStatusN",iv)
+	Quit sc }
+%dspartitionCompute(%id)
+	New %tException,%val set %val = ""
+	try {
+	Set %val=(%id\1024000)+1
+	} catch %tException { throw %tException }
+	Quit %val
+%dspartitionDisplayToLogical(%val) public {
+	Q $select(%val="":"",%val=$c(0)&&$zu(115,13):"",1:$s($in(%val,"","")'="":+$in(%val,"",%val),1:%val)) }
+%dspartitionGet() public {
+	Quit ..%dspartitionCompute($listget(i%"%%OID")) }
+%dspartitionIsValid(%val) public {
+	Quit $select(%val=$c(0)&&$zu(115,13):1,$isvalidnum(%val,0):1,1:$$Error^%apiOBJ(7207,%val)) }
+%dspartitionNormalize(%val) public {
+	Quit $select(%val=$c(0)&&$zu(115,13):"",1:%val\1) }
+%dspartitionSQLCompute()
+	// Compute code for field %dspartition
+ Set %d(2)=(%d(1)\1024000)+1
+ QUIT
+%sourceIdGetObject(force=0) public {
+	Quit $select(r%%sourceId=""||(i%%sourceId'=""):$select(i%%sourceId="":"",1:$listbuild(i%%sourceId_"")),(''..%sourceId.%GetSwizzleObject(force,.oid)):oid,1:"") }
+%sourceIdGetObjectId(force=0) public {
+	Quit $listget(..%sourceIdGetObject(force)) }
+%sourceIdGetStored(id) public {
+	Quit $Select(id'="":$listget($g(^DeepSee.Fact("USER.MESSAGEVOLUME.FACT",id)),1),1:"") }
+%sourceIdGetSwizzled(noswizzle=0) public {
+	If noswizzle Quit r%%sourceId
+	If i%%sourceId="" Quit ""
+	Set oref=##class(Ens.MessageHeader).%Open($select(i%%sourceId="":"",1:$listbuild(i%%sourceId_"")),,.sc) If ('sc) Do:$get(^%SYS("ThrowSwizzleError"),0) $zutil(96,3,19,1) Quit ""
+	Set modstate=$system.CLS.GetModifiedBits() Set r%%sourceId=oref Do $system.CLS.SetModifiedBits(modstate)
+	Quit oref }
+%sourceIdNewObject() public {
+	Set newobject=##class(Ens.MessageHeader).%New() If newobject="" Quit ""
+	Set ..%sourceId=newobject
+	Quit newobject }
+%sourceIdSetObject(newvalue) public {
+	If newvalue'="",$data(i%%sourceId,tmp),tmp=$listget(newvalue) Quit 1
+	Set i%%sourceId=$listget(newvalue),r%%sourceId=0,r%%sourceId=""
+	Quit 1 }
+%sourceIdSetObjectId(newid) public {
+	Quit ..%sourceIdSetObject($select(newid="":"",1:$listbuild(newid_""))) }
+%sourceIdUnSwizzle(force=0) public {
+	If r%%sourceId="" Quit 1
+	Set sc=..%sourceId.%GetSwizzleObject(force,.newvalue) Quit:('sc) sc
+	Set modstate=$system.CLS.GetModifiedBits() Set r%%sourceId="" Do $system.CLS.SetModifiedBits(modstate)
+	Set i%%sourceId=$listget(newvalue)
+	Quit 1 }
+zDx2624988102Compute(%id,%d1)
+	New %tException,%val set %val = ""
+	try {
+	Set %val=$S(%d1="":"",%d1=-1E14:-1E14,1:%d1\1)
+	} catch %tException { throw %tException }
+	Quit %val
+zDx2624988102Get() public {
+	Quit ..Dx2624988102Compute($listget(i%"%%OID"),..DxTimeProcessed) }
+zDx2624988102SQLCompute()
+	// Compute code for field Dx2624988102
+ Set %d(4)=$S($g(%d(9))="":"",$g(%d(9))=-1E14:-1E14,1:$g(%d(9))\1)
+ QUIT
+zDxIsErrorGetObject(force=0) public {
+	Quit $select(r%DxIsError=""||(i%DxIsError'=""):$select(i%DxIsError="":"",1:$listbuild(i%DxIsError_"")),(''..DxIsError.%GetSwizzleObject(force,.oid)):oid,1:"") }
+zDxIsErrorGetObjectId(force=0) public {
+	Quit $listget(..DxIsErrorGetObject(force)) }
+zDxIsErrorGetStored(id) public {
+	Quit $Select(id'="":$listget($g(^DeepSee.Fact("USER.MESSAGEVOLUME.FACT",id)),5),1:"") }
+zDxIsErrorGetSwizzled(noswizzle=0) public {
+	If noswizzle Quit r%DxIsError
+	If i%DxIsError="" Quit ""
+	Set oref=##class(User.MessageVolume.StarIsError).%Open($select(i%DxIsError="":"",1:$listbuild(i%DxIsError_"")),,.sc) If ('sc) Do:$get(^%SYS("ThrowSwizzleError"),0) $zutil(96,3,19,1) Quit ""
+	Set modstate=$system.CLS.GetModifiedBits() Set r%DxIsError=oref Do $system.CLS.SetModifiedBits(modstate)
+	Quit oref }
+zDxIsErrorNewObject() public {
+	Set newobject=##class(User.MessageVolume.StarIsError).%New() If newobject="" Quit ""
+	Set ..DxIsError=newobject
+	Quit newobject }
+zDxIsErrorSetObject(newvalue) public {
+	If newvalue'="",$data(i%DxIsError,tmp),tmp=$listget(newvalue) Quit 1
+	Set i%DxIsError=$listget(newvalue),r%DxIsError=0,r%DxIsError=""
+	Quit 1 }
+zDxIsErrorSetObjectId(newid) public {
+	Quit ..DxIsErrorSetObject($select(newid="":"",1:$listbuild(newid_""))) }
+zDxIsErrorUnSwizzle(force=0) public {
+	If r%DxIsError="" Quit 1
+	Set sc=..DxIsError.%GetSwizzleObject(force,.newvalue) Quit:('sc) sc
+	Set modstate=$system.CLS.GetModifiedBits() Set r%DxIsError="" Do $system.CLS.SetModifiedBits(modstate)
+	Set i%DxIsError=$listget(newvalue)
+	Quit 1 }
+zDxSourceConfigNameGetObject(force=0) public {
+	Quit $select(r%DxSourceConfigName=""||(i%DxSourceConfigName'=""):$select(i%DxSourceConfigName="":"",1:$listbuild(i%DxSourceConfigName_"")),(''..DxSourceConfigName.%GetSwizzleObject(force,.oid)):oid,1:"") }
+zDxSourceConfigNameGetObjectId(force=0) public {
+	Quit $listget(..DxSourceConfigNameGetObject(force)) }
+zDxSourceConfigNameGetStored(id) public {
+	Quit $Select(id'="":$listget($g(^DeepSee.Fact("USER.MESSAGEVOLUME.FACT",id)),3),1:"") }
+zDxSourceConfigNameGetSwizzled(noswizzle=0) public {
+	If noswizzle Quit r%DxSourceConfigName
+	If i%DxSourceConfigName="" Quit ""
+	Set oref=##class(User.MessageVolume.StarSourceConfigName).%Open($select(i%DxSourceConfigName="":"",1:$listbuild(i%DxSourceConfigName_"")),,.sc) If ('sc) Do:$get(^%SYS("ThrowSwizzleError"),0) $zutil(96,3,19,1) Quit ""
+	Set modstate=$system.CLS.GetModifiedBits() Set r%DxSourceConfigName=oref Do $system.CLS.SetModifiedBits(modstate)
+	Quit oref }
+zDxSourceConfigNameNewObject() public {
+	Set newobject=##class(User.MessageVolume.StarSourceConfigName).%New() If newobject="" Quit ""
+	Set ..DxSourceConfigName=newobject
+	Quit newobject }
+zDxSourceConfigNameSetObject(newvalue) public {
+	If newvalue'="",$data(i%DxSourceConfigName,tmp),tmp=$listget(newvalue) Quit 1
+	Set i%DxSourceConfigName=$listget(newvalue),r%DxSourceConfigName=0,r%DxSourceConfigName=""
+	Quit 1 }
+zDxSourceConfigNameSetObjectId(newid) public {
+	Quit ..DxSourceConfigNameSetObject($select(newid="":"",1:$listbuild(newid_""))) }
+zDxSourceConfigNameUnSwizzle(force=0) public {
+	If r%DxSourceConfigName="" Quit 1
+	Set sc=..DxSourceConfigName.%GetSwizzleObject(force,.newvalue) Quit:('sc) sc
+	Set modstate=$system.CLS.GetModifiedBits() Set r%DxSourceConfigName="" Do $system.CLS.SetModifiedBits(modstate)
+	Set i%DxSourceConfigName=$listget(newvalue)
+	Quit 1 }
+zDxStatusGetObject(force=0) public {
+	Quit $select(r%DxStatus=""||(i%DxStatus'=""):$select(i%DxStatus="":"",1:$listbuild(i%DxStatus_"")),(''..DxStatus.%GetSwizzleObject(force,.oid)):oid,1:"") }
+zDxStatusGetObjectId(force=0) public {
+	Quit $listget(..DxStatusGetObject(force)) }
+zDxStatusGetStored(id) public {
+	Quit $Select(id'="":$listget($g(^DeepSee.Fact("USER.MESSAGEVOLUME.FACT",id)),6),1:"") }
+zDxStatusGetSwizzled(noswizzle=0) public {
+	If noswizzle Quit r%DxStatus
+	If i%DxStatus="" Quit ""
+	Set oref=##class(User.MessageVolume.StarStatus).%Open($select(i%DxStatus="":"",1:$listbuild(i%DxStatus_"")),,.sc) If ('sc) Do:$get(^%SYS("ThrowSwizzleError"),0) $zutil(96,3,19,1) Quit ""
+	Set modstate=$system.CLS.GetModifiedBits() Set r%DxStatus=oref Do $system.CLS.SetModifiedBits(modstate)
+	Quit oref }
+zDxStatusNewObject() public {
+	Set newobject=##class(User.MessageVolume.StarStatus).%New() If newobject="" Quit ""
+	Set ..DxStatus=newobject
+	Quit newobject }
+zDxStatusSetObject(newvalue) public {
+	If newvalue'="",$data(i%DxStatus,tmp),tmp=$listget(newvalue) Quit 1
+	Set i%DxStatus=$listget(newvalue),r%DxStatus=0,r%DxStatus=""
+	Quit 1 }
+zDxStatusSetObjectId(newid) public {
+	Quit ..DxStatusSetObject($select(newid="":"",1:$listbuild(newid_""))) }
+zDxStatusUnSwizzle(force=0) public {
+	If r%DxStatus="" Quit 1
+	Set sc=..DxStatus.%GetSwizzleObject(force,.newvalue) Quit:('sc) sc
+	Set modstate=$system.CLS.GetModifiedBits() Set r%DxStatus="" Do $system.CLS.SetModifiedBits(modstate)
+	Set i%DxStatus=$listget(newvalue)
+	Quit 1 }
+zDxTargetConfigNameGetObject(force=0) public {
+	Quit $select(r%DxTargetConfigName=""||(i%DxTargetConfigName'=""):$select(i%DxTargetConfigName="":"",1:$listbuild(i%DxTargetConfigName_"")),(''..DxTargetConfigName.%GetSwizzleObject(force,.oid)):oid,1:"") }
+zDxTargetConfigNameGetObjectId(force=0) public {
+	Quit $listget(..DxTargetConfigNameGetObject(force)) }
+zDxTargetConfigNameGetStored(id) public {
+	Quit $Select(id'="":$listget($g(^DeepSee.Fact("USER.MESSAGEVOLUME.FACT",id)),4),1:"") }
+zDxTargetConfigNameGetSwizzled(noswizzle=0) public {
+	If noswizzle Quit r%DxTargetConfigName
+	If i%DxTargetConfigName="" Quit ""
+	Set oref=##class(User.MessageVolume.StarTargetConfigName).%Open($select(i%DxTargetConfigName="":"",1:$listbuild(i%DxTargetConfigName_"")),,.sc) If ('sc) Do:$get(^%SYS("ThrowSwizzleError"),0) $zutil(96,3,19,1) Quit ""
+	Set modstate=$system.CLS.GetModifiedBits() Set r%DxTargetConfigName=oref Do $system.CLS.SetModifiedBits(modstate)
+	Quit oref }
+zDxTargetConfigNameNewObject() public {
+	Set newobject=##class(User.MessageVolume.StarTargetConfigName).%New() If newobject="" Quit ""
+	Set ..DxTargetConfigName=newobject
+	Quit newobject }
+zDxTargetConfigNameSetObject(newvalue) public {
+	If newvalue'="",$data(i%DxTargetConfigName,tmp),tmp=$listget(newvalue) Quit 1
+	Set i%DxTargetConfigName=$listget(newvalue),r%DxTargetConfigName=0,r%DxTargetConfigName=""
+	Quit 1 }
+zDxTargetConfigNameSetObjectId(newid) public {
+	Quit ..DxTargetConfigNameSetObject($select(newid="":"",1:$listbuild(newid_""))) }
+zDxTargetConfigNameUnSwizzle(force=0) public {
+	If r%DxTargetConfigName="" Quit 1
+	Set sc=..DxTargetConfigName.%GetSwizzleObject(force,.newvalue) Quit:('sc) sc
+	Set modstate=$system.CLS.GetModifiedBits() Set r%DxTargetConfigName="" Do $system.CLS.SetModifiedBits(modstate)
+	Set i%DxTargetConfigName=$listget(newvalue)
+	Quit 1 }
+zDxTimeProcessedDisplayToLogica(%val) public {
+ q:%val="" "" set %val=$zdateh(%val,,,,,,-672045,,"Error: '"_%val_"' is an invalid DISPLAY Date value") q:%val||(%val=0) %val s %msg=%val ZTRAP "ODAT" }
+zDxTimeProcessedGetStored(id) public {
+	Quit $Select(id'="":$listget($g(^DeepSee.Fact("USER.MESSAGEVOLUME.FACT",id)),2),1:"") }
+zDxTimeProcessedIsValid(%val) public {
+	// $ZDT will accept bogus dates, such as "ABC"; test for this
+	Set tDay = $P(%val,",",1)
+	Set tSec = $P(%val,",",2)
+	If ((tDay'="")&&('$IsValidNum(tDay)||(tDay<=0))) {	// DTB311 - Reject negative and 0
+		Quit $$Error^%apiOBJ(7207,%val)
+	}
+	If ((tSec'="")&&'$IsValidNum(tSec)) {
+		Quit $$Error^%apiOBJ(7207,%val)
+	}
+	QUIT $S($ZDT(%val,3,,,,,,,,,"X")'="X":1,1:$$Error^%apiOBJ(7207,%val)) }
+zDxTimeProcessedLogicalToDispla(%val) public {
+	Quit $select(%val="":"",%val'?0.1"-"4N1"-"2N1"-"2N.1(1" "2N1":"2N1":"2N.1(1"."0.9N)):$zdate(%val,-1,,4,,,-672045),1:$$FormatJulian^%qarfunc(%val,-1)) }
+zDxTimeProcessedLogicalToOdbc(%val="") public {
+	Quit $select(%val="":"",%val'?0.1"-"4N1"-"2N1"-"2N.1(1" "2N1":"2N1":"2N.1(1"."0.9N)):$zdate(%val,3,,,,,-672045),1:$piece(%val," ",1)) }
+zDxTimeProcessedOdbcToLogical(%val="") public {
+ quit:%val=""||($zu(115,13)&&(%val=$c(0))) "" quit:$isvalidnum(%val) %val set %val=$zdateh(%val,3,,,,,-672045,,"Error: '"_%val_"' is an invalid ODBC/JDBC Date value") q:%val||(%val=0) %val s %msg=%val ZTRAP "ODAT" }
+zDxTimeProcessedFxHourNumberCom(%id,%d1)
+	New %tException,%val set %val = ""
+	try {
+	Set %val=$S(%d1="":"",%d1=-1E14:-1E14,1:(+$E($ZDT(%d1,3),12,13)))
+	} catch %tException { throw %tException }
+	Quit %val
+zDxTimeProcessedFxHourNumberGet() public {
+	Quit ..DxTimeProcessedFxHourNumberCompute($listget(i%"%%OID"),..DxTimeProcessed) }
+zDxTimeProcessedFxHourNumberSQL()
+	// Compute code for field DxTimeProcessedFxHourNumber
+ Set %d(10)=$S($g(%d(9))="":"",$g(%d(9))=-1E14:-1E14,1:(+$E($ZDT($g(%d(9)),3),12,13)))
+ QUIT
+zMxStatusNDisplayToLogical(%val) public {
+	Quit $select(%val="":"",$zu(115,13)&&(%val=$c(0)):"",1:$s($in(%val,"","")'="":$double($in(%val,"",%val)),1:%val)) }
+zMxStatusNGetStored(id) public {
+	Quit $Select(id'="":$listget($g(^DeepSee.Fact("USER.MESSAGEVOLUME.FACT",id)),7),1:"") }
+zMxStatusNIsValid(%val) public {
+	Quit $select($zu(115,13)&&(%val=$c(0)):1,$isvaliddouble(%val,,,):1,1:$$Error^%apiOBJ(5794,"%Double",%val)) }
+zMxStatusNLogicalToDisplay(%val) public {
+	Quit $s(%val="":"",1:$fn(%val,"",2)) }
+zMxStatusNNormalize(%val) public {
+	Quit $select(%val="":"",$zu(115,13)&&(%val=$c(0)):"",1:$double(%val)) }
+zMxStatusNOdbcToLogical(%val) public {
+	Quit $select(%val=""||($zu(115,13)&&(%val=$c(0))):"",'$isvaliddouble(%val,,,):%val,1:$double(%val)) }
+zExtentClose(%qHandle) [ SQLCODE ] public {
+	New SQLCODE
+	Do %qHandle.%Destruct() Kill %qHandle
+	If SQLCODE { Set:$isobject($g(%sqlcontext)) %sqlcontext.%SQLCODE=SQLCODE,%sqlcontext.%Message=$g(%msg) Set sc=$$Error^%apiOBJ(5540,SQLCODE,$get(%msg)) } Else { Set sc=1 }
+	Quit sc }
+zExtentExecute(%qHandle) [ SQLCODE ] public { New %ROWCOUNT,%ROWID,%msg,SQLCODE 
+	Set sc=1
+	 ;---&sql(DECLARE QExtent CURSOR FOR
+ 	 ;---		 SELECT ID FROM User_MessageVolume.Fact)
+ 	 ;--- ** SQL PUBLIC Variables: SQLCODE
+	 
+	 ;---&sql(OPEN QExtent)
+	try { if $g(%qHandle)'="" { s SQLCODE=-101 } else { s %qHandle=$classmethod("%sqlcq."_$tr($namespace,"%_-$@:/\[]^ ","pudsssssssss")_".xEZ5RfmM2IFCa9i4Ri9G6y9AnRJ2","%New") if '$isobject(%qHandle) s %qHandle=$$%0dsqlp() } } catch { if $ze["<CLASS DOES NOT EXIST>"&&($ze["%sqlcq."_$tr($namespace,"%_-$@:/\[]^ ","pudsssssssss")_".xEZ5RfmM2IFCa9i4Ri9G6y9AnRJ2")||($ze["<ZSQLU>") { s %qHandle=$$%0dsqlp() } else { throw } }
+	If SQLCODE { Set:$isobject($g(%sqlcontext)) %sqlcontext.%SQLCODE=SQLCODE,%sqlcontext.%Message=$g(%msg) Set sc=$$Error^%apiOBJ(5821,"SQLCODE = "_SQLCODE) } Else { Set sc=1 }
+	Quit sc }
+zExtentFetch(%qHandle,Row,AtEnd=0) [ SQLCODE ] public { New %ROWCOUNT,%ROWID,%msg,SQLCODE 
+	Set Row="",AtEnd=0
+	 ;---&sql(FETCH QExtent INTO :c1)
+ 	 ;--- ** SQL PUBLIC Variables: %ROWCOUNT, %ROWID, %msg, SQLCODE
+	if $isobject($g(%qHandle))'=1 { s SQLCODE=-102 } else { do %qHandle.FET() if SQLCODE=0 { s c1=%qHandle.sqlcol1 } }
+	If 'SQLCODE { Set Row=$lb(c1) Set sc=1 }
+	ElseIf SQLCODE=100 { Set AtEnd=1,sc=1 Set:$isobject($g(%sqlcontext)) %sqlcontext.%SQLCODE=SQLCODE,%sqlcontext.%ROWCOUNT=$g(%ROWCOUNT) }
+	Else { Set:$isobject($g(%sqlcontext)) %sqlcontext.%SQLCODE=SQLCODE,%sqlcontext.Message=$g(%msg) Set AtEnd=1,sc=$$Error^%apiOBJ(5540,SQLCODE,$get(%msg)) }
+	QUIT sc }
+zExtentFetchRows(%qHandle,FetchCount=0,RowSet,ReturnCount,AtEnd) [ SQLCODE ] public { New %ROWCOUNT,%ROWID,%msg,SQLCODE 
+	Set RowSet="",ReturnCount=0,AtEnd=0
+	For {
+		 ;---&sql(FETCH QExtent INTO :c1)
+ 		 ;--- ** SQL PUBLIC Variables: %ROWCOUNT, %ROWID, %msg, SQLCODE
+		if $isobject($g(%qHandle))'=1 { s SQLCODE=-102 } else { do %qHandle.FET() if SQLCODE=0 { s c1=%qHandle.sqlcol1 } }
+		If 'SQLCODE { Set RowSet=RowSet_$lb(c1),ReturnCount=ReturnCount+1 Quit:(ReturnCount=FetchCount)||(($l(RowSet)+($l(RowSet)\ReturnCount))>24000) } Else { Set AtEnd=1 Quit }
+	}
+	If 'SQLCODE { Set sc=1 } ElseIf SQLCODE=100 { Set sc=1 Set:$isobject($g(%sqlcontext)) %sqlcontext.%SQLCODE=SQLCODE,%sqlcontext.%ROWCOUNT=$g(%ROWCOUNT) } Else { Set:$isobject($g(%sqlcontext)) %sqlcontext.%SQLCODE=SQLCODE,%sqlcontext.Message=$g(%msg) Set sc=$$Error^%apiOBJ(5540,SQLCODE,$get(%msg)) }
+	Quit sc }
+zExtentSendODBC(%qHandle,array,qacn,%qrc,piece,ColumnCount) [ SQLCODE ] public { New %ROWCOUNT,%ROWID,%msg,SQLCODE 
+	set %qrc=0,piece=0
+	for {
+		set rc=..ExtentFetch(.%qHandle,.row,.atend)
+		if ('rc) { set %qrc=-400 set:$isobject($get(%sqlcontext)) %sqlcontext.SQLCode=-400,%sqlcontext.Message=$g(%msg) do ProcessError^%ourProcedure(rc,$get(%sqlcontext),.%qrc,.%msg),Logerr^%SYS.SQLSRV(%qrc,"","SP",.%msg) RETURN  }
+		if row="" { set %qrc=100 set:$isobject($get(%sqlcontext)) %sqlcontext.SQLCode=100 RETURN  }
+		if $g(%protocol)>50 { RETURN:$zobjexport(row,60) }
+		else {
+			if %protocol>46 { for piece=1:1:ColumnCount { goto:$zobjexport($lg(row,piece),50) SPDone } }
+			else { for piece=1:1:ColumnCount { goto:$zobjexport($lg(row,piece),7) SPDone } }
+		}
+	}
+	QUIT
+SPDone	set:%protocol>46 piece=piece+1
+	kill array(qacn)
+	for i=piece:1:ColumnCount { set array(qacn,i)=$lg(row,i) }
+	QUIT }
+ q
+%0dsqlp()	n %xxsql
+	s %xxsql("S",1)="DECLARE QExtent CURSOR FOR SELECT ID "
+	s %xxsql("S",2)="INTO  :i%sqlcol1"
+	s %xxsql("S",3)="FROM User_MessageVolume . Fact"
+	s %xxsql("M","%occSqlfuncinc")=$c(1),%xxsql("M","DEBUG")=$c(1),%xxsql("I","%DeepSee")="",%xxsql("I","%occSqlfunc")="",%xxsql("I","%systemInclude")=""
+	s %xxsql("I","EnsUtil")="",%xxsql("NS")="DEMONSTRATION"
+	return $$BuildQuery^%SYS.SQLSRV(.%xxsql,$lb("Runtime","","","User.MessageVolume",0,"",),",1,QExtent,","User.MessageVolume.Fact.CLS",1)
+zExtentFunc() public {
+	try {
+		set tSchemaPath = ##class(%SQL.Statement).%ClassPath($classname())
+			set tStatement = ##class(%SQL.Statement).%New(,tSchemaPath)
+			do tStatement.prepare(" SELECT ID FROM User_MessageVolume . Fact")
+		set tResult = tStatement.%Execute()
+	}
+	catch tException { if '$Isobject($Get(tResult)) { set tResult = ##class(%SQL.StatementResult).%New() } set tResult.%SQLCODE=tException.AsSQLCODE(),tResult.%Message=tException.AsSQLMessage() }
+	Quit tResult }
+zExtentGetInfo(colinfo,parminfo,idinfo,%qHandle,extoption=0,extinfo) public {
+ s parminfo=""
+	s:'($d(^oddCOM($classname(),"q","Extent",21),clientinfo)#2)&&'$s($d(^(2),clientinfo)#2&&(clientinfo'=$classname()):$d(^oddCOM(clientinfo,"q","Extent",21),clientinfo)#2||($d(^oddDEF(clientinfo,"q","Extent",21),clientinfo)#2),1:$d(^oddDEF($classname(),"q","Extent",21),clientinfo)#2) clientinfo=""
+	Set:extoption extinfo=$s($d(^oddCOM($classname(),"q","Extent",38))#2:^(38),$d(^oddCOM($g(^(2),$classname()),"q","Extent",38))#2:^(38),1:$s($d(^oddDEF($g(^oddCOM($classname(),"q","Extent",2),$classname()),"q","Extent",38))#2:^(38),1:""))
+	If clientinfo'="" Set colinfo=$listget(clientinfo,1),parminfo=$listget(clientinfo,2),idinfo=$listget(clientinfo,3) Quit 1
+	Set colinfo="",parminfo="",idinfo=$listbuild(0)
+	Set sc=$$externaltype^%apiOLE("%Library.Integer",.exttypes,"0")
+	Quit:('sc) sc
+	s:'($d(^oddCOM($classname(),"q","Extent",23),names)#2)&&'$s($d(^(2),names)#2&&(names'=$classname()):$d(^oddCOM(names,"q","Extent",23),names)#2||($d(^oddDEF(names,"q","Extent",23),names)#2),1:$d(^oddDEF($classname(),"q","Extent",23),names)#2) names=""
+	s:'($d(^oddCOM($classname(),"q","Extent",22),captions)#2)&&'$s($d(^(2),captions)#2&&(captions'=$classname()):$d(^oddCOM(captions,"q","Extent",22),captions)#2||($d(^oddDEF(captions,"q","Extent",22),captions)#2),1:$d(^oddDEF($classname(),"q","Extent",22),captions)#2) captions=""
+	For i=1:1:1 Set colinfo=colinfo_$listbuild($listbuild($listget(names,i),$piece(exttypes,",",i),$listget(captions,i)))
+	Set idinfo=$listbuild(1,$classname())
+	s ^oddCOM($classname(),"q","Extent",21)=$listbuild(colinfo,parminfo,idinfo)
+	Quit 1 }
+zExtentGetODBCInfo(colinfo,parminfo,qHandle) public {
+	set version = $Select($Get(%protocol,41)>40:4,1:3)
+	Set metadata=$lb(1,1,"ID",4,10,0,2,"ID","Fact","User_MessageVolume","",$c(0,0,0,0,0,0,0,0,0,0,0,1),0)
+	Set colcount=$li(metadata,2),cmdlen=colcount*10,parmcount=$li(metadata,3+cmdlen),pmdlen=parmcount*6,parminfo=$li(metadata,cmdlen+3,cmdlen+pmdlen+3)
+	If version=4 {
+		Set colinfo=$li(metadata,2,2+cmdlen)
+	} Else {
+		Set colinfo=$li(metadata,2,2)
+		For i=0:1:colcount-1 Set colinfo=colinfo_$list(metadata,3+(i*10),11+(i*10))
+	}
+	Quit 1 }
+zDxIsErrorCheck(kp1,lockonly=0) public {
+	Quit ##class(User.MessageVolume.StarIsError).%1Check(kp1,lockonly)
+}
+zDxIsErrorSQLFKeyExists(%p...)
+ QUIT $$Error^%apiOBJ(5758,"%CacheConstraintForeignKey::DxIsErrorSQLFKeyExists")
+zDxIsErrorSQLFKeyRefAction(pSameTable=0,k,pNoLock=0,%p...)
+ QUIT $$Error^%apiOBJ(5758,"%CacheConstraintForeignKey::DxIsErrorSQLFKeyRefAction")
+zDxSourceConfigNameCheck(kp1,lockonly=0) public {
+	Quit ##class(User.MessageVolume.StarSourceConfigName).%1Check(kp1,lockonly)
+}
+zDxSourceConfigNameSQLFKeyExist(%p...)
+ QUIT $$Error^%apiOBJ(5758,"%CacheConstraintForeignKey::DxSourceConfigNameSQLFKeyExists")
+zDxSourceConfigNameSQLFKeyRefAc(pSameTable=0,k,pNoLock=0,%p...)
+ QUIT $$Error^%apiOBJ(5758,"%CacheConstraintForeignKey::DxSourceConfigNameSQLFKeyRefAction")
+zDxStatusCheck(kp1,lockonly=0) public {
+	Quit ##class(User.MessageVolume.StarStatus).%1Check(kp1,lockonly)
+}
+zDxStatusSQLFKeyExists(%p...)
+ QUIT $$Error^%apiOBJ(5758,"%CacheConstraintForeignKey::DxStatusSQLFKeyExists")
+zDxStatusSQLFKeyRefAction(pSameTable=0,k,pNoLock=0,%p...)
+ QUIT $$Error^%apiOBJ(5758,"%CacheConstraintForeignKey::DxStatusSQLFKeyRefAction")
+zDxTargetConfigNameCheck(kp1,lockonly=0) public {
+	Quit ##class(User.MessageVolume.StarTargetConfigName).%1Check(kp1,lockonly)
+}
+zDxTargetConfigNameSQLFKeyExist(%p...)
+ QUIT $$Error^%apiOBJ(5758,"%CacheConstraintForeignKey::DxTargetConfigNameSQLFKeyExists")
+zDxTargetConfigNameSQLFKeyRefAc(pSameTable=0,k,pNoLock=0,%p...)
+ QUIT $$Error^%apiOBJ(5758,"%CacheConstraintForeignKey::DxTargetConfigNameSQLFKeyRefAction")
+zIDKEYCheck(K1,lockonly=0,concurrency=-1) public {
+	s id=K1,exists=..%ExistsId(id) q:'exists $s('lockonly:$$Error^%apiOBJ(5797,$classname(),"IDKEY",id),1:1) s:concurrency=-1 concurrency=$select(..#DEFAULTCONCURRENCY="$zu(115,10)":$zu(115,10),1:$xecute("q "_..#DEFAULTCONCURRENCY)) if concurrency { s status=..%LockId(id,1) q:('status) status } if 'lockonly { s exists=..%ExistsId(id) d:concurrency ..%UnlockId(id,1,0) quit $s('exists:$$Error^%apiOBJ(5797,$classname(),"IDKEY",id),1:1) } else { d:concurrency ..%UnlockId(id,1,0) q 1 }
+}
+zIDKEYDelete(K1,concurrency=-1) public {
+	Quit ..%DeleteId(.K1,concurrency) }
+zIDKEYExists(K1,id="") public {
+	s id=K1 q ..%ExistsId(K1) }
+zIDKEYOpen(K1,concurrency=-1,sc) public { s:'($d(sc)#2) sc=1
+	Quit ..%OpenId(.K1,concurrency,.sc) }
+zIDKEYSQLCheckUnique(pFromOrig=0,%pID,%pVals...)
+ QUIT $$Error^%apiOBJ(5758,"%Persistent::IDKEYSQLCheckUnique")
+zIDKEYSQLExists(pLockOnly=0,pUnlockRef,%pVal...)
+	// SQL Foreign Key validation entry point for Key IDKEY.  Called by FKeys that reference this Key to see if the row is defined
+	new id set id=%pVal(1)
+	if pLockOnly>=0 { if '..%SQLGetLock(id,1,.pUnlockRef) { set sqlcode=-114,%msg=$$FormatMessage^%occMessages(,"%SQL.Filer","SQLFiler39",,"User_MessageVolume"_"."_"Fact"_":"_"IDKEY") QUIT 0 } }
+	if pLockOnly<1 {
+		new qv set qv=$d(^DeepSee.Fact("USER.MESSAGEVOLUME.FACT",%pVal(1))) QUIT:pLockOnly=-1 qv
+		do:'$g(pUnlockRef) ..%SQLReleaseLock(id,1) quit qv
+	}
+	else { do:'$g(pUnlockRef) ..%SQLReleaseLock(id,1) QUIT 1 }
+	Return
+zIDKEYSQLFindPKeyByConstraint(%con)
+ QUIT $$Error^%apiOBJ(5758,"%Persistent::IDKEYSQLFindPKeyByConstraint")
+zIDKEYSQLFindRowIDByConstraint(%con,pInternal=0)
+ QUIT $$Error^%apiOBJ(5758,"%Persistent::IDKEYSQLFindRowIDByConstraint")
+zMxStatusNExists(K1,id="") [ K1,SQLCODE,id ] public { New SQLCODE 
+	 ;---&sql(SELECT %ID INTO :id FROM User_MessageVolume.Fact WHERE (:K1 is not null and MxStatusN = :K1) OR (:K1 IS NULL AND MxStatusN IS NULL))
+ 	 ;--- ** SQL PUBLIC Variables: K1, SQLCODE, id
+	try { d $classmethod("%sqlcq."_$tr($namespace,"%_-$@:/\[]^ ","pudsssssssss")_".xEIPoRhSbmZhEycVT4aO4UeBNaiu","%New") } catch { if $ze["<CLASS DOES NOT EXIST>"&&($ze["%sqlcq."_$tr($namespace,"%_-$@:/\[]^ ","pudsssssssss")_".xEIPoRhSbmZhEycVT4aO4UeBNaiu")||($ze["<ZSQLU>") { d %0dsqlt } else { throw } }
+	Quit $select('SQLCODE:1,1:0) }
+ q
+%0dsqlt	n %xxsql
+	s %xxsql("S",1)="SELECT %ID INTO :id FROM User_MessageVolume . Fact WHERE ( :K1 IS NOT NULL AND MxStatusN = :K1 ) OR ( :K1 IS NULL AND MxStatusN IS NULL )"
+	s %xxsql("M","%occSqlfuncinc")=$c(1),%xxsql("M","DEBUG")=$c(1),%xxsql("I","%DeepSee")="",%xxsql("I","%occSqlfunc")="",%xxsql("I","%systemInclude")=""
+	s %xxsql("I","EnsUtil")="",%xxsql("NS")="DEMONSTRATION"
+	d BuildQuery^%SYS.SQLSRV(.%xxsql,$lb("Logical","","","User.MessageVolume",0,"",),,"User.MessageVolume.Fact.CLS")
+	q

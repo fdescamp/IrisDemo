@@ -1,0 +1,70 @@
+ROUTINE ASCN.DTL.LFO5.BatchDTL.1 [Type=INT,Generated]
+ ;ASCN.DTL.LFO5.BatchDTL.1
+ ;Generated for class ASCN.DTL.LFO5.BatchDTL.  Do NOT edit. 08/13/2020 09:37:54AM
+ ;;6657514D;ASCN.DTL.LFO5.BatchDTL
+ ;
+zGetSourceType() public {
+ Quit "ASCN.Msg.RecMap.LFO5.Batch.Msg16" }
+zGetTargetType(pCreate) public {
+ Set pCreate="new"
+ Quit "ASCN.Msg.RecMap.LFO5.Batch.Msg16" }
+zTransform(source,target,aux="") [ process,context ] public {
+	Set (tSC,tSCTrans)=1
+	Try {
+		Set target = ##class(ASCN.Msg.RecMap.LFO5.Batch.Msg16).%New()
+		If '$IsObject(target) Set tSC=%objlasterror Quit
+		Do:$S($D(%Ensemble("DoTrace")):%Ensemble("DoTrace"),1:##class(Ens.Util.Trace).DoTrace()) ##class(Ens.Util.Trace).WriteTrace("xform",$classname(),"Transform","transform from source "_source_$S(source.%Extends("%Persistent"):"/"_source.%Id(),1:"")_" to target "_target_$S(target.%Extends("%Persistent"):"/"_target.%Id(),1:"")_"")
+		Set tIgnore = 0
+		Try { Set zVALz=source.BatchHeader, zVALz=$S($IsObject(zVALz):zVALz.%ConstructClone(), 1:zVALz) }
+		Catch ex { If (..#IGNOREMISSINGSOURCE&&($$GetOneStatusText^%apiOBJ(ex.AsStatus())["<INVALID OREF>")) { Set tIgnore=1 } Else { Set tSC=ex.AsStatus() } }
+		If ('tSC) Quit
+		If 'tIgnore { Set target.BatchHeader=zVALz }
+		Do ##class(Ens.Util.Trace).WriteTrace("user","ASCN.DTL.LFO5.BatchDTL","Transform","source.%Source:"_source.%Source)
+		Set tIgnore = 0
+		Try { Set zVALz=source.BatchTrailer, zVALz=$S($IsObject(zVALz):zVALz.%ConstructClone(), 1:zVALz) }
+		Catch ex { If (..#IGNOREMISSINGSOURCE&&($$GetOneStatusText^%apiOBJ(ex.AsStatus())["<INVALID OREF>")) { Set tIgnore=1 } Else { Set tSC=ex.AsStatus() } }
+		If ('tSC) Quit
+		If 'tIgnore { Set target.BatchTrailer=zVALz }
+		If (..Contains(source.%Source,"NATL_APPS")) {
+			Try { Set target.%Source="NATL_APPS" }
+			Catch ex { If (..#IGNOREMISSINGSOURCE&&($$GetOneStatusText^%apiOBJ(ex.AsStatus())["<INVALID OREF>")) { Set tSC = 1 } Else { Set tSC=ex.AsStatus() } }
+			If ('tSC) Quit
+		} Else {
+			Set tIgnore = 0
+			Try { Set zVALz=source.Records.GetAt(1).Ministry, zVALz=$S($IsObject(zVALz):zVALz.%ConstructClone(), 1:zVALz) }
+			Catch ex { If (..#IGNOREMISSINGSOURCE&&($$GetOneStatusText^%apiOBJ(ex.AsStatus())["<INVALID OREF>")) { Set tIgnore=1 } Else { Set tSC=ex.AsStatus() } }
+			If ('tSC) Quit
+			If 'tIgnore { Set target.%Source=zVALz }
+		}
+		Set k1="",tSC=1
+		For {
+			Set k1=source.Records.Next(k1)
+			Quit:k1=""
+			Try {
+				Set zTargOBJz=target.Records.GetAt(k1), tSCTarg=1
+			} CATCH errobj { Set zTargOBJz=""  Set:(errobj.Name'="<INVALID OREF>") tSCTarg=errobj.AsStatus() }
+			Set zSrcOBJz=source.Records.GetAt(k1), tSC1=1
+			If '..#IGNOREMISSINGSOURCE||$IsObject(zSrcOBJz)  Set tSC1=$classmethod("ASCN.DTL.LFO5.Msg16","Transform",zSrcOBJz,.zTargOBJz,"")  Set:('tSC1) tSCTrans=$select(+tSCTrans:tSC1,1:$$AppendStatus^%occSystem(tSCTrans,tSC1))
+			If '($Data(zTargOBJz)#2&&$IsObject(zTargOBJz))&&'..#IGNOREMISSINGSOURCE Set tSCTrans=$select(+tSCTrans:tSCTarg,1:$$AppendStatus^%occSystem(tSCTrans,tSCTarg))
+			If ($Data(zSrcOBJz)#2&&$IsObject(zSrcOBJz))||'..#IGNOREMISSINGSOURCE {
+				Set tSC=target.Records.SetAt(zTargOBJz,(k1))
+				If ('tSC) Quit
+			}
+ ; ====== Start Code Block ======
+ Do source.Records.%UnSwizzleAt(k1)
+ Do target.Records.GetAt(k1).%Save(0)
+ Do target.Records.%UnSwizzleAt(k1)
+ ; ======= End Code Block =======
+		}
+		If ('tSC) Quit
+		; Disabled 'assign'
+	} Catch thrownErr {
+		If $ZE="" {
+			Set tSC=thrownErr.AsStatus()
+			Do ##class(Ens.Util.Log).LogStatus($classname(),"Transform",tSC)
+		} Else {
+			Set tSC=##class(Ens.Util.Error).EnsSystemError($classname(),"Transform")
+		}
+	}
+	If ('tSCTrans) Do ##class(Ens.Util.Log).LogStatus($classname(),"Transform",tSCTrans)  Quit:(''tSC) tSCTrans
+	Quit tSC }

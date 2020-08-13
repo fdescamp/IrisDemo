@@ -1,0 +1,444 @@
+ROUTINE User.MessageVolume.1 [Type=INT,Generated]
+ ;User.MessageVolume.1
+ ;Generated for class User.MessageVolume.  Do NOT edit. 08/13/2020 09:37:10AM
+ ;;2F71472B;User.MessageVolume
+ ;
+quote(string) public { Quit $zutil(144,1,string) }
+quoteall(string) public { Quit """"_$replace(string,"""","""""")_"""" }
+%BuildFactTable(pVerbose=0,pFactList="") public {
+ Set tSC = ..%OnBuildCube(pFactList)
+ If ('tSC) Quit tSC
+ Set tSC = ##class(User.MessageVolume.Fact).%BuildAllFacts(pVerbose,pFactList)
+ If ('tSC) Quit tSC
+ Set tSC = ..%KillCache()
+ Quit tSC }
+%CheckSourceId(pSourceId,pVerbose=0,pStatus) public {
+ Quit ##class(User.MessageVolume.Fact).%CheckSourceId(pSourceId,pVerbose,.pStatus)
+}
+%DeleteFact(pSourceId) public {
+ Set tSC = ##class(User.MessageVolume.Fact).%DeleteFact(pSourceId,.tFactId)
+ If ('tSC) Quit tSC
+ Set:(tFactId'="") tChunks(tFactId\64000+1)=""
+ Set tSC = ##class(%DeepSee.Query.Engine).%InvalidateBuckets("MESSAGEVOLUME","User.MessageVolume.Fact",.tChunks)
+ If ('tSC) Quit tSC
+ Set tTimeStamp = $I(^DeepSee.Cache.Results("MESSAGEVOLUME"))
+ Quit tSC }
+%GetCubeCaption() public {
+ Quit "Message Volume" }
+%GetCubeName() public {
+ Quit "MessageVolume" }
+%GetLevelMemberCaption(pDimNo,pHierNo,pLevelNo,pName) public {
+ Set pName = $zu(28,pName,5)
+ Quit "" }
+%GetListingCaption(pListing) public {
+ Set pListing = $zu(28,pListing,5)
+ If ("LISTING"=pListing) {
+  Quit "Listing"
+ }
+ Quit "" }
+%GetListingDescription(pListing) public {
+ Set pListing = $zu(28,pListing,5)
+ If ("LISTING"=pListing) {
+  Quit ""
+ }
+ Quit "" }
+%GetListingFieldCaption(pField) public {
+ Set pField = $zu(28,pField,5)
+ Quit "" }
+%GetListingFieldDescription(pField) public {
+ Set pField = $zu(28,pField,5)
+ Quit "" }
+%GetMemberCaption(pDimName,pHierName="",pLevelName="",pPropName="") public {
+ Set tCaption = ""
+ Set pDimName = $zu(28,pDimName,5)
+ Set pHierName = $zu(28,pHierName,5)
+ Set pLevelName = $zu(28,pLevelName,5)
+ Set pPropName = $zu(28,pPropName,5)
+ If ($G(%dsCaptionContext)'="") {
+  If (pDimName'="") {
+   If (pHierName="") {
+    Set tCaption = $G(^DeepSee.Captions(%dsCaptionContext,"MESSAGEVOLUME",pDimName))
+   }
+   Else {
+    If (pLevelName="") {
+     Set tCaption = $G(^DeepSee.Captions(%dsCaptionContext,"MESSAGEVOLUME",pDimName,pHierName))
+    }
+    Else {
+     If (pPropName="") {
+      Set tCaption = $G(^DeepSee.Captions(%dsCaptionContext,"MESSAGEVOLUME",pDimName,pHierName,pLevelName))
+     }
+     Else {
+      Set tCaption = $G(^DeepSee.Captions(%dsCaptionContext,"MESSAGEVOLUME",pDimName,pHierName,pLevelName,pPropName))
+     }
+    }
+   }
+  }
+ If (tCaption'="") Quit tCaption
+ }
+ If (pDimName = "MEASURES") {
+  Set tCountName = ..%GetCountName()
+  If (pHierName = $zu(28,tCountName,5)) {
+   Set tCountCaption = ..%GetCountCaption()
+   Quit $S(tCountCaption="":$S(tCountName="%COUNT":"Count",1:tCountName),1:tCountCaption)
+  }
+ }
+ If (pDimName="%SEARCH") {
+  If ((pHierName="")&&(pLevelName="")) { Quit "%Search" }
+  ElseIf (pHierName="%SEARCH") {
+   If (pLevelName="") { Quit "%Search" }
+   ElseIf (pLevelName="%SEARCH") {
+     Quit "%Search"
+    }
+  }
+ }
+ ElseIf (pDimName="HOUR PROCESSED") {
+  If ((pHierName="")&&(pLevelName="")) { Quit "Hour Processed" }
+  ElseIf (pHierName="H1") {
+   If (pLevelName="") { Quit "H1" }
+   ElseIf (pLevelName="HOUR PROCESSED") {
+     Quit "Hour Processed"
+    }
+  }
+ }
+ ElseIf (pDimName="ISERROR") {
+  If ((pHierName="")&&(pLevelName="")) { Quit "IsError" }
+  ElseIf (pHierName="H1") {
+   If (pLevelName="") { Quit "H1" }
+   ElseIf (pLevelName="ISERROR") {
+     Quit "IsError"
+    }
+  }
+ }
+ ElseIf (pDimName="MEASURES") {
+  If ((pHierName="")&&(pLevelName="")) { Quit "" }
+  ElseIf (pHierName="STATUS") {
+   If (pLevelName="") { Quit "Status" }
+  }
+ }
+ ElseIf (pDimName="SOURCECONFIGNAME") {
+  If ((pHierName="")&&(pLevelName="")) { Quit "Source Config Name" }
+  ElseIf (pHierName="H1") {
+   If (pLevelName="") { Quit "H1" }
+   ElseIf (pLevelName="SOURCECONFIGNAME") {
+     Quit "Source Config Name"
+    }
+  }
+ }
+ ElseIf (pDimName="STATUS") {
+  If ((pHierName="")&&(pLevelName="")) { Quit "Status" }
+  ElseIf (pHierName="H1") {
+   If (pLevelName="") { Quit "H1" }
+   ElseIf (pLevelName="STATUS") {
+     Quit "Status"
+    }
+  }
+ }
+ ElseIf (pDimName="TARGETCONFIGNAME") {
+  If ((pHierName="")&&(pLevelName="")) { Quit "Target Config Name" }
+  ElseIf (pHierName="H1") {
+   If (pLevelName="") { Quit "H1" }
+   ElseIf (pLevelName="TARGETCONFIGNAME") {
+     Quit "Target Config Name"
+    }
+  }
+ }
+ ElseIf (pDimName="TIMEPROCESSED") {
+  If ((pHierName="")&&(pLevelName="")) { Quit "TimeProcessed" }
+  ElseIf (pHierName="H1") {
+   If (pLevelName="") { Quit "H1" }
+   ElseIf (pLevelName="TIMEPROCESSED") {
+     Quit "Time Processed"
+    }
+  }
+ }
+ Quit tCaption }
+%GetMemberDescription(pDimName,pHierName="",pLevelName="",pPropName="") public {
+ Set tDescription = ""
+ Set pDimName = $zu(28,pDimName,5)
+ Set pHierName = $zu(28,pHierName,5)
+ Set pLevelName = $zu(28,pLevelName,5)
+ Set pPropName = $zu(28,pPropName,5)
+ If (pDimName="%SEARCH") {
+  If ((pHierName="")&&(pLevelName="")) { Quit "%Search" }
+  ElseIf (pHierName="%SEARCH") {
+   If (pLevelName="") { Quit "%Search" }
+   ElseIf (pLevelName="%SEARCH") {
+     Quit "%Search"
+    }
+  }
+ }
+ ElseIf (pDimName="HOUR PROCESSED") {
+  If ((pHierName="")&&(pLevelName="")) { Quit "" }
+  ElseIf (pHierName="H1") {
+   If (pLevelName="") { Quit "" }
+   ElseIf (pLevelName="HOUR PROCESSED") {
+     Quit ""
+    }
+  }
+ }
+ ElseIf (pDimName="ISERROR") {
+  If ((pHierName="")&&(pLevelName="")) { Quit "" }
+  ElseIf (pHierName="H1") {
+   If (pLevelName="") { Quit "" }
+   ElseIf (pLevelName="ISERROR") {
+     Quit ""
+    }
+  }
+ }
+ ElseIf (pDimName="MEASURES") {
+  If ((pHierName="")&&(pLevelName="")) { Quit "" }
+  ElseIf (pHierName="STATUS") {
+   If (pLevelName="") { Quit "" }
+  }
+ }
+ ElseIf (pDimName="SOURCECONFIGNAME") {
+  If ((pHierName="")&&(pLevelName="")) { Quit "" }
+  ElseIf (pHierName="H1") {
+   If (pLevelName="") { Quit "" }
+   ElseIf (pLevelName="SOURCECONFIGNAME") {
+     Quit ""
+    }
+  }
+ }
+ ElseIf (pDimName="STATUS") {
+  If ((pHierName="")&&(pLevelName="")) { Quit "" }
+  ElseIf (pHierName="H1") {
+   If (pLevelName="") { Quit "" }
+   ElseIf (pLevelName="STATUS") {
+     Quit ""
+    }
+  }
+ }
+ ElseIf (pDimName="TARGETCONFIGNAME") {
+  If ((pHierName="")&&(pLevelName="")) { Quit "" }
+  ElseIf (pHierName="H1") {
+   If (pLevelName="") { Quit "" }
+   ElseIf (pLevelName="TARGETCONFIGNAME") {
+     Quit ""
+    }
+  }
+ }
+ ElseIf (pDimName="TIMEPROCESSED") {
+  If ((pHierName="")&&(pLevelName="")) { Quit "" }
+  ElseIf (pHierName="H1") {
+   If (pLevelName="") { Quit "" }
+   ElseIf (pLevelName="TIMEPROCESSED") {
+     Quit ""
+    }
+  }
+ }
+ Quit tDescription }
+%GetModel() public {
+ Set tCube1 = ""
+ Set tCube1 = ##class(%DeepSee.Model.cube).%New()
+ Set dmnsn2 = ##class(%DeepSee.Model.dimension).%New()
+ Set dmnsn2.allCaption="All SourceConfigName"
+ Set dmnsn2.allDisplayName="SourceConfigName"
+ Set dmnsn2.displayName="Source Config Name"
+ Set dmnsn2.hasAll=0
+ Set hrrchy3 = ##class(%DeepSee.Model.hierarchy).%New()
+ Set lvl4 = ##class(%DeepSee.Model.level).%New()
+ Set lvl4.displayName="Source Config Name"
+ Set lvl4.name="SourceConfigName"
+ Set lvl4.sourceProperty="SourceConfigName"
+ Set lvl4.useDisplayValue=1
+ Do hrrchy3.levels.Insert(lvl4)
+ Set hrrchy3.name="H1"
+ Do dmnsn2.hierarchies.Insert(hrrchy3)
+ Set dmnsn2.iKnowType="entity"
+ Set dmnsn2.name="SourceConfigName"
+ Do tCube1.dimensions.Insert(dmnsn2)
+ Set dmnsn2 = ##class(%DeepSee.Model.dimension).%New()
+ Set dmnsn2.allCaption="All TargetConfigName"
+ Set dmnsn2.allDisplayName="TargetConfigName"
+ Set dmnsn2.displayName="Target Config Name"
+ Set dmnsn2.hasAll=0
+ Set hrrchy3 = ##class(%DeepSee.Model.hierarchy).%New()
+ Set lvl4 = ##class(%DeepSee.Model.level).%New()
+ Set lvl4.displayName="Target Config Name"
+ Set lvl4.name="TargetConfigName"
+ Set lvl4.sourceProperty="TargetConfigName"
+ Set lvl4.useDisplayValue=1
+ Do hrrchy3.levels.Insert(lvl4)
+ Set hrrchy3.name="H1"
+ Do dmnsn2.hierarchies.Insert(hrrchy3)
+ Set dmnsn2.iKnowType="entity"
+ Set dmnsn2.name="TargetConfigName"
+ Do tCube1.dimensions.Insert(dmnsn2)
+ Set dmnsn2 = ##class(%DeepSee.Model.dimension).%New()
+ Set dmnsn2.allCaption="All TimeProcessed"
+ Set dmnsn2.allDisplayName="TimeProcessed"
+ Set dmnsn2.calendar="gregorian"
+ Set dmnsn2.hasAll=0
+ Set hrrchy3 = ##class(%DeepSee.Model.hierarchy).%New()
+ Set lvl4 = ##class(%DeepSee.Model.level).%New()
+ Set lvl4.displayName="Time Processed"
+ Set lvl4.name="TimeProcessed"
+ Set lvl4.timeFunction="DayMonthYear"
+ Set lvl4.useDisplayValue=1
+ Do hrrchy3.levels.Insert(lvl4)
+ Set hrrchy3.name="H1"
+ Do dmnsn2.hierarchies.Insert(hrrchy3)
+ Set dmnsn2.iKnowType="entity"
+ Set dmnsn2.name="TimeProcessed"
+ Set dmnsn2.sourceProperty="TimeProcessed"
+ Set dmnsn2.type="time"
+ Do tCube1.dimensions.Insert(dmnsn2)
+ Set dmnsn2 = ##class(%DeepSee.Model.dimension).%New()
+ Set dmnsn2.allCaption="All Hour Processed"
+ Set dmnsn2.allDisplayName="Hour Processed"
+ Set dmnsn2.calendar="gregorian"
+ Set dmnsn2.displayName="Hour Processed"
+ Set dmnsn2.hasAll=0
+ Set hrrchy3 = ##class(%DeepSee.Model.hierarchy).%New()
+ Set lvl4 = ##class(%DeepSee.Model.level).%New()
+ Set lvl4.displayName="Hour Processed"
+ Set lvl4.name="Hour Processed"
+ Set lvl4.timeFunction="HourNumber"
+ Set lvl4.useDisplayValue=1
+ Do hrrchy3.levels.Insert(lvl4)
+ Set hrrchy3.name="H1"
+ Do dmnsn2.hierarchies.Insert(hrrchy3)
+ Set dmnsn2.iKnowType="entity"
+ Set dmnsn2.name="Hour Processed"
+ Set dmnsn2.sourceProperty="TimeProcessed"
+ Set dmnsn2.type="time"
+ Do tCube1.dimensions.Insert(dmnsn2)
+ Set dmnsn2 = ##class(%DeepSee.Model.dimension).%New()
+ Set dmnsn2.allCaption="All IsError"
+ Set dmnsn2.allDisplayName="IsError"
+ Set dmnsn2.hasAll=0
+ Set hrrchy3 = ##class(%DeepSee.Model.hierarchy).%New()
+ Set lvl4 = ##class(%DeepSee.Model.level).%New()
+ Set lvl4.name="IsError"
+ Set lvl4.sourceProperty="IsError"
+ Set lvl4.useDisplayValue=1
+ Do hrrchy3.levels.Insert(lvl4)
+ Set hrrchy3.name="H1"
+ Do dmnsn2.hierarchies.Insert(hrrchy3)
+ Set dmnsn2.name="IsError"
+ Do tCube1.dimensions.Insert(dmnsn2)
+ Set dmnsn2 = ##class(%DeepSee.Model.dimension).%New()
+ Set dmnsn2.allCaption="All Status"
+ Set dmnsn2.allDisplayName="Status"
+ Set dmnsn2.hasAll=0
+ Set hrrchy3 = ##class(%DeepSee.Model.hierarchy).%New()
+ Set lvl4 = ##class(%DeepSee.Model.level).%New()
+ Set lvl4.name="Status"
+ Set lvl4.sourceProperty="Status"
+ Set lvl4.useDisplayValue=1
+ Do hrrchy3.levels.Insert(lvl4)
+ Set hrrchy3.name="H1"
+ Do dmnsn2.hierarchies.Insert(hrrchy3)
+ Set dmnsn2.name="Status"
+ Do tCube1.dimensions.Insert(dmnsn2)
+ Set tCube1.displayName="Message Volume"
+ Set lstng2 = ##class(%DeepSee.Model.listing).%New()
+ Set lstng2.additionalDescription="undefined"
+ Set lstng2.fieldList="SourceConfigName,TargetConfigName,TimeCreated,TimeProcessed,SessionId,MessageBodyId,Status"
+ Set lstng2.name="Listing"
+ Do tCube1.listings.Insert(lstng2)
+ Set msr2 = ##class(%DeepSee.Model.measure).%New()
+ Set msr2.aggregate="SUM"
+ Set msr2.name="Status"
+ Set msr2.sourceProperty="Status"
+ Set msr2.type="number"
+ Do tCube1.measures.Insert(msr2)
+ Set tCube1.name="MessageVolume"
+ Set rltnshp2 = ##class(%DeepSee.Model.relationship).%New()
+ Set rltnshp2.cardinality="one"
+ Set rltnshp2.disabled=1
+ Set rltnshp2.factName="%ID"
+ Set rltnshp2.inverse="MessageHeader"
+ Set rltnshp2.name="MessageBody"
+ Set rltnshp2.relatedCube="Ens.MessageBody"
+ Set rltnshp2.sourceProperty="MessageBodyId"
+ Do tCube1.relationships.Insert(rltnshp2)
+ Set tCube1.sourceClass="Ens.MessageHeader"
+ Quit tCube1 }
+%GetRelationshipId(pRelationName,pKey,pID) public {
+ Set (pStartId,pEndId)=""
+ Set tSC = 1
+ Set pID = ""
+ Quit tSC }
+%GetSourceIds(pStartId,pEndId) [ SQLCODE,pEndId,pStartId ] public { New SQLCODE 
+ Set (pStartId,pEndId)=""
+ Set tSC = 1
+  ;---&sql(SELECT MIN(%ID),MAX(%ID) INTO :pStartId,:pEndId FROM Ens.MessageHeader)
+   ;--- ** SQL PUBLIC Variables: SQLCODE, pEndId, pStartId
+ try { d $classmethod("%sqlcq."_$tr($namespace,"%_-$@:/\[]^ ","pudsssssssss")_".xEc13RszaDDffl5w0t6vOFoqTMbx","%New") } catch { if $ze["<CLASS DOES NOT EXIST>"&&($ze["%sqlcq."_$tr($namespace,"%_-$@:/\[]^ ","pudsssssssss")_".xEc13RszaDDffl5w0t6vOFoqTMbx")||($ze["<ZSQLU>") { d %0dsqlA } else { throw } }
+ If (pStartId="")&&(pEndId="") {
+   ;---&sql(SELECT TOP 1 %ID FROM Ens.MessageHeader WHERE %NOINDEX %ID IS NOT NULL)
+    ;--- ** SQL PUBLIC Variables: SQLCODE
+  try { d $classmethod("%sqlcq."_$tr($namespace,"%_-$@:/\[]^ ","pudsssssssss")_".xEZhtxDO5zgZLUKfP8UOXy2c3C69","%New") } catch { if $ze["<CLASS DOES NOT EXIST>"&&($ze["%sqlcq."_$tr($namespace,"%_-$@:/\[]^ ","pudsssssssss")_".xEZhtxDO5zgZLUKfP8UOXy2c3C69")||($ze["<ZSQLU>") { d %0dsqlC } else { throw } }
+  If (+$G(%ROWCOUNT)>0) {		// DTB495 - Double check that there are in fact zero source records.
+   Quit $$Error^%apiOBJ(5001,"Failure to determine first and last IDs in source table 'Ens.MessageHeader'. Check indices on the source.")
+  }
+ }
+ Quit tSC }
+%0dsqlA	n %xxsql
+	s %xxsql("S",1)="SELECT MIN ( %ID ) , MAX ( %ID ) INTO :pStartId , :pEndId FROM Ens . MessageHeader"
+	s %xxsql("M","DEBUG")=$c(1),%xxsql("I","%DeepSee")="",%xxsql("I","%systemInclude")="",%xxsql("I","EnsUtil")="",%xxsql("NS")="DEMONSTRATION"
+	d BuildQuery^%SYS.SQLSRV(.%xxsql,$lb("Logical","","","User",0,"",),,"User.MessageVolume.CLS")
+	q
+%0dsqlC	n %xxsql
+	s %xxsql("S",1)="SELECT TOP 1 %ID FROM Ens . MessageHeader WHERE %NOINDEX %ID IS NOT NULL"
+	s %xxsql("M","DEBUG")=$c(1),%xxsql("I","%DeepSee")="",%xxsql("I","%systemInclude")="",%xxsql("I","EnsUtil")="",%xxsql("NS")="DEMONSTRATION"
+	d BuildQuery^%SYS.SQLSRV(.%xxsql,$lb("Logical","","","User",0,"",),,"User.MessageVolume.CLS")
+	q
+%GetSourceInfo(pInfo) public {
+ Kill pInfo
+ Set pInfo("sourceType") = "persistent"
+ Set pInfo("sourceClass") = "Ens.MessageHeader"
+ Set pInfo("maxFacts") = ""
+ Set pInfo("dstime") = ""
+ Set pInfo("dsinterval") = ""
+ Set pInfo("idkey") = "IDKEY"
+ Set pInfo("posint") = 1
+ Quit 1 }
+%InjectFact(pFactId,pValues,pDimensionsOnly=0,pFactList="") public {
+ Set tSC = 1
+ Set tFactList = $S($ListValid(pFactList):pFactList,1:$ListFromString(pFactList,","))
+ Set tSC = ##class(User.MessageVolume.Fact).%InjectFact(.pFactId,.pValues,.tChunks,pDimensionsOnly,tFactList)
+ If ('tSC) Quit tSC
+ If ('pDimensionsOnly) {
+  Set tSC = ##class(%DeepSee.Query.Engine).%InvalidateBuckets("MESSAGEVOLUME","User.MessageVolume.Fact",.tChunks)
+  If ('tSC) Quit tSC
+  Set tTimeStamp = $I(^DeepSee.Cache.Results("MESSAGEVOLUME"))
+ }
+ Quit tSC }
+%KillFacts() public {
+ Set tSC = 1
+ Try {
+ Do ##class(User.MessageVolume.StarIsError).%KillExtent()
+ Do ##class(User.MessageVolume.StarSourceConfigName).%KillExtent()
+ Do ##class(User.MessageVolume.StarStatus).%KillExtent()
+ Do ##class(User.MessageVolume.StarTargetConfigName).%KillExtent()
+ do ##class(%DeepSee.ComputedDimension.SQL).%OnKillFacts("MessageVolume", 1, 1, 1, 1)
+ Set tSC = ..%KillCache()
+ If ('tSC) Quit
+ Set tSC = ##class(User.MessageVolume.Fact).%KillExtent()
+ If ('tSC) Quit
+ Kill ^DeepSee.Index("MESSAGEVOLUME","%sourceId")
+ Kill ^DeepSee.Index("MESSAGEVOLUME","%sourceIdReverse")
+ Kill ^DeepSee.FactS("USER.MESSAGEVOLUME.FACT")
+ Kill ^DeepSee.FactRelation("MESSAGEVOLUME")
+ Set tSC = ##class(User.MessageVolume.Fact).%OnKillFacts()
+ If ('tSC) Quit
+ Set tSC = ..%OnKillFacts()
+ If ('tSC) Quit
+ }
+  Catch(ex) {
+  Set tSC = ex.AsStatus()
+ }
+ Quit tSC }
+%UpdateFacts(pStartId,pEndId="",pBatchMode=0,pVerbose=0,pTaskGroup="",pUpdates,pRefProp="",pRefID="",pDimTables) public {
+ Set tSC = 1
+ Set tSC = ##class(User.MessageVolume.Fact).%UpdateFacts(pStartId,pEndId,pBatchMode,.tChunks, pVerbose,pTaskGroup,.pUpdates,pRefProp,pRefID,.pDimTables)
+ If ('tSC) Quit tSC
+ Set tSC = ##class(%DeepSee.Query.Engine).%InvalidateBuckets("MESSAGEVOLUME","User.MessageVolume.Fact",.tChunks)
+ If ('tSC) Quit tSC
+ Set tTimeStamp = $I(^DeepSee.Cache.Results("MESSAGEVOLUME"))
+ Quit tSC }
+%UpdateFactsList(pFactList="",pStartId,pEndId="",pBatchMode=0,pVerbose=0,pTaskGroup="",pUpdates,pRefProp="",pRefID="",pDimTables) public {
+ Quit $$Error^%apiOBJ(5001,"%UpdateFactsList cannot be called without enabling namedFactNums for this cube.") }
